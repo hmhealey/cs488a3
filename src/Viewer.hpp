@@ -33,11 +33,11 @@ protected:
     // Called when the window is resized (formerly on_configure_event)
     virtual void resizeGL(int width, int height);
     // Called when a mouse button is pressed
-    virtual void mousePressEvent ( QMouseEvent * event );
+    virtual void mousePressEvent(QMouseEvent* event);
     // Called when a mouse button is released
-    virtual void mouseReleaseEvent ( QMouseEvent * event );
+    virtual void mouseReleaseEvent(QMouseEvent* event);
     // Called when the mouse moves
-    virtual void mouseMoveEvent ( QMouseEvent * event );
+    virtual void mouseMoveEvent(QMouseEvent* event);
     
     // Draw a circle for the trackball, with OpenGL commands.
     // Assumes the context for the viewer is active.
