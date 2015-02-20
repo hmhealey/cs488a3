@@ -6,6 +6,7 @@
 #include <QtWidgets>
 
 #include "Mesh.hpp"
+#include "AlgebraToQt.hpp"
 #include "Primitive.hpp"
 
 #ifndef GL_MULTISAMPLE
@@ -80,7 +81,7 @@ void Viewer::initializeGL() {
     program.enableAttributeArray("vert");
     program.setAttributeBuffer("vert", GL_FLOAT, 0, 3);
 
-    mMvpMatrixLocation = program.uniformLocation("mvpMatrix");
+    mMvpMatrixLocation = program.uniformLocation("modelViewProjection");
     mColorLocation = program.uniformLocation("frag_color");
 }
 
@@ -101,13 +102,19 @@ void Viewer::paintGL() {
         cerr << "Viewer::paintGL - error after drawing trackball " << error << endl;
     }
 
-    draw_trackball_circle();
+    //draw_trackball_circle();
 
     error = glGetError();
     if (error != GL_NO_ERROR) {
         cerr << "Viewer::paintGL - error after drawing trackball " << error << endl;
     }
     cerr << "aaa" << endl;
+
+    static double angle = 0;
+    angle += M_PI / 240;
+
+    program.setUniformValue("modelView", toQt(Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
+    program.setUniformValue("modelViewProjection", toQt(Matrix4::makePerspective(30, 1, 0.1, 10) * Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
 
     Mesh* mesh = Mesh::makeCube(1);
     //Mesh* mesh = Mesh::makeIcosphere(1, 0.5f);
@@ -133,6 +140,8 @@ void Viewer::paintGL() {
     if (error != GL_NO_ERROR) {
         cerr << "Viewer::paintGL - error after painting " << error << endl;
     }
+
+    update();
 }
 
 void Viewer::resizeGL(int width, int height) {
@@ -203,16 +212,14 @@ void Viewer::draw_trackball_circle() {
     set_colour(QColor(0.0, 0.0, 0.0));
 
     // Set orthographic Matrix
-    QMatrix4x4 orthoMatrix;
-    orthoMatrix.ortho(0.0, (float) current_width, 0.0, (float) current_height, -0.1, 0.1);
+    Matrix4 orthoMatrix = Matrix4::makeOrtho(0, current_width, 0, current_height, -0.1, 0.1);
 
     // Translate the view to the middle
-    QMatrix4x4 transformMatrix;
-    transformMatrix.translate(width() / 2.0, height() / 2.0, 0.0);
+    Matrix4 transformMatrix = Matrix4::makeTranslation(current_width / 2, current_height / 2, 0);
 
     // Bind buffer object
     mCircleBufferObject.bind();
-    program.setUniformValue(mMvpMatrixLocation, orthoMatrix * transformMatrix);
+    program.setUniformValue(mMvpMatrixLocation, toQt(orthoMatrix * transformMatrix));
 
     int error = glGetError();
     if (error != GL_NO_ERROR) {
