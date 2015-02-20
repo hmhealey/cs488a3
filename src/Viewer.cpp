@@ -116,28 +116,10 @@ void Viewer::paintGL() {
     program.setUniformValue("modelView", toQt(Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
     program.setUniformValue("modelViewProjection", toQt(Matrix4::makePerspective(30, 1, 0.1, 10) * Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
 
-    /*Mesh* mesh = Mesh::makeCube(1);
-    //Mesh* mesh = Mesh::makeIcosphere(1, 0.5f);
-
-    cerr << "bbb" << endl;
-    int numColours = mesh->getNumVertices() * 4;
-    float* colours = new float[numColours];
-    for (int i = 0; i < numColours; i += 4) {
-        colours[i] = 1.0f;
-        colours[i + 1] = 0.0f;
-        colours[i + 2] = 0.0f;
-        colours[i + 3] = 0.0f;
-    }
-    mesh->setColours(colours);
-
+    //Mesh* mesh = Mesh::makeBox(1, 1, 1);
+    Mesh* mesh = Mesh::makeIcosphere(0.5f, 1);
     mesh->draw(program);
-
-    delete mesh;*/
-
-    //NMesh* nmesh = NMesh::makeBox(1, 1, 1);
-    NMesh* nmesh = NMesh::makeIcosphere(0.5f, 1);
-    nmesh->draw(program);
-    delete nmesh;
+    delete mesh;
 
     //Sphere sphere;
 
