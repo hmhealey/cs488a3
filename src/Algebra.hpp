@@ -303,85 +303,85 @@ private:
 struct Matrix4
 {
   double values[16];
-  double* v_ = values;
+
   Matrix4()
   {
     // Construct an identity matrix
-    std::fill(v_, v_+16, 0.0);
-    v_[0] = 1.0;
-    v_[5] = 1.0;
-    v_[10] = 1.0;
-    v_[15] = 1.0;
+    std::fill(values, values+16, 0.0);
+    values[0] = 1.0;
+    values[5] = 1.0;
+    values[10] = 1.0;
+    values[15] = 1.0;
   }
     Matrix4(double v0, double v1, double v2, double v3, double v4, double v5, double v6, double v7,
             double v8, double v9, double v10, double v11, double v12, double v13, double v14, double v15) {
-        v_[0] = v0;
-        v_[1] = v1;
-        v_[2] = v2;
-        v_[3] = v3;
-        v_[4] = v4;
-        v_[5] = v5;
-        v_[6] = v6;
-        v_[7] = v7;
-        v_[8] = v8;
-        v_[9] = v9;
-        v_[10] = v10;
-        v_[11] = v11;
-        v_[12] = v12;
-        v_[13] = v13;
-        v_[14] = v14;
-        v_[15] = v15;
+        values[0] = v0;
+        values[1] = v1;
+        values[2] = v2;
+        values[3] = v3;
+        values[4] = v4;
+        values[5] = v5;
+        values[6] = v6;
+        values[7] = v7;
+        values[8] = v8;
+        values[9] = v9;
+        values[10] = v10;
+        values[11] = v11;
+        values[12] = v12;
+        values[13] = v13;
+        values[14] = v14;
+        values[15] = v15;
     }
   Matrix4(const Matrix4& other)
   {
-    std::copy(other.v_, other.v_+16, v_);
+    std::copy(other.values, other.values+16, values);
   }
   Matrix4(const Vector4D row1, const Vector4D row2, const Vector4D row3, 
              const Vector4D row4)
   {
-    v_[0] = row1[0]; 
-    v_[1] = row1[1]; 
-    v_[2] = row1[2]; 
-    v_[3] = row1[3]; 
+    values[0] = row1[0]; 
+    values[1] = row1[1]; 
+    values[2] = row1[2]; 
+    values[3] = row1[3]; 
 
-    v_[4] = row2[0]; 
-    v_[5] = row2[1]; 
-    v_[6] = row2[2]; 
-    v_[7] = row2[3]; 
+    values[4] = row2[0]; 
+    values[5] = row2[1]; 
+    values[6] = row2[2]; 
+    values[7] = row2[3]; 
 
-    v_[8] = row3[0]; 
-    v_[9] = row3[1]; 
-    v_[10] = row3[2]; 
-    v_[11] = row3[3]; 
+    values[8] = row3[0]; 
+    values[9] = row3[1]; 
+    values[10] = row3[2]; 
+    values[11] = row3[3]; 
 
-    v_[12] = row4[0]; 
-    v_[13] = row4[1]; 
-    v_[14] = row4[2]; 
-    v_[15] = row4[3]; 
+    values[12] = row4[0]; 
+    values[13] = row4[1]; 
+    values[14] = row4[2]; 
+    values[15] = row4[3]; 
   }
   Matrix4(double *vals)
   {
-    std::copy(vals, vals + 16, (double*)v_);
+    std::copy(vals, vals + 16, (double*)values);
   }
 
   Matrix4& operator=(const Matrix4& other)
   {
-    std::copy(other.v_, other.v_+16, v_);
+    std::copy(other.values, other.values+16, values);
     return *this;
   }
 
   Vector4D getRow(size_t row) const
   {
-    return Vector4D(v_[4*row], v_[4*row+1], v_[4*row+2], v_[4*row+3]);
+    return Vector4D(values[4*row], values[4*row+1], values[4*row+2], values[4*row+3]);
   }
   double *getRow(size_t row) 
   {
-    return (double*)v_ + 4*row;
+    return (double*)values + 4*row;
   }
 
   Vector4D getColumn(size_t col) const
   {
-    return Vector4D(v_[col], v_[4+col], v_[8+col], v_[12+col]);
+    return Vector4D(values[col], values[4+col], values[8+col], values[12+col]);
   }
 
   Vector4D operator[](size_t row) const
@@ -402,7 +402,7 @@ struct Matrix4
 
   const double *begin() const
   {
-    return (double*)v_;
+    return (double*)values;
   }
   const double *end() const
   {
