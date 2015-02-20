@@ -351,7 +351,7 @@ Mesh* Mesh::makeIcosphere(int refinement, float radius) {
     float normals[numVertices];
     for (size_t i = 0; i < numVertices; i += 3) {
         cerr << "a " << vertices[i] << " " << vertices[i + 1] << " " << vertices[i + 2] << endl;
-        Vector3D normal(&vertices[i]);
+        Vector3 normal(&vertices[i]);
         cerr << "aa " << normal << endl;
         normal.normalize();
 

@@ -250,7 +250,7 @@ int gr_node_scale_cmd(lua_State* L)
     values[i] = luaL_checknumber(L, i + 2);
   }
 
-  self->scale(Vector3D(values[0], values[1], values[2]));
+  self->scale(Vector3(values[0], values[1], values[2]));
 
   return 0;
 }
@@ -272,7 +272,7 @@ int gr_node_translate_cmd(lua_State* L)
     values[i] = luaL_checknumber(L, i + 2);
   }
 
-  self->translate(Vector3D(values[0], values[1], values[2]));
+  self->translate(Vector3(values[0], values[1], values[2]));
 
   return 0;
 }

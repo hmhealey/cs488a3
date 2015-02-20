@@ -14,7 +14,7 @@
 
 #include "Algebra.hpp"
 
-double Vector3D::normalize()
+double Vector3::normalize()
 {
   double denom = 1.0;
   double x = (v_[0] > 0.0) ? v_[0] : -v_[0];
@@ -61,7 +61,7 @@ double Vector3D::normalize()
   return 0.0;
 }
 
-Vector3D Vector3D::normalized()
+Vector3 Vector3::normalized()
 {
   return *this / length();
 }
@@ -70,7 +70,7 @@ Vector3D Vector3D::normalized()
  * Define some helper functions for matrix inversion.
  */
 
-static void swaprows(Matrix4x4& a, size_t r1, size_t r2)
+static void swaprows(Matrix4& a, size_t r1, size_t r2)
 {
   std::swap(a[r1][0], a[r2][0]);
   std::swap(a[r1][1], a[r2][1]);
@@ -78,7 +78,7 @@ static void swaprows(Matrix4x4& a, size_t r1, size_t r2)
   std::swap(a[r1][3], a[r2][3]);
 }
 
-static void dividerow(Matrix4x4& a, size_t r, double fac)
+static void dividerow(Matrix4& a, size_t r, double fac)
 {
   a[r][0] /= fac;
   a[r][1] /= fac;
@@ -86,7 +86,7 @@ static void dividerow(Matrix4x4& a, size_t r, double fac)
   a[r][3] /= fac;
 }
 
-static void submultrow(Matrix4x4& a, size_t dest, size_t src, double fac)
+static void submultrow(Matrix4& a, size_t dest, size_t src, double fac)
 {
   a[dest][0] -= fac * a[src][0];
   a[dest][1] -= fac * a[src][1];
@@ -101,13 +101,13 @@ static void submultrow(Matrix4x4& a, size_t dest, size_t src, double fac)
  * from a different school.  I taught that course too, so I figured it
  * would be okay.
  */
-Matrix4x4 Matrix4x4::invert() const
+Matrix4 Matrix4::invert() const
 {
   /* The algorithm is plain old Gauss-Jordan elimination 
      with partial pivoting. */
 
-  Matrix4x4 a(*this);
-  Matrix4x4 ret;
+  Matrix4 a(*this);
+  Matrix4 ret;
 
   /* Loop over cols of a from left to right, 
      eliminating above and below diag */
@@ -145,4 +145,127 @@ Matrix4x4 Matrix4x4::invert() const
   }
 
   return ret;
+}
+
+Matrix4 Matrix4::makeXRotation(double angle) {
+    float ca = cos(angle);
+    float sa = sin(angle);
+
+    return Matrix4(
+        1, 0, 0, 0,
+        0, ca, -sa, 0,
+        0, sa, ca, 0,
+        0, 0, 0, 1
+    );
+}
+
+Matrix4 Matrix4::makeYRotation(double angle) {
+    float ca = cos(angle);
+    float sa = sin(angle);
+
+    return Matrix4(
+        ca, 0, sa, 0,
+        0, 1, 0, 0,
+        -sa, 0, ca, 0,
+        0, 0, 0, 1
+    );
+}
+
+Matrix4 Matrix4::makeZRotation(double angle) {
+    float ca = cos(angle);
+    float sa = sin(angle);
+
+    return Matrix4(
+        ca, -sa, 0, 0,
+        sa, ca, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    );
+}
+
+Matrix4 Matrix4::makeRotation(double pitch, double yaw, double roll) {
+    return makeYRotation(yaw) * makeXRotation(pitch) * makeZRotation(roll);
+}
+
+Matrix4 Matrix4::makeRotation(double angle, const Vector3& axis) {
+    // formula taken from http://en.wikipedia.org/wiki/Rotation_matrix
+    float ux = axis[0];
+    float uy = axis[1];
+    float uz = axis[2];
+
+    float ca = cos(angle);
+    float sa = sin(angle);
+
+    return Matrix4(
+        ca + ux * ux * (1 - ca),        ux * uy * (1 - ca) - uz * sa,   ux * uz * ca + uy * sa,         0,
+        uy * ux * (1 - ca) + uz * sa,   ca + uy * uy * (1 - ca),        uy * uz * (1 - ca) - ux * sa,   0,
+        uz * ux * (1 - ca) - uy * sa,   uz * uy * (1 - ca) + ux * sa,   ca + uz * uz * (1 - ca),        0,
+        0,                              0,                              0,                              1
+    );
+}
+
+Matrix4 Matrix4::makeTranslation(double x, double y, double z) {
+    return Matrix4(
+        1, 0, 0, x,
+        0, 1, 0, y,
+        0, 0, 1, z,
+        0, 0, 0, 1
+    );
+}
+
+Matrix4 Matrix4::makeScaling(double x, double y, double z) {
+    return Matrix4(
+        x, 0, 0, 0,
+        0, y, 0, 0,
+        0, 0, z, 0,
+        0, 0, 0, 1
+    );
+}
+
+Matrix4 Matrix4::makePerspective(double fov, double aspect, double near, double far) {
+    // formula adapted from http://www.songho.ca/opengl/gl_projectionmatrix.html
+    //double top = near * tan(fov / 2);
+    //double right = aspect * top;
+    double right = near * tan(fov / 2);
+    double top = aspect * right;
+
+    return Matrix4(
+        near / right,   0,          0,                              0,
+        0,              near / top, 0,                              0,
+        0,              0,          (far + near) / (near - far),    (2 * far * near) / (near - far),
+        0,              0,          -1,                             0
+    );
+    /*float temp, temp2, temp3, temp4;
+    temp = 2.0 * znear;
+    temp2 = right - left;
+    temp3 = top - bottom;
+    temp4 = zfar - znear;
+    return Matrix4(
+        near / right,   0,          0,                                  0,
+        0,              near / top, 0,                                  0,
+        0,              0,          (far + near) / (near - far),        -1,
+        0,              0,          (2.0 * near * far) / (near - far),  0
+    );*/
+    /*return Matrix4(
+        (2 * near) / (right - left),        0,                                  0,                                  0,
+        0,                                  (2 * near) / (top - bottom),        0,                                  0,
+        (right + left) / (right - left),    (top + bottom) / (top - bottom),    (-far - near) / (far - near),       -1,
+        0,                                  0,                                  -(2.0 * near * far) / (far - near), 0
+    );*/
+    /*matrix[0] = temp / temp2;
+    matrix[1] = 0.0;
+    matrix[2] = 0.0;
+    matrix[3] = 0.0;
+    matrix[4] = 0.0;
+    matrix[5] = temp / temp3;
+    matrix[6] = 0.0;
+    matrix[7] = 0.0;
+    matrix[8] = (right + left) / temp2;
+    matrix[9] = (top + bottom) / temp3;
+    matrix[10] = (-zfar - znear) / temp4;
+    matrix[11] = -1.0;
+    matrix[12] = 0.0;
+    matrix[13] = 0.0;
+    matrix[14] = (-temp * zfar) / temp4;
+    matrix[15] = 0.0;*/
 }

@@ -105,42 +105,42 @@ private:
   double v_[3];
 };
 
-class Vector3D
+class Vector3
 {
 public:
-  Vector3D()
+  Vector3()
   {
     v_[0] = 0.0;
     v_[1] = 0.0;
     v_[2] = 0.0;
   }
-  Vector3D(double x, double y, double z)
+  Vector3(double x, double y, double z)
   { 
     v_[0] = x;
     v_[1] = y;
     v_[2] = z;
   }
-  Vector3D(float* array)
+  Vector3(float* array)
   {
     v_[0] = array[0];
     v_[1] = array[1];
     v_[2] = array[2];
   }
-  Vector3D(const Vector3D& other)
+  Vector3(const Vector3& other)
   {
     v_[0] = other.v_[0];
     v_[1] = other.v_[1];
     v_[2] = other.v_[2];
   }
 
-  Vector3D& operator =(const Vector3D& other)
+  Vector3& operator =(const Vector3& other)
   {
     v_[0] = other.v_[0];
     v_[1] = other.v_[1];
     v_[2] = other.v_[2];
     return *this;
   }
-  Vector3D& operator=(const float* array)
+  Vector3& operator=(const float* array)
   {
     v_[0] = array[0];
     v_[1] = array[1];
@@ -157,7 +157,7 @@ public:
     return v_[ idx ];
   }
 
-  double dot(const Vector3D& other) const
+  double dot(const Vector3& other) const
   {
     return v_[0]*other.v_[0] + v_[1]*other.v_[1] + v_[2]*other.v_[2];
   }
@@ -172,11 +172,11 @@ public:
   }
 
   double normalize();
-  Vector3D normalized();
+  Vector3 normalized();
 
-  Vector3D cross(const Vector3D& other) const
+  Vector3 cross(const Vector3& other) const
   {
-    return Vector3D(
+    return Vector3(
                     v_[1]*other[2] - v_[2]*other[1],
                     v_[2]*other[0] - v_[0]*other[2],
                     v_[0]*other[1] - v_[1]*other[0]);
@@ -186,52 +186,52 @@ private:
   double v_[3];
 };
 
-inline Vector3D operator*(double s, const Vector3D& v)
+inline Vector3 operator*(double s, const Vector3& v)
 {
-  return Vector3D(s*v[0], s*v[1], s*v[2]);
+  return Vector3(s*v[0], s*v[1], s*v[2]);
 }
 
-inline Vector3D operator*(const Vector3D& v, double s)
+inline Vector3 operator*(const Vector3& v, double s)
 {
   return s * v;
 }
 
-inline Vector3D operator/(const Vector3D& v, double s)
+inline Vector3 operator/(const Vector3& v, double s)
 {
-  return Vector3D(v[0] / s, v[1] / s, v[2] / s);
+  return Vector3(v[0] / s, v[1] / s, v[2] / s);
 }
 
-inline Vector3D operator +(const Vector3D& a, const Vector3D& b)
+inline Vector3 operator +(const Vector3& a, const Vector3& b)
 {
-  return Vector3D(a[0]+b[0], a[1]+b[1], a[2]+b[2]);
+  return Vector3(a[0]+b[0], a[1]+b[1], a[2]+b[2]);
 }
 
-inline Point3D operator +(const Point3D& a, const Vector3D& b)
+inline Point3D operator +(const Point3D& a, const Vector3& b)
 {
   return Point3D(a[0]+b[0], a[1]+b[1], a[2]+b[2]);
 }
 
-inline Vector3D operator -(const Point3D& a, const Point3D& b)
+inline Vector3 operator -(const Point3D& a, const Point3D& b)
 {
-  return Vector3D(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
+  return Vector3(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
 }
 
-inline Vector3D operator -(const Vector3D& a, const Vector3D& b)
+inline Vector3 operator -(const Vector3& a, const Vector3& b)
 {
-  return Vector3D(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
+  return Vector3(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
 }
 
-inline Vector3D operator -(const Vector3D& a)
+inline Vector3 operator -(const Vector3& a)
 {
-  return Vector3D(-a[0], -a[1], -a[2]);
+  return Vector3(-a[0], -a[1], -a[2]);
 }
 
-inline Point3D operator -(const Point3D& a, const Vector3D& b)
+inline Point3D operator -(const Point3D& a, const Vector3& b)
 {
   return Point3D(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
 }
 
-inline Vector3D cross(const Vector3D& a, const Vector3D& b) 
+inline Vector3 cross(const Vector3& a, const Vector3& b) 
 {
   return a.cross(b);
 }
@@ -246,12 +246,12 @@ inline std::ostream& operator <<(std::ostream& os, const Point3D& p)
   return os << "p<" << p[0] << "," << p[1] << "," << p[2] << ">";
 }
 
-inline std::ostream& operator <<(std::ostream& os, const Vector3D& v)
+inline std::ostream& operator <<(std::ostream& os, const Vector3& v)
 {
   return os << "v<" << v[0] << "," << v[1] << "," << v[2] << ">";
 }
 
-class Matrix4x4;
+class Matrix4;
 
 class Vector4D
 {
@@ -300,10 +300,10 @@ private:
   double v_[4];
 };
 
-class Matrix4x4
+class Matrix4
 {
 public:
-  Matrix4x4()
+  Matrix4()
   {
     // Construct an identity matrix
     std::fill(v_, v_+16, 0.0);
@@ -312,11 +312,30 @@ public:
     v_[10] = 1.0;
     v_[15] = 1.0;
   }
-  Matrix4x4(const Matrix4x4& other)
+    Matrix4(double v0, double v1, double v2, double v3, double v4, double v5, double v6, double v7,
+            double v8, double v9, double v10, double v11, double v12, double v13, double v14, double v15) {
+        v_[0] = v0;
+        v_[1] = v1;
+        v_[2] = v2;
+        v_[3] = v3;
+        v_[4] = v4;
+        v_[5] = v5;
+        v_[6] = v6;
+        v_[7] = v7;
+        v_[8] = v8;
+        v_[9] = v9;
+        v_[10] = v10;
+        v_[11] = v11;
+        v_[12] = v12;
+        v_[13] = v13;
+        v_[14] = v14;
+        v_[15] = v15;
+    }
+  Matrix4(const Matrix4& other)
   {
     std::copy(other.v_, other.v_+16, v_);
   }
-  Matrix4x4(const Vector4D row1, const Vector4D row2, const Vector4D row3, 
+  Matrix4(const Vector4D row1, const Vector4D row2, const Vector4D row3, 
              const Vector4D row4)
   {
     v_[0] = row1[0]; 
@@ -339,12 +358,12 @@ public:
     v_[14] = row4[2]; 
     v_[15] = row4[3]; 
   }
-  Matrix4x4(double *vals)
+  Matrix4(double *vals)
   {
     std::copy(vals, vals + 16, (double*)v_);
   }
 
-  Matrix4x4& operator=(const Matrix4x4& other)
+  Matrix4& operator=(const Matrix4& other)
   {
     std::copy(other.v_, other.v_+16, v_);
     return *this;
@@ -373,12 +392,12 @@ public:
     return getRow(row);
   }
 
-  Matrix4x4 transpose() const
+  Matrix4 transpose() const
   {
-    return Matrix4x4(getColumn(0), getColumn(1), 
+    return Matrix4(getColumn(0), getColumn(1), 
                       getColumn(2), getColumn(3));
   }
-  Matrix4x4 invert() const;
+  Matrix4 invert() const;
 
   const double *begin() const
   {
@@ -391,11 +410,24 @@ public:
 		
 private:
   double v_[16];
+
+public:
+    static Matrix4 makeXRotation(double angle);
+    static Matrix4 makeYRotation(double angle);
+    static Matrix4 makeZRotation(double angle);
+    static Matrix4 makeRotation(double pitch, double yaw, double roll);
+    static Matrix4 makeRotation(double angle, const Vector3& axis);
+
+    static Matrix4 makeTranslation(double x, double y, double z);
+
+    static Matrix4 makeScaling(double x, double y, double z);
+
+    static Matrix4 makePerspective(double fov, double aspect, double far, double near);
 };
 
-inline Matrix4x4 operator *(const Matrix4x4& a, const Matrix4x4& b)
+inline Matrix4 operator *(const Matrix4& a, const Matrix4& b)
 {
-  Matrix4x4 ret;
+  Matrix4 ret;
 
   for(size_t i = 0; i < 4; ++i) {
     Vector4D row = a.getRow(i);
@@ -409,15 +441,15 @@ inline Matrix4x4 operator *(const Matrix4x4& a, const Matrix4x4& b)
   return ret;
 }
 
-inline Vector3D operator *(const Matrix4x4& M, const Vector3D& v)
+inline Vector3 operator *(const Matrix4& M, const Vector3& v)
 {
-  return Vector3D(
+  return Vector3(
                   v[0] * M[0][0] + v[1] * M[0][1] + v[2] * M[0][2],
                   v[0] * M[1][0] + v[1] * M[1][1] + v[2] * M[1][2],
                   v[0] * M[2][0] + v[1] * M[2][1] + v[2] * M[2][2]);
 }
 
-inline Point3D operator *(const Matrix4x4& M, const Point3D& p)
+inline Point3D operator *(const Matrix4& M, const Point3D& p)
 {
   return Point3D(
                  p[0] * M[0][0] + p[1] * M[0][1] + p[2] * M[0][2] + M[0][3],
@@ -425,15 +457,15 @@ inline Point3D operator *(const Matrix4x4& M, const Point3D& p)
                  p[0] * M[2][0] + p[1] * M[2][1] + p[2] * M[2][2] + M[2][3]);
 }
 
-inline Vector3D transNorm(const Matrix4x4& M, const Vector3D& n)
+inline Vector3 transNorm(const Matrix4& M, const Vector3& n)
 {
-  return Vector3D(
+  return Vector3(
                   n[0] * M[0][0] + n[1] * M[1][0] + n[2] * M[2][0],
                   n[0] * M[0][1] + n[1] * M[1][1] + n[2] * M[2][1],
                   n[0] * M[0][2] + n[1] * M[1][2] + n[2] * M[2][2]);
 }
 
-inline std::ostream& operator <<(std::ostream& os, const Matrix4x4& M)
+inline std::ostream& operator <<(std::ostream& os, const Matrix4& M)
 {
   return os << "[" << M[0][0] << " " << M[0][1] << " " 
             << M[0][2] << " " << M[0][3] << "]" << std::endl
