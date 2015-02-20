@@ -367,6 +367,13 @@ Mesh* Mesh::makeIcosphere(int refinement, float radius) {
 
 NMesh::NMesh(unsigned int type) : type(type) { }
 
+NMesh::~NMesh() {
+    if (vertexBuffer != NULL) delete vertexBuffer;
+    if (normalBuffer != NULL) delete normalBuffer;
+    if (colourBuffer != NULL) delete colourBuffer;
+    if (indexBuffer != NULL) delete indexBuffer;
+}
+
 void NMesh::draw(QGLShaderProgram& program) {
     int error = glGetError();
     if (error != GL_NO_ERROR) {
@@ -434,6 +441,108 @@ void NMesh::draw(QGLShaderProgram& program) {
     }
 
     vertexArrayObject.release();
+}
+
+NMesh* NMesh::makeBox(float width, float height, float depth) {
+    /*
+          A***B      *+y
+         *,  **      *
+        C***D *      *  +x
+        * E,*,F      *****
+        *,  **      *
+        G***H      *+z
+    */
+    float vertices[] = {
+        // top face
+        -width / 2, height / 2, -depth / 2, // A
+        -width / 2, height / 2, depth / 2, // C
+        width / 2, height / 2, -depth / 2, // B
+        width / 2, height / 2, -depth / 2, // B
+        -width / 2, height / 2, depth / 2, // C
+        width / 2, height / 2, depth / 2, // D
+        // bottom face
+        width / 2, -height / 2, depth / 2, // H
+        -width / 2, -height / 2, depth / 2, // G
+        width / 2, -height / 2, -depth / 2, // F
+        width / 2, -height / 2, -depth / 2, // F
+        -width / 2, -height / 2, depth / 2, // G
+        -width / 2, -height / 2, -depth / 2, // E
+        // left face
+        -width / 2, height / 2, -depth / 2, // A
+        -width / 2, -height / 2, -depth / 2, // E
+        -width / 2, height / 2, depth / 2, // C
+        -width / 2, height / 2, depth / 2, // C
+        -width / 2, -height / 2, -depth / 2, // E
+        -width / 2, -height / 2, depth / 2, // G
+        // right face
+        width / 2, height / 2, depth / 2, // D
+        width / 2, -height / 2, depth / 2, // H
+        width / 2, height / 2, -depth / 2, // B
+        width / 2, height / 2, -depth / 2, // B
+        width / 2, -height / 2, depth / 2, // H
+        width / 2, -height / 2, -depth / 2, // F
+        // front face
+        -width / 2, height / 2, depth / 2, // C
+        -width / 2, -height / 2, depth / 2, // G
+        width / 2, height / 2, depth / 2, // D
+        width / 2, height / 2, depth / 2, // D
+        -width / 2, -height / 2, depth / 2, // G
+        width / 2, -height / 2, depth / 2, // H
+        // back face
+        width / 2, height / 2, -depth / 2, // B
+        width / 2, -height / 2, -depth / 2, // F
+        -width / 2, height / 2, -depth / 2, // A
+        -width / 2, height / 2, -depth / 2, // A
+        width / 2, -height / 2, -depth / 2, // F
+        -width / 2, -height / 2, -depth / 2, // E
+    };
+
+    float normals[] = {
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1
+    };
+
+    RawMesh raw;
+
+    raw.numVertices = 6 * 6;
+    raw.vertices = vertices;
+    raw.normals = normals;
+
+    return raw.construct();
 }
 
 NMesh* RawMesh::construct() const {

@@ -116,7 +116,7 @@ void Viewer::paintGL() {
     program.setUniformValue("modelView", toQt(Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
     program.setUniformValue("modelViewProjection", toQt(Matrix4::makePerspective(30, 1, 0.1, 10) * Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
 
-    Mesh* mesh = Mesh::makeCube(1);
+    /*Mesh* mesh = Mesh::makeCube(1);
     //Mesh* mesh = Mesh::makeIcosphere(1, 0.5f);
 
     cerr << "bbb" << endl;
@@ -132,7 +132,11 @@ void Viewer::paintGL() {
 
     mesh->draw(program);
 
-    delete mesh;
+    delete mesh;*/
+
+    NMesh* nmesh = NMesh::makeBox(1, 1, 1);
+    nmesh->draw(program);
+    delete nmesh;
 
     //Sphere sphere;
 
