@@ -71,7 +71,11 @@ public:
 
     void draw(QGLShaderProgram& program);
 
+    static NMesh* makeSquare(float sideLength);
+    static NMesh* makeRectangle(float width, float height);
+    static NMesh* makeCube(float sideLength);
     static NMesh* makeBox(float width, float height, float depth);
+    static NMesh* makeIcosphere(float radius, int refinement);
 
     friend struct RawMesh;
 };

@@ -443,6 +443,39 @@ void NMesh::draw(QGLShaderProgram& program) {
     vertexArrayObject.release();
 }
 
+/** Returns a square mesh with the given side length that is centered at (0, 0, 0). **/
+NMesh* NMesh::makeSquare(float sideLength) {
+    return NMesh::makeRectangle(sideLength, sideLength);
+}
+
+/** Returns a rectangular mesh with the given dimensions that is centered at (0, 0, 0). **/
+NMesh* NMesh::makeRectangle(float width, float height) {
+    float vertices[] = {
+        -width / 2, height / 2, 0,
+        width / 2, height / 2, 0,
+        -width / 2, -height / 2, 0,
+        width / 2, -height / 2, 0
+    };
+    int indices[] = {
+        0, 2, 1,
+        1, 2, 3
+    };
+
+    RawMesh raw;
+
+    raw.numVertices = 4;
+    raw.vertices = vertices;
+    raw.numIndices = 2;
+    raw.indices = indices;
+
+    return raw.construct();
+}
+
+/** Returns a cube mesh with the given side length that is centered at (0, 0, 0). **/
+NMesh* NMesh::makeCube(float sideLength) {
+    return NMesh::makeBox(sideLength, sideLength, sideLength);
+}
+
 NMesh* NMesh::makeBox(float width, float height, float depth) {
     /*
           A***B      *+y
@@ -541,6 +574,70 @@ NMesh* NMesh::makeBox(float width, float height, float depth) {
     raw.numVertices = 6 * 6;
     raw.vertices = vertices;
     raw.normals = normals;
+
+    return raw.construct();
+}
+
+NMesh* NMesh::makeIcosphere(float radius, int refinement) {
+    // TODO support parameters
+    // adapted from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
+    float t = radius * (1.0 + sqrt(5.0)) / 2.0;
+
+    float vertices[] = {
+        -1, t, 0,
+        1, t, 0,
+        -1, -t, 0,
+        1, -t, 0,
+        0, -1, t,
+        0, 1, t,
+        0, -1, -t,
+        0, 1, -t,
+        t, 0, -1,
+        t, 0, 1,
+        -t, 0, -1,
+        -t, 0, 1
+    };
+
+    float normals[36];
+    for (int i = 0; i < 36; i += 3) {
+        Vector3 normal(&vertices[i]);
+        normal.normalize();
+
+        normals[i] = normal[0];
+        normals[i + 1] = normal[1];
+        normals[i + 2] = normal[2];
+    }
+
+    int indices[] = {
+        0, 11, 5,
+        0, 5, 1,
+        0, 1, 7,
+        0, 7, 10,
+        0, 10, 11,
+        1, 5, 9,
+        5, 11, 4,
+        11, 10, 2,
+        10, 7, 6,
+        7, 1, 8,
+        3, 9, 4,
+        3, 4, 2,
+        3, 2, 6,
+        3, 6, 8,
+        3, 8, 9,
+        4, 9, 5,
+        2, 4, 11,
+        8, 6, 7,
+        9, 8, 1
+    };
+
+    RawMesh raw;
+
+    raw.numVertices = 12;
+    raw.vertices = vertices;
+    raw.normals = normals;
+
+    raw.numIndices = 20;
+    raw.indices = indices;
 
     return raw.construct();
 }

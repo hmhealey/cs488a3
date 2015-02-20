@@ -134,7 +134,8 @@ void Viewer::paintGL() {
 
     delete mesh;*/
 
-    NMesh* nmesh = NMesh::makeBox(1, 1, 1);
+    //NMesh* nmesh = NMesh::makeBox(1, 1, 1);
+    NMesh* nmesh = NMesh::makeIcosphere(0.5f, 1);
     nmesh->draw(program);
     delete nmesh;
 
