@@ -49,6 +49,7 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = Algebra.cpp \
+		AlgebraToQt.cpp \
 		AppWindow.cpp \
 		Main.cpp \
 		Material.cpp \
@@ -59,6 +60,7 @@ SOURCES       = Algebra.cpp \
 		Viewer.cpp moc_AppWindow.cpp \
 		moc_Viewer.cpp
 OBJECTS       = Algebra.o \
+		AlgebraToQt.o \
 		AppWindow.o \
 		Main.o \
 		Material.o \
@@ -197,6 +199,7 @@ DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		/usr/local/qt/5.4/clang_64/mkspecs/features/yacc.prf \
 		/usr/local/qt/5.4/clang_64/mkspecs/features/lex.prf \
 		puppeteer.pro Algebra.hpp \
+		AlgebraToQt.hpp \
 		AppWindow.hpp \
 		Material.hpp \
 		Mesh.hpp \
@@ -204,6 +207,7 @@ DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		Scene.hpp \
 		scene_lua.hpp \
 		Viewer.hpp Algebra.cpp \
+		AlgebraToQt.cpp \
 		AppWindow.cpp \
 		Main.cpp \
 		Material.cpp \
@@ -549,8 +553,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.hpp AppWindow.hpp Material.hpp Mesh.hpp Primitive.hpp Scene.hpp scene_lua.hpp Viewer.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.cpp AppWindow.cpp Main.cpp Material.cpp Mesh.cpp Primitive.cpp Scene.cpp scene_lua.cpp Viewer.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.hpp AlgebraToQt.hpp AppWindow.hpp Material.hpp Mesh.hpp Primitive.hpp Scene.hpp scene_lua.hpp Viewer.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.cpp AlgebraToQt.cpp AppWindow.cpp Main.cpp Material.cpp Mesh.cpp Primitive.cpp Scene.cpp scene_lua.cpp Viewer.cpp $(DISTDIR)/
 
 
 clean:compiler_clean 
@@ -635,6 +639,12 @@ compiler_clean: compiler_moc_header_clean
 
 Algebra.o: Algebra.cpp Algebra.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Algebra.o Algebra.cpp
+
+AlgebraToQt.o: AlgebraToQt.cpp AlgebraToQt.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix4x4 \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix4x4.h \
+		Algebra.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AlgebraToQt.o AlgebraToQt.cpp
 
 AppWindow.o: AppWindow.cpp AppWindow.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
@@ -841,7 +851,8 @@ Mesh.o: Mesh.cpp Mesh.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglfunctions.h \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglpixelbuffer.h \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglglobal.h \
-		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglversion.h
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglversion.h \
+		Algebra.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Mesh.o Mesh.cpp
 
 Primitive.o: Primitive.cpp Primitive.hpp \

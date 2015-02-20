@@ -19,6 +19,7 @@ unix:!macx {
 
 # Input
 HEADERS += Algebra.hpp \
+           AlgebraToQt.hpp \
            AppWindow.hpp \
            Material.hpp \
            Mesh.hpp \
@@ -27,6 +28,7 @@ HEADERS += Algebra.hpp \
            scene_lua.hpp \
            Viewer.hpp
 SOURCES += Algebra.cpp \
+           AlgebraToQt.cpp \
            AppWindow.cpp \ 
            Main.cpp \
            Material.cpp \
