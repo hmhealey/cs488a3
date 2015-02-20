@@ -224,52 +224,6 @@ Mesh* Mesh::makeBox(float width, float height, float depth) {
         0, 5, 4
     };
     return new Mesh(vertices, 8, indices, 36);
-        
-    /*float vertices[] = {
-        // top face
-        -width / 2, height / 2, -depth / 2, // A
-        -width / 2, height / 2, depth / 2, // C
-        width / 2, height / 2, -depth / 2, // B
-        width / 2, height / 2, -depth / 2, // B
-        -width / 2, height / 2, depth / 2, // C
-        width / 2, height / 2, depth / 2, // D
-        // bottom face
-        width / 2, -height / 2, depth / 2, // H
-        -width / 2, -height / 2, depth / 2, // G
-        width / 2, -height / 2, -depth / 2, // F
-        width / 2, -height / 2, -depth / 2, // F
-        -width / 2, -height / 2, depth / 2, // G
-        -width / 2, -height / 2, -depth / 2, // E
-        // left face
-        -width / 2, height / 2, -depth / 2, // A
-        -width / 2, -height / 2, -depth / 2, // E
-        -width / 2, height / 2, depth / 2, // C
-        -width / 2, height / 2, depth / 2, // C
-        -width / 2, -height / 2, -depth / 2, // E
-        -width / 2, -height / 2, depth / 2, // G
-        // right face
-        width / 2, height / 2, depth / 2, // D
-        width / 2, -height / 2, depth / 2, // H
-        width / 2, height / 2, -depth / 2, // B
-        width / 2, height / 2, -depth / 2, // B
-        width / 2, -height / 2, depth / 2, // H
-        width / 2, -height / 2, -depth / 2, // F
-        // front face
-        -width / 2, height / 2, depth / 2, // C
-        -width / 2, -height / 2, depth / 2, // G
-        width / 2, height / 2, depth / 2, // D
-        width / 2, height / 2, depth / 2, // D
-        -width / 2, -height / 2, depth / 2, // G
-        width / 2, -height / 2, depth / 2, // H
-        // back face
-        width / 2, height / 2, -depth / 2, // B
-        width / 2, -height / 2, -depth / 2, // F
-        -width / 2, height / 2, -depth / 2, // A
-        -width / 2, height / 2, -depth / 2, // A
-        width / 2, -height / 2, -depth / 2, // F
-        -width / 2, -height / 2, -depth / 2, // E
-    };
-    return new Mesh(vertices, 36);*/
 }
 
 Mesh* Mesh::makeIcosphere(int refinement, float radius) {
