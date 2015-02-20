@@ -120,6 +120,12 @@ public:
     v_[1] = y;
     v_[2] = z;
   }
+  Vector3D(float* array)
+  {
+    v_[0] = array[0];
+    v_[1] = array[1];
+    v_[2] = array[2];
+  }
   Vector3D(const Vector3D& other)
   {
     v_[0] = other.v_[0];
@@ -132,6 +138,13 @@ public:
     v_[0] = other.v_[0];
     v_[1] = other.v_[1];
     v_[2] = other.v_[2];
+    return *this;
+  }
+  Vector3D& operator=(const float* array)
+  {
+    v_[0] = array[0];
+    v_[1] = array[1];
+    v_[2] = array[2];
     return *this;
   }
 
@@ -159,6 +172,7 @@ public:
   }
 
   double normalize();
+  Vector3D normalized();
 
   Vector3D cross(const Vector3D& other) const
   {
@@ -172,9 +186,19 @@ private:
   double v_[3];
 };
 
-inline Vector3D operator *(double s, const Vector3D& v)
+inline Vector3D operator*(double s, const Vector3D& v)
 {
   return Vector3D(s*v[0], s*v[1], s*v[2]);
+}
+
+inline Vector3D operator*(const Vector3D& v, double s)
+{
+  return s * v;
+}
+
+inline Vector3D operator/(const Vector3D& v, double s)
+{
+  return Vector3D(v[0] / s, v[1] / s, v[2] / s);
 }
 
 inline Vector3D operator +(const Vector3D& a, const Vector3D& b)

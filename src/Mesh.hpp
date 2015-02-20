@@ -10,6 +10,7 @@ private:
     QOpenGLVertexArrayObject vertexArrayObject;
 
     QOpenGLBuffer vertexBuffer;
+    QOpenGLBuffer normalBuffer;
     QOpenGLBuffer colourBuffer;
     QOpenGLBuffer indexBuffer;
 
@@ -35,6 +36,8 @@ public:
 
     //int[] getTriangles(int[] dest) const;
     void setIndices(const int indices[], int numIndices);
+
+    void setNormals(const float normals[]);
 
     static Mesh* makeSquare(float sideLength);
     static Mesh* makeRectangle(float width, float height);

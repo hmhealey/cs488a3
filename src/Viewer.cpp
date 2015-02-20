@@ -107,9 +107,12 @@ void Viewer::paintGL() {
     if (error != GL_NO_ERROR) {
         cerr << "Viewer::paintGL - error after drawing trackball " << error << endl;
     }
+    cerr << "aaa" << endl;
 
     Mesh* mesh = Mesh::makeCube(1);
+    //Mesh* mesh = Mesh::makeIcosphere(1, 0.5f);
 
+    cerr << "bbb" << endl;
     int numColours = mesh->getNumVertices() * 4;
     float* colours = new float[numColours];
     for (int i = 0; i < numColours; i += 4) {

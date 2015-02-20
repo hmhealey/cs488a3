@@ -61,6 +61,11 @@ double Vector3D::normalize()
   return 0.0;
 }
 
+Vector3D Vector3D::normalized()
+{
+  return *this / length();
+}
+
 /*
  * Define some helper functions for matrix inversion.
  */

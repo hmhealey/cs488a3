@@ -3,6 +3,8 @@
 #include <iostream>
 #include <QtOpenGL>
 
+#include "Algebra.hpp"
+
 using namespace std;
 
 Mesh::Mesh(const float vertices[], int numVertices) : Mesh(vertices, numVertices, NULL, -1) { }
@@ -27,6 +29,9 @@ Mesh::Mesh(const float vertices[], int numVertices, const int indices[], int num
 
     colourBuffer.create();
     colourBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+
+    normalBuffer.create();
+    normalBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
 
     indexBuffer.create();
     indexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -57,6 +62,14 @@ void Mesh::draw(QGLShaderProgram& program) {
     }
     program.enableAttributeArray("vert");
     program.setAttributeBuffer("vert", GL_FLOAT, 0, 3);
+
+    // bind vertex normals
+    if (!normalBuffer.bind()) {
+        cerr << "Mesh::draw - Unable to bind normal buffer" << endl;
+        return;
+    }
+    program.enableAttributeArray("normal");
+    program.setAttributeBuffer("normal", GL_FLOAT, 0, 3);
 
     // bind vertex colours
     if (!colourBuffer.bind()) {
@@ -118,6 +131,14 @@ void Mesh::setVertices(const float vertices[], int numVertices) {
     }
     vertexBuffer.allocate(vertices, numVertices * 3 * sizeof(float));
     this->numVertices = numVertices;
+}
+
+void Mesh::setNormals(const float normals[]) {
+    if (!normalBuffer.bind()) {
+        cerr << "Mesh::setNormals - Unable to bind normal buffer" << endl;
+        return;
+    }
+    normalBuffer.allocate(normals, numVertices * 3 * sizeof(float));
 }
 
 /** Fills an array with the vertex colours of this Mesh. Assumes that the destination array has
@@ -194,43 +215,101 @@ Mesh* Mesh::makeBox(float width, float height, float depth) {
         G***H      *+z
     */
     float vertices[] = {
+        // top face
         -width / 2, height / 2, -depth / 2, // A
+        -width / 2, height / 2, depth / 2, // C
+        width / 2, height / 2, -depth / 2, // B
         width / 2, height / 2, -depth / 2, // B
         -width / 2, height / 2, depth / 2, // C
         width / 2, height / 2, depth / 2, // D
-        -width / 2, -height / 2, -depth / 2, // E
+        // bottom face
+        width / 2, -height / 2, depth / 2, // H
+        -width / 2, -height / 2, depth / 2, // G
+        width / 2, -height / 2, -depth / 2, // F
         width / 2, -height / 2, -depth / 2, // F
         -width / 2, -height / 2, depth / 2, // G
-        width / 2, -height / 2, depth / 2 // H
-    };
-    int indices[] = {
-        // top face
-        0, 2, 1,
-        1, 2, 3,
-        // bottom face
-        7, 6, 5,
-        5, 6, 4,
+        -width / 2, -height / 2, -depth / 2, // E
         // left face
-        0, 4, 2,
-        2, 4, 6,
+        -width / 2, height / 2, -depth / 2, // A
+        -width / 2, -height / 2, -depth / 2, // E
+        -width / 2, height / 2, depth / 2, // C
+        -width / 2, height / 2, depth / 2, // C
+        -width / 2, -height / 2, -depth / 2, // E
+        -width / 2, -height / 2, depth / 2, // G
         // right face
-        3, 7, 1,
-        1, 7, 5,
+        width / 2, height / 2, depth / 2, // D
+        width / 2, -height / 2, depth / 2, // H
+        width / 2, height / 2, -depth / 2, // B
+        width / 2, height / 2, -depth / 2, // B
+        width / 2, -height / 2, depth / 2, // H
+        width / 2, -height / 2, -depth / 2, // F
         // front face
-        2, 6, 3,
-        3, 6, 7,
+        -width / 2, height / 2, depth / 2, // C
+        -width / 2, -height / 2, depth / 2, // G
+        width / 2, height / 2, depth / 2, // D
+        width / 2, height / 2, depth / 2, // D
+        -width / 2, -height / 2, depth / 2, // G
+        width / 2, -height / 2, depth / 2, // H
         // back face
-        1, 5, 0,
-        0, 5, 4
+        width / 2, height / 2, -depth / 2, // B
+        width / 2, -height / 2, -depth / 2, // F
+        -width / 2, height / 2, -depth / 2, // A
+        -width / 2, height / 2, -depth / 2, // A
+        width / 2, -height / 2, -depth / 2, // F
+        -width / 2, -height / 2, -depth / 2, // E
     };
-    return new Mesh(vertices, 8, indices, 36);
+
+    float normals[] = {
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1
+    };
+    
+    Mesh* mesh = new Mesh(vertices, 36);
+    mesh->setNormals(normals);
+
+    return mesh;
 }
 
 Mesh* Mesh::makeIcosphere(int refinement, float radius) {
     // TODO support parameters
     // adapted from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
-    float t = (1.0 + sqrt(5.0)) / 2.0;
+    float t = radius * (1.0 + sqrt(5.0)) / 2.0;
 
+    int numVertices = 36;
     float vertices[] = {
         -1, t, 0,
         1, t, 0,
@@ -246,6 +325,7 @@ Mesh* Mesh::makeIcosphere(int refinement, float radius) {
         -t, 0, 1
     };
 
+    int numIndices = 60;
     int indices[] = {
         0, 11, 5,
         0, 5, 1,
@@ -268,5 +348,20 @@ Mesh* Mesh::makeIcosphere(int refinement, float radius) {
         9, 8, 1
     };
 
-    return new Mesh(vertices, sizeof(vertices), indices, sizeof(indices));
+    float normals[numVertices];
+    for (size_t i = 0; i < numVertices; i += 3) {
+        cerr << "a " << vertices[i] << " " << vertices[i + 1] << " " << vertices[i + 2] << endl;
+        Vector3D normal(&vertices[i]);
+        cerr << "aa " << normal << endl;
+        normal.normalize();
+
+        normals[i] = normal[0];
+        normals[i + 1] = normal[1];
+        normals[i + 2] = normal[2];
+    }
+
+    Mesh* mesh = new Mesh(vertices, 12, indices, 20);
+    mesh->setNormals(normals);
+
+    return mesh;
 }
