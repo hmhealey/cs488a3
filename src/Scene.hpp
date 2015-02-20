@@ -5,7 +5,8 @@
 
 #include "Algebra.hpp"
 #include "Material.hpp"
-#include "Primitive.hpp"
+
+class Primitive;
 
 class SceneNode {
 public:

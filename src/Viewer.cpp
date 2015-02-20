@@ -5,6 +5,9 @@
 #include <QtOpenGL>
 #include <QtWidgets>
 
+#include "Mesh.hpp"
+#include "Primitive.hpp"
+
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE 0x809D
 #endif
@@ -82,6 +85,10 @@ void Viewer::initializeGL() {
 }
 
 void Viewer::paintGL() {
+    int error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "Viewer::paintGL - error before painting " << error << endl;
+    }
     // Clear framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -89,8 +96,40 @@ void Viewer::paintGL() {
 
     // Draw stuff
 
+    error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "Viewer::paintGL - error after drawing trackball " << error << endl;
+    }
+
     draw_trackball_circle();
 
+    error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "Viewer::paintGL - error after drawing trackball " << error << endl;
+    }
+
+    Mesh* mesh = Mesh::makeCube(1);
+
+    int numColours = mesh->getNumVertices() * 4;
+    float* colours = new float[numColours];
+    for (int i = 0; i < numColours; i += 4) {
+        colours[i] = 1.0f;
+        colours[i + 1] = 0.0f;
+        colours[i + 2] = 0.0f;
+        colours[i + 3] = 0.0f;
+    }
+    mesh->setColours(colours);
+
+    mesh->draw(program);
+
+    delete mesh;
+
+    //Sphere sphere;
+
+    error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "Viewer::paintGL - error after painting " << error << endl;
+    }
 }
 
 void Viewer::resizeGL(int width, int height) {
@@ -149,6 +188,8 @@ void Viewer::set_colour(const QColor& col) {
 }
 
 void Viewer::draw_trackball_circle() {
+    mVertexArrayObject.bind();
+
     int current_width = width();
     int current_height = height();
 
@@ -170,6 +211,16 @@ void Viewer::draw_trackball_circle() {
     mCircleBufferObject.bind();
     program.setUniformValue(mMvpMatrixLocation, orthoMatrix * transformMatrix);
 
+    int error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "Viewer::draw_trackball_circle - error before drawing trackball " << error << endl;
+    }
+
     // Draw buffer
-    glDrawArrays(GL_LINE_LOOP, 0, 40);    
+    glDrawArrays(GL_LINE_LOOP, 0, 40);
+
+    error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "Viewer::draw_trackball_circle - error after drawing trackball " << error << endl;
+    }
 }

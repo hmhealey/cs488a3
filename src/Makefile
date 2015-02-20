@@ -49,21 +49,23 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = Algebra.cpp \
+		AppWindow.cpp \
 		Main.cpp \
 		Material.cpp \
+		Mesh.cpp \
 		Primitive.cpp \
 		Scene.cpp \
 		scene_lua.cpp \
-		AppWindow.cpp \
 		Viewer.cpp moc_AppWindow.cpp \
 		moc_Viewer.cpp
 OBJECTS       = Algebra.o \
+		AppWindow.o \
 		Main.o \
 		Material.o \
+		Mesh.o \
 		Primitive.o \
 		Scene.o \
 		scene_lua.o \
-		AppWindow.o \
 		Viewer.o \
 		moc_AppWindow.o \
 		moc_Viewer.o
@@ -195,18 +197,20 @@ DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		/usr/local/qt/5.4/clang_64/mkspecs/features/yacc.prf \
 		/usr/local/qt/5.4/clang_64/mkspecs/features/lex.prf \
 		puppeteer.pro Algebra.hpp \
+		AppWindow.hpp \
 		Material.hpp \
+		Mesh.hpp \
 		Primitive.hpp \
 		Scene.hpp \
 		scene_lua.hpp \
-		AppWindow.hpp \
 		Viewer.hpp Algebra.cpp \
+		AppWindow.cpp \
 		Main.cpp \
 		Material.cpp \
+		Mesh.cpp \
 		Primitive.cpp \
 		Scene.cpp \
 		scene_lua.cpp \
-		AppWindow.cpp \
 		Viewer.cpp
 QMAKE_TARGET  = puppeteer
 DESTDIR       = #avoid trailing-slash linebreak
@@ -545,8 +549,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.hpp Material.hpp Primitive.hpp Scene.hpp scene_lua.hpp AppWindow.hpp Viewer.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.cpp Main.cpp Material.cpp Primitive.cpp Scene.cpp scene_lua.cpp AppWindow.cpp Viewer.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.hpp AppWindow.hpp Material.hpp Mesh.hpp Primitive.hpp Scene.hpp scene_lua.hpp Viewer.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.cpp AppWindow.cpp Main.cpp Material.cpp Mesh.cpp Primitive.cpp Scene.cpp scene_lua.cpp Viewer.cpp $(DISTDIR)/
 
 
 clean:compiler_clean 
@@ -631,65 +635,6 @@ compiler_clean: compiler_moc_header_clean
 
 Algebra.o: Algebra.cpp Algebra.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Algebra.o Algebra.cpp
-
-Main.o: Main.cpp /usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QApplication \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qapplication.h \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QDesktopWidget \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qdesktopwidget.h \
-		AppWindow.hpp \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenu.h \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenuBar \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenubar.h \
-		Viewer.hpp \
-		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
-		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
-		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLWidget \
-		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qgl.h \
-		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix4x4 \
-		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix4x4.h \
-		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLBuffer \
-		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglbuffer.h \
-		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLVertexArrayObject \
-		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
-		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
-		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
-		scene_lua.hpp \
-		Scene.hpp \
-		Algebra.hpp \
-		Material.hpp \
-		Primitive.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Main.o Main.cpp
-
-Material.o: Material.cpp Material.hpp \
-		Algebra.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Material.o Material.cpp
-
-Primitive.o: Primitive.cpp Primitive.hpp \
-		Algebra.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Primitive.o Primitive.cpp
-
-Scene.o: Scene.cpp Scene.hpp \
-		Algebra.hpp \
-		Material.hpp \
-		Primitive.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Scene.o Scene.cpp
-
-scene_lua.o: scene_lua.cpp scene_lua.hpp \
-		Scene.hpp \
-		Algebra.hpp \
-		Material.hpp \
-		Primitive.hpp \
-		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lua.hpp \
-		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lua.h \
-		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/luaconf.h \
-		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lualib.h \
-		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lauxlib.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scene_lua.o scene_lua.cpp
 
 AppWindow.o: AppWindow.cpp AppWindow.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
@@ -845,6 +790,88 @@ AppWindow.o: AppWindow.cpp AppWindow.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtwidgetsversion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AppWindow.o AppWindow.cpp
 
+Main.o: Main.cpp /usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QApplication \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qapplication.h \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QDesktopWidget \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qdesktopwidget.h \
+		AppWindow.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenu.h \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenuBar \
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenubar.h \
+		Viewer.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLWidget \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qgl.h \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix4x4 \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix4x4.h \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLBuffer \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLVertexArrayObject \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
+		scene_lua.hpp \
+		Scene.hpp \
+		Algebra.hpp \
+		Material.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Main.o Main.cpp
+
+Material.o: Material.cpp Material.hpp \
+		Algebra.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Material.o Material.cpp
+
+Mesh.o: Mesh.cpp Mesh.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLBuffer \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLVertexArrayObject \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QtOpenGL \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qgl.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglcolormap.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglframebufferobject.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglfunctions.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglpixelbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglglobal.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglversion.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Mesh.o Mesh.cpp
+
+Primitive.o: Primitive.cpp Primitive.hpp \
+		Algebra.hpp \
+		Mesh.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLBuffer \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLVertexArrayObject \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Primitive.o Primitive.cpp
+
+Scene.o: Scene.cpp Scene.hpp \
+		Algebra.hpp \
+		Material.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Scene.o Scene.cpp
+
+scene_lua.o: scene_lua.cpp scene_lua.hpp \
+		Scene.hpp \
+		Algebra.hpp \
+		Material.hpp \
+		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lua.hpp \
+		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lua.h \
+		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/luaconf.h \
+		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lualib.h \
+		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lauxlib.h \
+		Primitive.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scene_lua.o scene_lua.cpp
+
 Viewer.o: Viewer.cpp Viewer.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
@@ -999,7 +1026,10 @@ Viewer.o: Viewer.cpp Viewer.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtoolbar.h \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtoolbox.h \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtoolbutton.h \
-		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtwidgetsversion.h
+		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtwidgetsversion.h \
+		Mesh.hpp \
+		Primitive.hpp \
+		Algebra.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Viewer.o Viewer.cpp
 
 moc_AppWindow.o: moc_AppWindow.cpp 

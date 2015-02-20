@@ -3,6 +3,8 @@
 
 #include "Algebra.hpp"
 
+class Mesh;
+
 class Primitive {
 public:
     virtual ~Primitive();
@@ -10,7 +12,9 @@ public:
 };
 
 class Sphere : public Primitive {
+    Mesh* mesh;
 public:
+    Sphere(double radius = 1.0);
     virtual ~Sphere();
     virtual void walk_gl(bool picking) const;
 };

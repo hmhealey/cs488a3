@@ -19,17 +19,19 @@ unix:!macx {
 
 # Input
 HEADERS += Algebra.hpp \
+           AppWindow.hpp \
            Material.hpp \
+           Mesh.hpp \
            Primitive.hpp \
            Scene.hpp \
            scene_lua.hpp \
-           AppWindow.hpp \
            Viewer.hpp
 SOURCES += Algebra.cpp \
+           AppWindow.cpp \ 
            Main.cpp \
            Material.cpp \
+           Mesh.cpp \
            Primitive.cpp \
            Scene.cpp \
            scene_lua.cpp \
-           AppWindow.cpp \ 
            Viewer.cpp

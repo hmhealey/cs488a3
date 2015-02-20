@@ -43,6 +43,7 @@
 #include <iostream>
 #include <lua.hpp>
 
+#include "Primitive.hpp"
 
 // Uncomment the following line to enable debugging messages
 // #define GRLUA_ENABLE_DEBUG
