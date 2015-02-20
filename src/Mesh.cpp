@@ -1,7 +1,6 @@
 #include "Mesh.hpp"
 
 #include <iostream>
-#include <QtOpenGL>
 
 #include "Algebra.hpp"
 
@@ -349,7 +348,7 @@ Mesh* Mesh::makeIcosphere(int refinement, float radius) {
     };
 
     float normals[numVertices];
-    for (size_t i = 0; i < numVertices; i += 3) {
+    for (int i = 0; i < numVertices; i += 3) {
         cerr << "a " << vertices[i] << " " << vertices[i + 1] << " " << vertices[i + 2] << endl;
         Vector3 normal(&vertices[i]);
         cerr << "aa " << normal << endl;
@@ -365,3 +364,134 @@ Mesh* Mesh::makeIcosphere(int refinement, float radius) {
 
     return mesh;
 }
+
+NMesh::NMesh(unsigned int type) : type(type) { }
+
+void NMesh::draw(QGLShaderProgram& program) {
+    int error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "NMesh::draw - Error at start of drawing " << error << endl;
+    }
+    
+    vertexArrayObject.bind();
+
+    // bind vertex positions
+    if (vertexBuffer != NULL) {
+        if (!vertexBuffer->bind()) {
+            cerr << "NMesh::draw - Unable to bind vertex buffer" << endl;
+            return;
+        }
+        program.enableAttributeArray("vert");
+        program.setAttributeBuffer("vert", GL_FLOAT, 0, 3);
+    }
+
+    // bind vertex normals
+    if (normalBuffer != NULL) {
+        if (!normalBuffer->bind()) {
+            cerr << "NMesh::draw - Unable to bind normal buffer" << endl;
+            return;
+        }
+        program.enableAttributeArray("normal");
+        program.setAttributeBuffer("normal", GL_FLOAT, 0, 3);
+    }
+
+    // bind vertex colours
+    if (colourBuffer != NULL) {
+        if (!colourBuffer->bind()) {
+            cerr << "NMesh::draw - Unable to bind colour buffer" << endl;
+            return;
+        }
+        program.enableAttributeArray("colour");
+        program.setAttributeBuffer("colour", GL_FLOAT, 0, 4);
+    }
+
+    if (indexBuffer != NULL) {
+        error = glGetError();
+        if (error != GL_NO_ERROR) {
+            cerr << "NMesh::draw - Error before binding " << error << endl;
+        }
+
+        if (!indexBuffer->bind()) {
+            cerr << "NMesh::draw - Unable to bind index buffer" << endl;
+            return;
+        }
+
+        error = glGetError();
+        if (error != GL_NO_ERROR) {
+            cerr << "NMesh::draw - Error before drawing " << error << endl;
+        }
+
+        glDrawElements(type, numIndices, GL_UNSIGNED_INT, NULL);
+
+        error = glGetError();
+        if (error != GL_NO_ERROR) {
+            cerr << "NMesh::draw - Error after drawing" << error << endl;
+        }
+
+        indexBuffer->release();
+    } else {
+        glDrawArrays(type, 0, numVertices);
+    }
+
+    vertexArrayObject.release();
+}
+
+NMesh* RawMesh::construct() const {
+    NMesh* mesh = new NMesh(type);
+
+    mesh->vertexArrayObject.bind();
+
+    if (vertices != NULL && numVertices > 0) {
+        mesh->vertexBuffer = new QOpenGLBuffer();
+        mesh->numVertices = numVertices;
+
+        mesh->vertexBuffer->create();
+        mesh->vertexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
+
+        mesh->vertexBuffer->bind();
+        mesh->vertexBuffer->allocate(vertices, numVertices * 3 * sizeof(float));
+    } else {
+        cerr << "RawMesh::construct - Unable to construct Mesh with no vertices" << endl;
+        return NULL;
+    }
+
+    if (normals != NULL) {
+        mesh->normalBuffer = new QOpenGLBuffer();
+
+        mesh->normalBuffer->create();
+        mesh->normalBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
+
+        mesh->normalBuffer->bind();
+        mesh->normalBuffer->allocate(normals, numVertices * 3 * sizeof(float));
+    }
+
+    if (colours != NULL) {
+        mesh->colourBuffer = new QOpenGLBuffer();
+
+        mesh->colourBuffer->create();
+        mesh->colourBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
+
+        mesh->colourBuffer->bind();
+        mesh->colourBuffer->allocate(colours, numVertices * 4 * sizeof(float));
+    }
+
+    if (indices != NULL) {
+        if (numIndices > 0) {
+            mesh->indexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+            mesh->numIndices = numIndices;
+
+            mesh->indexBuffer->create();
+            mesh->indexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
+
+            mesh->indexBuffer->bind();
+            mesh->indexBuffer->allocate(indices, numIndices * 3 * sizeof(float));
+        } else {
+            cerr << "RawMesh::construct - Indexed drawing specified without an index count of <= 0" << endl;
+        }
+    }
+
+    mesh->vertexArrayObject.release();
+
+    return mesh;
+}
+
