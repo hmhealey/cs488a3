@@ -419,6 +419,7 @@ struct Matrix4
 
     static Matrix4 makeScaling(double x, double y, double z);
 
+    static Matrix4 makeOrtho(double left, double right, double bottom, double top, double near, double far);
     static Matrix4 makePerspective(double fov, double aspect, double far, double near);
 };
 

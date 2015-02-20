@@ -222,10 +222,18 @@ Matrix4 Matrix4::makeScaling(double x, double y, double z) {
     );
 }
 
+Matrix4 Matrix4::makeOrtho(double left, double right, double bottom, double top, double near, double far) {
+    // formula from http://en.wikipedia.org/wiki/Orthographic_projection#Geometry
+    return Matrix4(
+        2 / (right - left), 0,                  0,                  -(right + left) / (right - left),
+        0,                  2 / (top - bottom), 0,                  -(top + bottom) / (top - bottom),
+        0,                  0,                  -2 / (far - near),  (far + near) / (far - near),
+        0,                  0,                  0,                  1
+    );
+}
+
 Matrix4 Matrix4::makePerspective(double fov, double aspect, double near, double far) {
     // formula adapted from http://www.songho.ca/opengl/gl_projectionmatrix.html
-    //double top = near * tan(fov / 2);
-    //double right = aspect * top;
     double right = near * tan(fov / 2);
     double top = aspect * right;
 
@@ -235,37 +243,4 @@ Matrix4 Matrix4::makePerspective(double fov, double aspect, double near, double 
         0,              0,          (far + near) / (near - far),    (2 * far * near) / (near - far),
         0,              0,          -1,                             0
     );
-    /*float temp, temp2, temp3, temp4;
-    temp = 2.0 * znear;
-    temp2 = right - left;
-    temp3 = top - bottom;
-    temp4 = zfar - znear;
-    return Matrix4(
-        near / right,   0,          0,                                  0,
-        0,              near / top, 0,                                  0,
-        0,              0,          (far + near) / (near - far),        -1,
-        0,              0,          (2.0 * near * far) / (near - far),  0
-    );*/
-    /*return Matrix4(
-        (2 * near) / (right - left),        0,                                  0,                                  0,
-        0,                                  (2 * near) / (top - bottom),        0,                                  0,
-        (right + left) / (right - left),    (top + bottom) / (top - bottom),    (-far - near) / (far - near),       -1,
-        0,                                  0,                                  -(2.0 * near * far) / (far - near), 0
-    );*/
-    /*matrix[0] = temp / temp2;
-    matrix[1] = 0.0;
-    matrix[2] = 0.0;
-    matrix[3] = 0.0;
-    matrix[4] = 0.0;
-    matrix[5] = temp / temp3;
-    matrix[6] = 0.0;
-    matrix[7] = 0.0;
-    matrix[8] = (right + left) / temp2;
-    matrix[9] = (top + bottom) / temp3;
-    matrix[10] = (-zfar - znear) / temp4;
-    matrix[11] = -1.0;
-    matrix[12] = 0.0;
-    matrix[13] = 0.0;
-    matrix[14] = (-temp * zfar) / temp4;
-    matrix[15] = 0.0;*/
 }
