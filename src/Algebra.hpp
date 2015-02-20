@@ -251,7 +251,7 @@ inline std::ostream& operator <<(std::ostream& os, const Vector3& v)
   return os << "v<" << v[0] << "," << v[1] << "," << v[2] << ">";
 }
 
-class Matrix4;
+struct Matrix4;
 
 class Vector4D
 {
@@ -300,9 +300,10 @@ private:
   double v_[4];
 };
 
-class Matrix4
+struct Matrix4
 {
-public:
+  double values[16];
+  double* v_ = values;
   Matrix4()
   {
     // Construct an identity matrix
@@ -408,10 +409,6 @@ public:
     return begin() + 16;
   }
 		
-private:
-  double v_[16];
-
-public:
     static Matrix4 makeXRotation(double angle);
     static Matrix4 makeYRotation(double angle);
     static Matrix4 makeZRotation(double angle);
