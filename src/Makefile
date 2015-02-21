@@ -57,6 +57,7 @@ SOURCES       = Algebra.cpp \
 		Primitive.cpp \
 		Scene.cpp \
 		scene_lua.cpp \
+		Shader.cpp \
 		Viewer.cpp moc_AppWindow.cpp \
 		moc_Viewer.cpp
 OBJECTS       = Algebra.o \
@@ -68,6 +69,7 @@ OBJECTS       = Algebra.o \
 		Primitive.o \
 		Scene.o \
 		scene_lua.o \
+		Shader.o \
 		Viewer.o \
 		moc_AppWindow.o \
 		moc_Viewer.o
@@ -206,6 +208,7 @@ DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		Primitive.hpp \
 		Scene.hpp \
 		scene_lua.hpp \
+		Shader.hpp \
 		Viewer.hpp Algebra.cpp \
 		AlgebraToQt.cpp \
 		AppWindow.cpp \
@@ -215,6 +218,7 @@ DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		Primitive.cpp \
 		Scene.cpp \
 		scene_lua.cpp \
+		Shader.cpp \
 		Viewer.cpp
 QMAKE_TARGET  = puppeteer
 DESTDIR       = #avoid trailing-slash linebreak
@@ -553,8 +557,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.hpp AlgebraToQt.hpp AppWindow.hpp Material.hpp Mesh.hpp Primitive.hpp Scene.hpp scene_lua.hpp Viewer.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.cpp AlgebraToQt.cpp AppWindow.cpp Main.cpp Material.cpp Mesh.cpp Primitive.cpp Scene.cpp scene_lua.cpp Viewer.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.hpp AlgebraToQt.hpp AppWindow.hpp Material.hpp Mesh.hpp Primitive.hpp Scene.hpp scene_lua.hpp Shader.hpp Viewer.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.cpp AlgebraToQt.cpp AppWindow.cpp Main.cpp Material.cpp Mesh.cpp Primitive.cpp Scene.cpp scene_lua.cpp Shader.cpp Viewer.cpp $(DISTDIR)/
 
 
 clean:compiler_clean 
@@ -856,19 +860,35 @@ Mesh.o: Mesh.cpp Mesh.hpp \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Mesh.o Mesh.cpp
 
 Primitive.o: Primitive.cpp Primitive.hpp \
-		Algebra.hpp \
-		Mesh.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
+		Algebra.hpp \
+		Mesh.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLBuffer \
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglbuffer.h \
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QOpenGLVertexArrayObject \
-		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QtOpenGL \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qgl.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglcolormap.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglframebufferobject.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglfunctions.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglpixelbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglglobal.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglversion.h \
+		Viewer.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLWidget \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix4x4 \
+		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix4x4.h \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Primitive.o Primitive.cpp
 
 Scene.o: Scene.cpp Scene.hpp \
 		Algebra.hpp \
-		Material.hpp
+		Material.hpp \
+		Primitive.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Scene.o Scene.cpp
 
 scene_lua.o: scene_lua.cpp scene_lua.hpp \
@@ -882,6 +902,13 @@ scene_lua.o: scene_lua.cpp scene_lua.hpp \
 		/usr/local/Cellar/lua51/5.1.5/include/lua-5.1/lauxlib.h \
 		Primitive.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scene_lua.o scene_lua.cpp
+
+Shader.o: Shader.cpp Shader.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
+		Algebra.hpp \
+		AlgebraToQt.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Shader.o Shader.cpp
 
 Viewer.o: Viewer.cpp Viewer.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
@@ -1039,8 +1066,9 @@ Viewer.o: Viewer.cpp Viewer.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtoolbutton.h \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtwidgetsversion.h \
 		Mesh.hpp \
-		Primitive.hpp \
-		Algebra.hpp
+		Algebra.hpp \
+		AlgebraToQt.hpp \
+		Primitive.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Viewer.o Viewer.cpp
 
 moc_AppWindow.o: moc_AppWindow.cpp 

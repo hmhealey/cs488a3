@@ -26,6 +26,7 @@ HEADERS += Algebra.hpp \
            Primitive.hpp \
            Scene.hpp \
            scene_lua.hpp \
+           Shader.hpp \
            Viewer.hpp
 SOURCES += Algebra.cpp \
            AlgebraToQt.cpp \
@@ -36,4 +37,5 @@ SOURCES += Algebra.cpp \
            Primitive.cpp \
            Scene.cpp \
            scene_lua.cpp \
+           Shader.cpp \
            Viewer.cpp
