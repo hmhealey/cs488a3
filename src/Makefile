@@ -607,6 +607,8 @@ moc_AppWindow.cpp: /usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
+		Shader.hpp \
+		Algebra.hpp \
 		AppWindow.hpp
 	/usr/local/qt/5.4/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/usr/local/qt/5.4/clang_64/mkspecs/macx-clang -I/Users/harrison/Dropbox/School/cs488/A3/src -I/usr/local/include/lua5.1 -I/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Headers -F/usr/local/qt/5.4/clang_64/lib AppWindow.hpp -o moc_AppWindow.cpp
 
@@ -622,6 +624,8 @@ moc_Viewer.cpp: /usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Hea
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
+		Shader.hpp \
+		Algebra.hpp \
 		Viewer.hpp
 	/usr/local/qt/5.4/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/usr/local/qt/5.4/clang_64/mkspecs/macx-clang -I/Users/harrison/Dropbox/School/cs488/A3/src -I/usr/local/include/lua5.1 -I/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Headers -F/usr/local/qt/5.4/clang_64/lib Viewer.hpp -o moc_Viewer.cpp
 
@@ -672,6 +676,8 @@ AppWindow.o: AppWindow.cpp AppWindow.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
+		Shader.hpp \
+		Algebra.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QtWidgets \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/complexwidgets.h \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/itemviews.h \
@@ -830,9 +836,10 @@ Main.o: Main.cpp /usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/H
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
+		Shader.hpp \
+		Algebra.hpp \
 		scene_lua.hpp \
 		Scene.hpp \
-		Algebra.hpp \
 		Material.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Main.o Main.cpp
 
@@ -856,7 +863,8 @@ Mesh.o: Mesh.cpp Mesh.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglpixelbuffer.h \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglglobal.h \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglversion.h \
-		Algebra.hpp
+		Algebra.hpp \
+		Shader.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Mesh.o Mesh.cpp
 
 Primitive.o: Primitive.cpp Primitive.hpp \
@@ -882,7 +890,8 @@ Primitive.o: Primitive.cpp Primitive.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/QMatrix4x4 \
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qmatrix4x4.h \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
-		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
+		Shader.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Primitive.o Primitive.cpp
 
 Scene.o: Scene.cpp Scene.hpp \
@@ -907,6 +916,17 @@ Shader.o: Shader.cpp Shader.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLShaderProgram \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglshaderprogram.h \
 		Algebra.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QFile \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qfile.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QtOpenGL \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qgl.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglcolormap.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglframebufferobject.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglfunctions.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglpixelbuffer.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglglobal.h \
+		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qtopenglversion.h \
 		AlgebraToQt.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Shader.o Shader.cpp
 
@@ -923,6 +943,8 @@ Viewer.o: Viewer.cpp Viewer.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Versions/5/Headers/qopenglvertexarrayobject.h \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QtGlobal \
 		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qglobal.h \
+		Shader.hpp \
+		Algebra.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QtOpenGL \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglbuffer.h \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglcolormap.h \
@@ -1066,7 +1088,6 @@ Viewer.o: Viewer.cpp Viewer.hpp \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtoolbutton.h \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qtwidgetsversion.h \
 		Mesh.hpp \
-		Algebra.hpp \
 		AlgebraToQt.hpp \
 		Primitive.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Viewer.o Viewer.cpp
