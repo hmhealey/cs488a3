@@ -398,7 +398,7 @@ struct Matrix4
     return Matrix4(getColumn(0), getColumn(1), 
                       getColumn(2), getColumn(3));
   }
-  Matrix4 invert() const;
+  Matrix4 inverse() const;
 
   const double *begin() const
   {

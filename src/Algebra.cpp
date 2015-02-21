@@ -101,7 +101,7 @@ static void submultrow(Matrix4& a, size_t dest, size_t src, double fac)
  * from a different school.  I taught that course too, so I figured it
  * would be okay.
  */
-Matrix4 Matrix4::invert() const
+Matrix4 Matrix4::inverse() const
 {
   /* The algorithm is plain old Gauss-Jordan elimination 
      with partial pivoting. */
