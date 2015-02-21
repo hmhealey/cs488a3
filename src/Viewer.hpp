@@ -8,8 +8,14 @@
 #include <QOpenGLVertexArrayObject>
 #include <QtGlobal>
 
+#include "Shader.hpp"
+
+struct Matrix4;
+
 class Viewer : public QGLWidget {
     Q_OBJECT
+
+    Shader shader;
 
 public:
     Viewer(const QGLFormat& format, QWidget *parent = 0);
@@ -17,6 +23,11 @@ public:
     
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
+
+    QGLShaderProgram& getProgram();
+
+    const Matrix4& getViewTransform() const;
+    const Matrix4& getInverseViewTransform() const;
 
     // If you want to render a new frame, call do not call paintGL(),
     // instead, call update() to ensure that the view gets a paint 

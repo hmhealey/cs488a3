@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Algebra.hpp"
+#include "Shader.hpp"
 
 using namespace std;
 
@@ -13,6 +14,10 @@ Mesh::~Mesh() {
     if (normalBuffer != NULL) delete normalBuffer;
     if (colourBuffer != NULL) delete colourBuffer;
     if (indexBuffer != NULL) delete indexBuffer;
+}
+
+void Mesh::draw(Shader& shader) {
+    draw(shader.getProgram());
 }
 
 void Mesh::draw(QGLShaderProgram& program) {

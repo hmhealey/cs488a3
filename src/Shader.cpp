@@ -1,6 +1,7 @@
 #include "Shader.hpp"
 
 #include <QFile>
+#include <QtOpenGL>
 #include <sstream>
 
 #include "AlgebraToQt.hpp"
@@ -14,25 +15,29 @@ static const char* SHADER_PATHS[] = {
     NULL
 };
 
-Shader::Shader(const char* name) {
+Shader::Shader() { }
+
+void Shader::initialize(const char* name) {
     for (int i = 0; SHADER_PATHS[i] != NULL; i++) {
         string vertexShaderPath = generateShaderPath(SHADER_PATHS[i], name, "vert");
         string fragmentShaderPath = generateShaderPath(SHADER_PATHS[i], name, "frag");
 
         if (QFile(vertexShaderPath.c_str()).exists() && QFile(fragmentShaderPath.c_str()).exists()) {
             if (!program.addShaderFromSourceFile(QGLShader::Vertex, vertexShaderPath.c_str())) {
-                cerr << "Shader::Shader - Unable to load vertex shader from " << vertexShaderPath << endl;
+                cerr << "Shader::Shader - Unable to load vertex shader from " << vertexShaderPath  << " : " << program.log().toStdString() << endl;
                 return;
             }
 
             if (!program.addShaderFromSourceFile(QGLShader::Fragment, fragmentShaderPath.c_str())) {
-                cerr << "Shader::Shader - Unable to load fragment shader from " << fragmentShaderPath << endl;
+                cerr << "Shader::Shader - Unable to load fragment shader from " << fragmentShaderPath << " : " << program.log().toStdString() << endl;
                 return;
             }
 
             if (!program.link()) {
                 cerr << "Shader::Shader - Unable to link shaders" << endl;
             }
+
+            return;
         }
     }
 

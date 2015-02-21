@@ -8,6 +8,8 @@
 
 #include "Algebra.hpp"
 
+class Shader;
+
 class Mesh {
     QOpenGLVertexArrayObject vertexArrayObject;
 
@@ -29,6 +31,7 @@ public:
     void release();
 
     void draw(QGLShaderProgram& program);
+    void draw(Shader& shader);
 
     static Mesh* makeSquare(float sideLength, const Colour& colour);
     static Mesh* makeRectangle(float width, float height, const Colour& colour);

@@ -27,6 +27,22 @@ QSize Viewer::sizeHint() const {
     return QSize(300, 300);
 }
 
+QGLShaderProgram& Viewer::getProgram() {
+    return program;
+}
+
+const Matrix4& Viewer::getViewTransform() const {
+    // this probably isnt the best way to do this, but we're not saving a reference to view anyway
+    static Matrix4 view = Matrix4::makeTranslation(0, 0, -2);
+    return view;
+}
+
+const Matrix4& Viewer::getInverseViewTransform() const {
+    // this probably isnt the best way to do this, but we're not saving a reference to view anyway
+    static Matrix4 inverseView = Matrix4::makeTranslation(0, 0, -2).inverse();
+    return inverseView;
+}
+
 void Viewer::initializeGL() {
     QGLFormat glFormat = QGLWidget::format();
     if (!glFormat.sampleBuffers()) {
@@ -37,7 +53,9 @@ void Viewer::initializeGL() {
     glShadeModel(GL_SMOOTH);
     glClearColor(0.4, 0.4, 0.4, 0.0);
     glEnable(GL_DEPTH_TEST);
-    
+
+    shader.initialize("shader");
+
     if (!program.addShaderFromSourceFile(QGLShader::Vertex, "shader.vert")) {
         cerr << "Cannot load vertex shader." << endl;
         return;
@@ -90,6 +108,7 @@ void Viewer::paintGL() {
     if (error != GL_NO_ERROR) {
         cerr << "Viewer::paintGL - error before painting " << error << endl;
     }
+
     // Clear framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -114,11 +133,13 @@ void Viewer::paintGL() {
     angle += M_PI / 240;
 
     program.setUniformValue("modelView", toQt(Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
+    //program.setUniformValue("modelView", toQt(getViewTransform() * Matrix4::makeRotation(0, angle, 0)));
     program.setUniformValue("modelViewProjection", toQt(Matrix4::makePerspective(30, 1, 0.1, 10) * Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
 
     Mesh* mesh = Mesh::makeBox(1, 1, 1, Colour(0.5, 0.0, 1.0));
-    //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1);
-    mesh->draw(program);
+    //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1, Colour(0.5, 0.0, 1.0));
+    //mesh->draw(program);
+    mesh->draw(shader);
     delete mesh;
 
     //Sphere sphere;

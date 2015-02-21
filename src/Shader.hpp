@@ -13,8 +13,10 @@ class Shader {
     Matrix4 perspective;
 
 public:
-    Shader(const char* name);
+    Shader();
     Shader(const Shader& other);
+
+    void initialize(const char* name);
 
     void use();
 
