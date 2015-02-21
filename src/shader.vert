@@ -11,7 +11,7 @@ out vec3 fVert;
 out vec3 fNormal;
 out vec4 fColour;
 
-void main() {	
+void main() {
     gl_Position = modelViewProjection * vec4(vert, 1.0);
 
     fVert = vec3(modelView * vec4(vert, 1.0));
