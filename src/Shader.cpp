@@ -93,6 +93,7 @@ void Shader::setProjectionMatrix(const Matrix4& projection) {
 }
 
 void Shader::setMaterial(const PhongMaterial& material) {
+    program.setUniformValue("materialAmbient", 1.0, 1.0, 1.0, 1.0);
     program.setUniformValue("materialDiffuse", material.kd[0], material.kd[1], material.kd[2], 1.0);
     program.setUniformValue("materialSpecular", material.ks[0], material.ks[1], material.ks[2], 1.0);
     program.setUniformValue("materialShininess", (GLfloat) material.shininess);

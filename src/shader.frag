@@ -1,5 +1,6 @@
 #version 330
 
+uniform vec4 materialAmbient;
 uniform vec4 materialSpecular;
 uniform vec4 materialDiffuse;
 uniform float materialShininess;
@@ -11,11 +12,11 @@ in vec3 fNormal;
 out vec4 fragColour;
 
 void main() {
-    // TODO these should be set as uniforms or something
-    vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);
-    vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
-    vec4 specular = vec4(0.4, 0.4, 0.4, 1.0);
-    float shininess = 32;
+    // TODO set the light components as uniforms r something
+    vec4 ambient = materialAmbient * vec4(0.1, 0.1, 0.1, 1.0);
+    vec4 diffuse = materialDiffuse * vec4(0.8, 0.8, 0.8, 1.0);
+    vec4 specular = materialSpecular * vec4(0.4, 0.4, 0.4, 1.0);
+    float shininess = materialShininess;
 
     // for simplicity, the light is just located at the eyepoint
     vec3 L = normalize(vec3(0, 0, 4) - fVert);
