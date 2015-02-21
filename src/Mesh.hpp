@@ -16,7 +16,6 @@ class Mesh {
     int numVertices;
     QOpenGLBuffer* vertexBuffer = NULL;
     QOpenGLBuffer* normalBuffer = NULL;
-    QOpenGLBuffer* colourBuffer = NULL;
 
     int numIndices;
     QOpenGLBuffer* indexBuffer = NULL;
@@ -32,11 +31,11 @@ public:
 
     void draw(Shader& shader);
 
-    static Mesh* makeSquare(float sideLength, const Colour& colour);
-    static Mesh* makeRectangle(float width, float height, const Colour& colour);
-    static Mesh* makeCube(float sideLength, const Colour& colour);
-    static Mesh* makeBox(float width, float height, float depth, const Colour& colour);
-    static Mesh* makeIcosphere(float radius, int refinement, const Colour& colour);
+    static Mesh* makeSquare(float sideLength);
+    static Mesh* makeRectangle(float width, float height);
+    static Mesh* makeCube(float sideLength);
+    static Mesh* makeBox(float width, float height, float depth);
+    static Mesh* makeIcosphere(float radius, int refinement);
 
     friend struct RawMesh;
 };
@@ -46,8 +45,6 @@ struct RawMesh {
     float* vertices = NULL;
 
     float* normals = NULL;
-
-    float* colours = NULL;
 
     int numIndices = 0;
     int* indices = NULL;

@@ -12,7 +12,6 @@ Mesh::Mesh(unsigned int type) : type(type) { }
 Mesh::~Mesh() {
     if (vertexBuffer != NULL) delete vertexBuffer;
     if (normalBuffer != NULL) delete normalBuffer;
-    if (colourBuffer != NULL) delete colourBuffer;
     if (indexBuffer != NULL) delete indexBuffer;
 }
 
@@ -36,11 +35,6 @@ void Mesh::draw(Shader& shader) {
     if (normalBuffer != NULL) {
         shader.bindBuffer("normal", *normalBuffer);
     }
-
-    // bind vertex colours
-    /*if (colourBuffer != NULL) {
-        shader.bindBuffer("colour", *colourBuffer, GL_FLOAT, 4);
-    }*/
 
     if (indexBuffer != NULL) {
         error = glGetError();
@@ -77,26 +71,18 @@ void Mesh::draw(Shader& shader) {
 }
 
 /** Returns a square mesh with the given side length that is centered at (0, 0, 0). **/
-Mesh* Mesh::makeSquare(float sideLength, const Colour& colour) {
-    return Mesh::makeRectangle(sideLength, sideLength, colour);
+Mesh* Mesh::makeSquare(float sideLength) {
+    return Mesh::makeRectangle(sideLength, sideLength);
 }
 
 /** Returns a rectangular mesh with the given dimensions that is centered at (0, 0, 0). **/
-Mesh* Mesh::makeRectangle(float width, float height, const Colour& colour) {
+Mesh* Mesh::makeRectangle(float width, float height) {
     float vertices[] = {
         -width / 2, height / 2, 0,
         width / 2, height / 2, 0,
         -width / 2, -height / 2, 0,
         width / 2, -height / 2, 0
     };
-
-    float colours[4 * 4];
-    for (int i = 0; i < 16; i += 4) {
-        colours[i] = colour[0];
-        colours[i + 1] = colour[1];
-        colours[i + 2] = colour[2];
-        colours[i + 3] = 1.0;
-    }
 
     int indices[] = {
         0, 2, 1,
@@ -107,7 +93,6 @@ Mesh* Mesh::makeRectangle(float width, float height, const Colour& colour) {
 
     raw.numVertices = 4;
     raw.vertices = vertices;
-    raw.colours = colours;
     raw.numIndices = 2;
     raw.indices = indices;
 
@@ -115,11 +100,11 @@ Mesh* Mesh::makeRectangle(float width, float height, const Colour& colour) {
 }
 
 /** Returns a cube mesh with the given side length that is centered at (0, 0, 0). **/
-Mesh* Mesh::makeCube(float sideLength, const Colour& colour) {
-    return Mesh::makeBox(sideLength, sideLength, sideLength, colour);
+Mesh* Mesh::makeCube(float sideLength) {
+    return Mesh::makeBox(sideLength, sideLength, sideLength);
 }
 
-Mesh* Mesh::makeBox(float width, float height, float depth, const Colour& colour) {
+Mesh* Mesh::makeBox(float width, float height, float depth) {
     /*
           A***B      *+y
          *,  **      *
@@ -173,14 +158,6 @@ Mesh* Mesh::makeBox(float width, float height, float depth, const Colour& colour
         -width / 2, -height / 2, -depth / 2, // E
     };
 
-    float colours[36 * 4];
-    for (int i = 0; i < 36 * 4; i += 4) {
-        colours[i] = colour[0];
-        colours[i + 1] = colour[1];
-        colours[i + 2] = colour[2];
-        colours[i + 3] = 1.0;
-    }
-
     float normals[] = {
         0, 1, 0,
         0, 1, 0,
@@ -225,12 +202,11 @@ Mesh* Mesh::makeBox(float width, float height, float depth, const Colour& colour
     raw.numVertices = 6 * 6;
     raw.vertices = vertices;
     raw.normals = normals;
-    raw.colours = colours;
 
     return raw.construct();
 }
 
-Mesh* Mesh::makeIcosphere(float radius, int refinement, const Colour& colour) {
+Mesh* Mesh::makeIcosphere(float radius, int refinement) {
     // TODO support parameters
     // adapted from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
     float t = radius * (1.0 + sqrt(5.0)) / 2.0;
@@ -249,14 +225,6 @@ Mesh* Mesh::makeIcosphere(float radius, int refinement, const Colour& colour) {
         -t, 0, -1,
         -t, 0, 1
     };
-
-    float colours[12 * 4];
-    for (int i = 0; i < 12 * 4; i += 4) {
-        colours[i] = colour[0];
-        colours[i + 1] = colour[1];
-        colours[i + 2] = colour[2];
-        colours[i + 3] = 1.0;
-    }
 
     float normals[12 * 3];
     for (int i = 0; i < 12 * 3; i += 3) {
@@ -296,7 +264,6 @@ Mesh* Mesh::makeIcosphere(float radius, int refinement, const Colour& colour) {
     raw.numVertices = 12;
     raw.vertices = vertices;
     raw.normals = normals;
-    raw.colours = colours;
 
     raw.numIndices = 20;
     raw.indices = indices;
@@ -331,16 +298,6 @@ Mesh* RawMesh::construct() const {
 
         mesh->normalBuffer->bind();
         mesh->normalBuffer->allocate(normals, numVertices * 3 * sizeof(float));
-    }
-
-    if (colours != NULL) {
-        mesh->colourBuffer = new QOpenGLBuffer();
-
-        mesh->colourBuffer->create();
-        mesh->colourBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
-
-        mesh->colourBuffer->bind();
-        mesh->colourBuffer->allocate(colours, numVertices * 4 * sizeof(float));
     }
 
     if (indices != NULL) {

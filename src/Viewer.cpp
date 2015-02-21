@@ -125,8 +125,8 @@ void Viewer::paintGL() {
 
     shader.use();
 
-    Mesh* mesh = Mesh::makeBox(1, 1, 1, Colour(0.5, 0.0, 1.0));
-    //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1, Colour(0.5, 0.0, 1.0));
+    Mesh* mesh = Mesh::makeBox(1, 1, 1);
+    //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1);
     mesh->draw(shader);
     delete mesh;
 
