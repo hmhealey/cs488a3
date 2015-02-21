@@ -1,5 +1,6 @@
 #include "Mesh.hpp"
 
+#include <cmath>
 #include <iostream>
 
 #include "Algebra.hpp"
@@ -205,6 +206,51 @@ Mesh* Mesh::makeBox(float width, float height, float depth) {
 
     return raw.construct();
 }
+
+Mesh* Mesh::makeUvSphere(float radius, int horizontalResolution, int verticalResolution) {
+    // from http://stackoverflow.com/questions/4081898/procedurally-generate-a-sphere-mesh
+    // from http://stackoverflow.com/questions/7946770/calculating-a-sphere-in-opengl
+    int numVertices = horizontalResolution * (verticalResolution + 1);
+    float vertices[numVertices * 3];
+    float normals[numVertices * 3];
+
+    for (int i = 0; i < verticalResolution + 1; i++) {
+        for (int j = 0; j < horizontalResolution; j++) {
+            float const x = cos(2 * M_PI * j / horizontalResolution) * sin(M_PI * i / verticalResolution);
+            float const y = sin(-M_PI / 2 + M_PI * i / verticalResolution);
+            float const z = sin(2 * M_PI * j / horizontalResolution) * sin(M_PI * i / verticalResolution);
+
+            int vertex = (i * horizontalResolution + j) * 3;
+            vertices[vertex] = radius * x;
+            vertices[vertex + 1] = radius * y;
+            vertices[vertex + 2] = radius * z;
+
+            normals[vertex] = x;
+            normals[vertex + 1] = y;
+            normals[vertex + 2] = z;
+        }
+    }
+
+    int numIndices = horizontalResolution * verticalResolution * 2;
+    int indices[numIndices];
+    for (int i = 0; i < numIndices / 2; i++) {
+        indices[2 * i] = i;
+        indices[2 * i + 1] = i + horizontalResolution;
+    }
+
+    RawMesh raw;
+    raw.type = GL_TRIANGLE_STRIP;
+
+    raw.numVertices = numVertices;
+    raw.vertices = vertices;
+    raw.normals = normals;
+
+    raw.numIndices = numIndices;
+    raw.indices = indices;
+
+    return raw.construct();
+}
+
 
 Mesh* Mesh::makeIcosphere(float radius, int refinement) {
     // TODO support parameters

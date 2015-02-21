@@ -23,8 +23,18 @@ class Sphere : public Primitive {
     Mesh* mesh;
 
 public:
-    Sphere(double radius = 1.0);
+    Sphere(double radius = 0.5);
     virtual ~Sphere();
+
+    virtual void draw(Shader& shader, bool picking = false) const;
+};
+
+class Cube : public Primitive {
+    Mesh* mesh;
+
+public:
+    Cube(double size = 1.0);
+    virtual ~Cube();
 
     virtual void draw(Shader& shader, bool picking = false) const;
 };

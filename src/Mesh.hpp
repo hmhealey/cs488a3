@@ -35,6 +35,7 @@ public:
     static Mesh* makeRectangle(float width, float height);
     static Mesh* makeCube(float sideLength);
     static Mesh* makeBox(float width, float height, float depth);
+    static Mesh* makeUvSphere(float radium, int horizontalResolution, int verticalResolution);
     static Mesh* makeIcosphere(float radius, int refinement);
 
     friend struct RawMesh;
