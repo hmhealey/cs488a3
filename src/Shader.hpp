@@ -6,6 +6,7 @@
 
 #include "Algebra.hpp"
 
+struct PhongMaterial;
 class QOpenGLBuffer;
 
 class Shader {
@@ -38,8 +39,7 @@ public:
     const Matrix4& getProjectionMatrix() const;
     void setProjectionMatrix(const Matrix4& projection);
 
-    const Colour& getColour() const;
-    void setColour(const Colour& colour);
+    void setMaterial(const PhongMaterial& material);
 
 private:
     static std::string generateShaderPath(const char* path, const char* name, const char* type);

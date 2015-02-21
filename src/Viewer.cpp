@@ -6,8 +6,9 @@
 #include <QtOpenGL>
 #include <QtWidgets>
 
-#include "Mesh.hpp"
 #include "AlgebraToQt.hpp"
+#include "Material.hpp"
+#include "Mesh.hpp"
 #include "Primitive.hpp"
 
 #ifndef GL_MULTISAMPLE
@@ -121,13 +122,12 @@ void Viewer::paintGL() {
     shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
     shader.setProjectionMatrix(Matrix4::makePerspective(30, 1, 0.1, 10));
 
-    shader.setColour(Colour(0.5, 0.0, 1.0));
-
     shader.use();
 
+    PhongMaterial material(Colour(0.2, 0.2, 0.2), Colour(0.8, 0.8, 0.8), 64);
     Mesh* mesh = Mesh::makeBox(1, 1, 1);
     //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1);
-    mesh->draw(shader);
+    mesh->draw(shader, material);
     delete mesh;
 
     //Sphere sphere;

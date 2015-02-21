@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Algebra.hpp"
+#include "Material.hpp"
 #include "Shader.hpp"
 
 using namespace std;
@@ -15,7 +16,7 @@ Mesh::~Mesh() {
     if (indexBuffer != NULL) delete indexBuffer;
 }
 
-void Mesh::draw(Shader& shader) {
+void Mesh::draw(Shader& shader, const PhongMaterial& material) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -35,6 +36,9 @@ void Mesh::draw(Shader& shader) {
     if (normalBuffer != NULL) {
         shader.bindBuffer("normal", *normalBuffer);
     }
+
+    // apply material
+    shader.setMaterial(material);
 
     if (indexBuffer != NULL) {
         error = glGetError();

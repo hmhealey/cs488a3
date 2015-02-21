@@ -1,5 +1,8 @@
 #version 330
 
+uniform vec4 materialSpecular;
+uniform vec4 materialDiffuse;
+uniform float materialShininess;
 uniform vec4 colour;
 
 in vec3 fVert;

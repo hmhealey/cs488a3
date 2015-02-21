@@ -3,27 +3,16 @@
 
 #include "Algebra.hpp"
 
-class Material {
-public:
-    virtual ~Material();
-    virtual void apply_gl() const = 0;
+struct Material { };
 
-protected:
-    Material() { }
-};
+struct PhongMaterial : public Material {
+    Colour kd;
+    Colour ks;
 
-class PhongMaterial : public Material {
-public:
+    double shininess;
+
     PhongMaterial(const Colour& kd, const Colour& ks, double shininess);
-    virtual ~PhongMaterial();
-
-    virtual void apply_gl() const;
-
-private:
-    Colour m_kd;
-    Colour m_ks;
-
-    double m_shininess;
+    PhongMaterial(const PhongMaterial& other);
 };
 
 #endif
