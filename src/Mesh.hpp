@@ -8,7 +8,6 @@
 
 #include "Algebra.hpp"
 
-struct PhongMaterial;
 class Shader;
 
 class Mesh {
@@ -30,7 +29,7 @@ public:
     void bind();
     void release();
 
-    void draw(Shader& shader, const PhongMaterial& material);
+    void draw(Shader& shader);
 
     static Mesh* makeSquare(float sideLength);
     static Mesh* makeRectangle(float width, float height);

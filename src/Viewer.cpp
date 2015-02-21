@@ -127,8 +127,8 @@ void Viewer::paintGL() {
     PhongMaterial material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
     Mesh* mesh = Mesh::makeBox(1, 1, 1);
     //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1);
-    // TODO remove material from mesh
-    mesh->draw(shader, material);
+    shader.setMaterial(material);
+    mesh->draw(shader);
     delete mesh;
 
     //Sphere sphere;
