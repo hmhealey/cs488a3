@@ -113,7 +113,6 @@ void Viewer::paintGL() {
     if (error != GL_NO_ERROR) {
         cerr << "Viewer::paintGL - error after drawing trackball " << error << endl;
     }
-    cerr << "aaa" << endl;
 
     static double angle = 0;
     angle += M_PI / 240;
