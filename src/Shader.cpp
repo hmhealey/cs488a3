@@ -1,7 +1,7 @@
 #include "Shader.hpp"
 
 #include <QFile>
-#include <QtOpenGL>
+#include <QOpenGLBuffer>
 #include <sstream>
 
 #include "AlgebraToQt.hpp"
@@ -48,7 +48,17 @@ void Shader::use() {
     program.bind();
 
     program.setUniformValue("modelView", toQt(view.inverse() * model));
-    program.setUniformValue("modelViewProjection", toQt(perspective * view.inverse() * model));
+    program.setUniformValue("modelViewProjection", toQt(projection * view.inverse() * model));
+}
+
+void Shader::bindBuffer(const char* name, QOpenGLBuffer& buffer, unsigned int type, int components) {
+    if (buffer.bind()) {
+        program.enableAttributeArray(name);
+        program.setAttributeArray(name, type, 0, components);
+    } else {
+        cerr << "Shader::bindBuffer - Unable to bind buffer to " << name << endl;
+        return;
+    }
 }
 
 QGLShaderProgram& Shader::getProgram() {
@@ -71,12 +81,12 @@ void Shader::setViewMatrix(const Matrix4& view) {
     this->view = view;
 }
 
-const Matrix4& Shader::getPerspectiveMatrix() const {
-    return perspective;
+const Matrix4& Shader::getProjectionMatrix() const {
+    return projection;
 }
 
-void Shader::setPerspectiveMatrix(const Matrix4& perspective) {
-    this->perspective = perspective;
+void Shader::setProjectionMatrix(const Matrix4& projection) {
+    this->projection = projection;
 }
 
 string Shader::generateShaderPath(const char* basePath, const char* name, const char* type) {

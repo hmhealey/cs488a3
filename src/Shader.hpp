@@ -2,15 +2,18 @@
 #define __SHADER_HPP__
 
 #include <QGLShaderProgram>
+#include <QtOpenGL>
 
 #include "Algebra.hpp"
+
+class QOpenGLBuffer;
 
 class Shader {
     QGLShaderProgram program;
 
     Matrix4 model;
     Matrix4 view;
-    Matrix4 perspective;
+    Matrix4 projection;
 
 public:
     Shader();
@@ -20,6 +23,8 @@ public:
 
     void use();
 
+    void bindBuffer(const char* name, QOpenGLBuffer& buffer, unsigned int type = GL_FLOAT, int components = 3);
+
     QGLShaderProgram& getProgram();
 
     const Matrix4& getModelMatrix() const;
@@ -28,8 +33,8 @@ public:
     const Matrix4& getViewMatrix() const;
     void setViewMatrix(const Matrix4& view);
 
-    const Matrix4& getPerspectiveMatrix() const;
-    void setPerspectiveMatrix(const Matrix4& perspective);
+    const Matrix4& getProjectionMatrix() const;
+    void setProjectionMatrix(const Matrix4& projection);
 
 private:
     static std::string generateShaderPath(const char* path, const char* name, const char* type);

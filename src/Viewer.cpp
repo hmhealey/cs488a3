@@ -117,9 +117,11 @@ void Viewer::paintGL() {
     static double angle = 0;
     angle += M_PI / 240;
 
-    shader.getProgram().setUniformValue("modelView", toQt(Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
-    //shader.getProgram().setUniformValue("modelView", toQt(getViewTransform() * Matrix4::makeRotation(0, angle, 0)));
-    shader.getProgram().setUniformValue("modelViewProjection", toQt(Matrix4::makePerspective(30, 1, 0.1, 10) * Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
+    shader.setModelMatrix(Matrix4::makeRotation(0, angle, 0));
+    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
+    shader.setProjectionMatrix(Matrix4::makePerspective(30, 1, 0.1, 10));
+
+    shader.use();
 
     Mesh* mesh = Mesh::makeBox(1, 1, 1, Colour(0.5, 0.0, 1.0));
     //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1, Colour(0.5, 0.0, 1.0));
