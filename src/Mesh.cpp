@@ -17,10 +17,6 @@ Mesh::~Mesh() {
 }
 
 void Mesh::draw(Shader& shader) {
-    draw(shader.getProgram());
-}
-
-void Mesh::draw(QGLShaderProgram& program) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -33,32 +29,17 @@ void Mesh::draw(QGLShaderProgram& program) {
 
     // bind vertex positions
     if (vertexBuffer != NULL) {
-        if (!vertexBuffer->bind()) {
-            cerr << "Mesh::draw - Unable to bind vertex buffer" << endl;
-            return;
-        }
-        program.enableAttributeArray("vert");
-        program.setAttributeBuffer("vert", GL_FLOAT, 0, 3);
+        shader.bindBuffer("vert", *vertexBuffer);
     }
 
     // bind vertex normals
     if (normalBuffer != NULL) {
-        if (!normalBuffer->bind()) {
-            cerr << "Mesh::draw - Unable to bind normal buffer" << endl;
-            return;
-        }
-        program.enableAttributeArray("normal");
-        program.setAttributeBuffer("normal", GL_FLOAT, 0, 3);
+        shader.bindBuffer("normal", *normalBuffer);
     }
 
     // bind vertex colours
     if (colourBuffer != NULL) {
-        if (!colourBuffer->bind()) {
-            cerr << "Mesh::draw - Unable to bind colour buffer" << endl;
-            return;
-        }
-        program.enableAttributeArray("colour");
-        program.setAttributeBuffer("colour", GL_FLOAT, 0, 4);
+        shader.bindBuffer("colour", *colourBuffer, GL_FLOAT, 4);
     }
 
     if (indexBuffer != NULL) {

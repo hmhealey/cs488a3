@@ -30,7 +30,6 @@ public:
     void bind();
     void release();
 
-    void draw(QGLShaderProgram& program);
     void draw(Shader& shader);
 
     static Mesh* makeSquare(float sideLength, const Colour& colour);
