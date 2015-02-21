@@ -85,18 +85,27 @@ void Mesh::draw(QGLShaderProgram& program) {
 }
 
 /** Returns a square mesh with the given side length that is centered at (0, 0, 0). **/
-Mesh* Mesh::makeSquare(float sideLength) {
-    return Mesh::makeRectangle(sideLength, sideLength);
+Mesh* Mesh::makeSquare(float sideLength, const Colour& colour) {
+    return Mesh::makeRectangle(sideLength, sideLength, colour);
 }
 
 /** Returns a rectangular mesh with the given dimensions that is centered at (0, 0, 0). **/
-Mesh* Mesh::makeRectangle(float width, float height) {
+Mesh* Mesh::makeRectangle(float width, float height, const Colour& colour) {
     float vertices[] = {
         -width / 2, height / 2, 0,
         width / 2, height / 2, 0,
         -width / 2, -height / 2, 0,
         width / 2, -height / 2, 0
     };
+
+    float colours[4 * 4];
+    for (int i = 0; i < 16; i++) {
+        colours[i] = colour[0];
+        colours[i + 1] = colour[1];
+        colours[i + 2] = colour[2];
+        colours[i + 3] = 1.0;
+    }
+
     int indices[] = {
         0, 2, 1,
         1, 2, 3
@@ -106,6 +115,7 @@ Mesh* Mesh::makeRectangle(float width, float height) {
 
     raw.numVertices = 4;
     raw.vertices = vertices;
+    raw.colours = colours;
     raw.numIndices = 2;
     raw.indices = indices;
 
@@ -113,11 +123,11 @@ Mesh* Mesh::makeRectangle(float width, float height) {
 }
 
 /** Returns a cube mesh with the given side length that is centered at (0, 0, 0). **/
-Mesh* Mesh::makeCube(float sideLength) {
-    return Mesh::makeBox(sideLength, sideLength, sideLength);
+Mesh* Mesh::makeCube(float sideLength, const Colour& colour) {
+    return Mesh::makeBox(sideLength, sideLength, sideLength, colour);
 }
 
-Mesh* Mesh::makeBox(float width, float height, float depth) {
+Mesh* Mesh::makeBox(float width, float height, float depth, const Colour& colour) {
     /*
           A***B      *+y
          *,  **      *
@@ -171,6 +181,14 @@ Mesh* Mesh::makeBox(float width, float height, float depth) {
         -width / 2, -height / 2, -depth / 2, // E
     };
 
+    float colours[36 * 4];
+    for (int i = 0; i < 36 * 4; i += 4) {
+        colours[i] = colour[0];
+        colours[i + 1] = colour[1];
+        colours[i + 2] = colour[2];
+        colours[i + 3] = 1.0;
+    }
+
     float normals[] = {
         0, 1, 0,
         0, 1, 0,
@@ -215,11 +233,12 @@ Mesh* Mesh::makeBox(float width, float height, float depth) {
     raw.numVertices = 6 * 6;
     raw.vertices = vertices;
     raw.normals = normals;
+    raw.colours = colours;
 
     return raw.construct();
 }
 
-Mesh* Mesh::makeIcosphere(float radius, int refinement) {
+Mesh* Mesh::makeIcosphere(float radius, int refinement, const Colour& colour) {
     // TODO support parameters
     // adapted from http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
     float t = radius * (1.0 + sqrt(5.0)) / 2.0;
@@ -239,8 +258,16 @@ Mesh* Mesh::makeIcosphere(float radius, int refinement) {
         -t, 0, 1
     };
 
-    float normals[36];
-    for (int i = 0; i < 36; i += 3) {
+    float colours[12 * 4];
+    for (int i = 0; i < 12 * 4; i++) {
+        colours[i] = colour[0];
+        colours[i + 1] = colour[1];
+        colours[i + 2] = colour[2];
+        colours[i + 3] = 1.0;
+    }
+
+    float normals[12 * 3];
+    for (int i = 0; i < 12 * 3; i += 3) {
         Vector3 normal(&vertices[i]);
         normal.normalize();
 
@@ -276,6 +303,7 @@ Mesh* Mesh::makeIcosphere(float radius, int refinement) {
     raw.numVertices = 12;
     raw.vertices = vertices;
     raw.normals = normals;
+    raw.colours = colours;
 
     raw.numIndices = 20;
     raw.indices = indices;

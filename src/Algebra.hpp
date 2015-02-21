@@ -502,6 +502,19 @@ public:
     return *this;
   }
 
+    double operator[](int i) const {
+        switch(i) {
+        case 0:
+            return r_;
+        case 1:
+            return g_;
+        case 2:
+            return b_;
+        default:
+            return -1;
+        }
+    }
+
   double R() const 
   { 
     return r_;

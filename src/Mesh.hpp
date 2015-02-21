@@ -6,6 +6,8 @@
 #include <QOpenGLVertexArrayObject>
 #include <QtOpenGL>
 
+#include "Algebra.hpp"
+
 struct RawMesh;
 
 class Mesh {
@@ -30,11 +32,11 @@ public:
 
     void draw(QGLShaderProgram& program);
 
-    static Mesh* makeSquare(float sideLength);
-    static Mesh* makeRectangle(float width, float height);
-    static Mesh* makeCube(float sideLength);
-    static Mesh* makeBox(float width, float height, float depth);
-    static Mesh* makeIcosphere(float radius, int refinement);
+    static Mesh* makeSquare(float sideLength, const Colour& colour);
+    static Mesh* makeRectangle(float width, float height, const Colour& colour);
+    static Mesh* makeCube(float sideLength, const Colour& colour);
+    static Mesh* makeBox(float width, float height, float depth, const Colour& colour);
+    static Mesh* makeIcosphere(float radius, int refinement, const Colour& colour);
 
     friend struct RawMesh;
 };
@@ -53,7 +55,6 @@ struct RawMesh {
     unsigned int type = GL_TRIANGLES;
 
     Mesh *construct() const;
-
 };
 
 #endif

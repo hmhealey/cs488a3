@@ -2,13 +2,14 @@
 
 in vec3 fVert;
 in vec3 fNormal;
+in vec4 fColour;
 
-out vec4 fColor;
+out vec4 fragColour;
 
 void main() {
     // TODO these should be set as uniforms or something
     vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);
-    vec4 diffuse = vec4(1.0, 0.0, 0.0, 1.0);
+    vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
     vec4 specular = vec4(0.4, 0.4, 0.4, 1.0);
     float shininess = 32;
 
@@ -30,5 +31,5 @@ void main() {
     vec4 iSpec = specular * pow(max(dot(R, E), 0.0), 0.3 * shininess);
     iSpec = clamp(iSpec, 0.0, 1.0);
 
-    fColor = iAmbient + iDiff + iSpec;
+    fragColour = iAmbient + fColour * iDiff + iSpec;
 }
