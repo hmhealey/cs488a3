@@ -16,6 +16,9 @@ Mesh::~Mesh() {
 }
 
 void Mesh::draw(QGLShaderProgram& program) {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
     int error = glGetError();
     if (error != GL_NO_ERROR) {
         cerr << "Mesh::draw - Error at start of drawing " << error << endl;
@@ -82,6 +85,9 @@ void Mesh::draw(QGLShaderProgram& program) {
     }
 
     vertexArrayObject.release();
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 }
 
 /** Returns a square mesh with the given side length that is centered at (0, 0, 0). **/
@@ -99,7 +105,7 @@ Mesh* Mesh::makeRectangle(float width, float height, const Colour& colour) {
     };
 
     float colours[4 * 4];
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 16; i += 4) {
         colours[i] = colour[0];
         colours[i + 1] = colour[1];
         colours[i + 2] = colour[2];
@@ -259,7 +265,7 @@ Mesh* Mesh::makeIcosphere(float radius, int refinement, const Colour& colour) {
     };
 
     float colours[12 * 4];
-    for (int i = 0; i < 12 * 4; i++) {
+    for (int i = 0; i < 12 * 4; i += 4) {
         colours[i] = colour[0];
         colours[i + 1] = colour[1];
         colours[i + 2] = colour[2];
@@ -294,6 +300,7 @@ Mesh* Mesh::makeIcosphere(float radius, int refinement, const Colour& colour) {
         3, 8, 9,
         4, 9, 5,
         2, 4, 11,
+        6, 2, 10,
         8, 6, 7,
         9, 8, 1
     };
