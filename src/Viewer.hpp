@@ -1,7 +1,6 @@
 #ifndef CS488_VIEWER_HPP
 #define CS488_VIEWER_HPP
 
-#include <QGLShaderProgram>
 #include <QGLWidget>
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
@@ -10,6 +9,7 @@
 
 #include "Shader.hpp"
 
+class QGLShaderProgram;
 struct Matrix4;
 
 class Viewer : public QGLWidget {
@@ -70,7 +70,6 @@ private:
 
     QMatrix4x4 mPerspMatrix;
     QMatrix4x4 mTransformMatrix;
-    QGLShaderProgram program;
 };
 
 #endif

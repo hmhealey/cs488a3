@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <QGLShaderProgram>
 #include <QtOpenGL>
 #include <QtWidgets>
 
@@ -28,7 +29,7 @@ QSize Viewer::sizeHint() const {
 }
 
 QGLShaderProgram& Viewer::getProgram() {
-    return program;
+    return shader.getProgram();
 }
 
 const Matrix4& Viewer::getViewTransform() const {
@@ -56,21 +57,6 @@ void Viewer::initializeGL() {
 
     shader.initialize("shader");
 
-    if (!program.addShaderFromSourceFile(QGLShader::Vertex, "shader.vert")) {
-        cerr << "Cannot load vertex shader." << endl;
-        return;
-    }
-
-    if (!program.addShaderFromSourceFile(QGLShader::Fragment, "shader.frag")) {
-        cerr << "Cannot load fragment shader." << endl;
-        return;
-    }
-
-    if ( !program.link() ) {
-        cerr << "Cannot link shaders." << endl;
-        return;
-    }
-
     float circleData[120];
 
     double radius = width() < height() ? (float)width() * 0.25 : (float)height() * 0.25;
@@ -94,13 +80,13 @@ void Viewer::initializeGL() {
 
     mCircleBufferObject.allocate(circleData, 40 * 3 * sizeof(float));
 
-    program.bind();
+    shader.getProgram().bind();
 
-    program.enableAttributeArray("vert");
-    program.setAttributeBuffer("vert", GL_FLOAT, 0, 3);
+    shader.getProgram().enableAttributeArray("vert");
+    shader.getProgram().setAttributeBuffer("vert", GL_FLOAT, 0, 3);
 
-    mMvpMatrixLocation = program.uniformLocation("modelViewProjection");
-    mColorLocation = program.uniformLocation("frag_color");
+    mMvpMatrixLocation = shader.getProgram().uniformLocation("modelViewProjection");
+    mColorLocation = shader.getProgram().uniformLocation("frag_color");
 }
 
 void Viewer::paintGL() {
@@ -132,13 +118,13 @@ void Viewer::paintGL() {
     static double angle = 0;
     angle += M_PI / 240;
 
-    program.setUniformValue("modelView", toQt(Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
-    //program.setUniformValue("modelView", toQt(getViewTransform() * Matrix4::makeRotation(0, angle, 0)));
-    program.setUniformValue("modelViewProjection", toQt(Matrix4::makePerspective(30, 1, 0.1, 10) * Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
+    shader.getProgram().setUniformValue("modelView", toQt(Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
+    //shader.getProgram().setUniformValue("modelView", toQt(getViewTransform() * Matrix4::makeRotation(0, angle, 0)));
+    shader.getProgram().setUniformValue("modelViewProjection", toQt(Matrix4::makePerspective(30, 1, 0.1, 10) * Matrix4::makeTranslation(0, 0, -2) * Matrix4::makeRotation(0, angle, 0)));
 
     Mesh* mesh = Mesh::makeBox(1, 1, 1, Colour(0.5, 0.0, 1.0));
     //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1, Colour(0.5, 0.0, 1.0));
-    //mesh->draw(program);
+    //mesh->draw(shader.getProgram());
     mesh->draw(shader);
     delete mesh;
 
@@ -204,7 +190,7 @@ void Viewer::scaleWorld(float x, float y, float z) {
 }
 
 void Viewer::set_colour(const QColor& col) {
-    program.setUniformValue(mColorLocation, col.red(), col.green(), col.blue());
+    shader.getProgram().setUniformValue(mColorLocation, col.red(), col.green(), col.blue());
 }
 
 void Viewer::draw_trackball_circle() {
@@ -227,7 +213,7 @@ void Viewer::draw_trackball_circle() {
 
     // Bind buffer object
     mCircleBufferObject.bind();
-    program.setUniformValue(mMvpMatrixLocation, toQt(orthoMatrix * transformMatrix));
+    shader.getProgram().setUniformValue(mMvpMatrixLocation, toQt(orthoMatrix * transformMatrix));
 
     int error = glGetError();
     if (error != GL_NO_ERROR) {
