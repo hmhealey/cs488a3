@@ -25,6 +25,7 @@ public:
     QSize sizeHint() const;
 
     QGLShaderProgram& getProgram();
+    Shader& getShader();
 
     const Matrix4& getViewTransform() const;
     const Matrix4& getInverseViewTransform() const;

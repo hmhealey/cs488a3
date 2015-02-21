@@ -32,6 +32,9 @@ QSize Viewer::sizeHint() const {
 QGLShaderProgram& Viewer::getProgram() {
     return shader.getProgram();
 }
+Shader& Viewer::getShader() {
+    return shader;
+}
 
 const Matrix4& Viewer::getViewTransform() const {
     // this probably isnt the best way to do this, but we're not saving a reference to view anyway
@@ -125,13 +128,9 @@ void Viewer::paintGL() {
     shader.use();
 
     PhongMaterial material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
-    Mesh* mesh = Mesh::makeBox(1, 1, 1);
-    //Mesh* mesh = Mesh::makeIcosphere(0.5f, 1);
-    shader.setMaterial(material);
-    mesh->draw(shader);
-    delete mesh;
-
-    //Sphere sphere;
+    Sphere sphere;
+    sphere.setMaterial(material);
+    sphere.draw(shader);
 
     error = glGetError();
     if (error != GL_NO_ERROR) {
