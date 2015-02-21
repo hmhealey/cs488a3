@@ -8,8 +8,6 @@
 
 #include "Algebra.hpp"
 
-struct RawMesh;
-
 class Mesh {
     QOpenGLVertexArrayObject vertexArrayObject;
 
