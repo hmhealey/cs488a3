@@ -15,7 +15,7 @@ static const char* SHADER_PATHS[] = {
     NULL
 };
 
-Shader::Shader() { }
+Shader::Shader() : colour(Colour(1.0, 1.0, 1.0)) { }
 
 void Shader::initialize(const char* name) {
     for (int i = 0; SHADER_PATHS[i] != NULL; i++) {
@@ -49,6 +49,8 @@ void Shader::use() {
 
     program.setUniformValue("modelView", toQt(view.inverse() * model));
     program.setUniformValue("modelViewProjection", toQt(projection * view.inverse() * model));
+
+    program.setUniformValue("colour", colour[0], colour[1], colour[2], 1.0);
 }
 
 void Shader::bindBuffer(const char* name, QOpenGLBuffer& buffer, unsigned int type, int components) {
@@ -87,6 +89,14 @@ const Matrix4& Shader::getProjectionMatrix() const {
 
 void Shader::setProjectionMatrix(const Matrix4& projection) {
     this->projection = projection;
+}
+
+const Colour& Shader::getColour() const {
+    return colour;
+}
+
+void Shader::setColour(const Colour& colour) {
+    this->colour = colour;
 }
 
 string Shader::generateShaderPath(const char* basePath, const char* name, const char* type) {

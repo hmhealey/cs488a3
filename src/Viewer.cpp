@@ -121,6 +121,8 @@ void Viewer::paintGL() {
     shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
     shader.setProjectionMatrix(Matrix4::makePerspective(30, 1, 0.1, 10));
 
+    shader.setColour(Colour(0.5, 0.0, 1.0));
+
     shader.use();
 
     Mesh* mesh = Mesh::makeBox(1, 1, 1, Colour(0.5, 0.0, 1.0));

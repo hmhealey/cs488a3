@@ -38,9 +38,9 @@ void Mesh::draw(Shader& shader) {
     }
 
     // bind vertex colours
-    if (colourBuffer != NULL) {
+    /*if (colourBuffer != NULL) {
         shader.bindBuffer("colour", *colourBuffer, GL_FLOAT, 4);
-    }
+    }*/
 
     if (indexBuffer != NULL) {
         error = glGetError();

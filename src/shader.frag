@@ -1,8 +1,9 @@
 #version 330
 
+uniform vec4 colour;
+
 in vec3 fVert;
 in vec3 fNormal;
-in vec4 fColour;
 
 out vec4 fragColour;
 
@@ -31,5 +32,5 @@ void main() {
     vec4 iSpec = specular * pow(max(dot(R, E), 0.0), 0.3 * shininess);
     iSpec = clamp(iSpec, 0.0, 1.0);
 
-    fragColour = iAmbient + fColour * iDiff + iSpec;
+    fragColour = iAmbient + colour * iDiff + iSpec;
 }

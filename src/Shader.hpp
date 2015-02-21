@@ -15,6 +15,8 @@ class Shader {
     Matrix4 view;
     Matrix4 projection;
 
+    Colour colour;
+
 public:
     Shader();
     Shader(const Shader& other);
@@ -35,6 +37,9 @@ public:
 
     const Matrix4& getProjectionMatrix() const;
     void setProjectionMatrix(const Matrix4& projection);
+
+    const Colour& getColour() const;
+    void setColour(const Colour& colour);
 
 private:
     static std::string generateShaderPath(const char* path, const char* name, const char* type);
