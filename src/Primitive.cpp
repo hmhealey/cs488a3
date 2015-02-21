@@ -13,7 +13,7 @@ void Primitive::setMaterial(const PhongMaterial& material) {
     this->material = material;
 }
 
-Sphere::Sphere(double radius) : mesh(Mesh::makeUvSphere(radius, 24, 24)) { } 
+Sphere::Sphere(double radius) : mesh(Mesh::makeUvSphere(radius, 64, 64)) { } 
 
 Sphere::~Sphere() {
     delete mesh;
