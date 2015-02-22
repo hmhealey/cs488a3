@@ -9,14 +9,17 @@
 
 #include "Shader.hpp"
 
-class QGLShaderProgram;
 struct Matrix4;
+class QGLShaderProgram;
+class SceneNode;
 
 class Viewer : public QGLWidget {
     Q_OBJECT
 
     Shader shader;
     Shader interfaceShader;
+
+    SceneNode* scene = NULL;
 
 public:
     Viewer(const QGLFormat& format, QWidget *parent = 0);
@@ -27,10 +30,9 @@ public:
 
     Shader& getShader();
 
-    // If you want to render a new frame, call do not call paintGL(),
-    // instead, call update() to ensure that the view gets a paint 
-    // event.
-  
+    const SceneNode* getScene() const;
+    void setScene(SceneNode* scene);
+
 protected:
 
     // Events we implement

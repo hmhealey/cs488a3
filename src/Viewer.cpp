@@ -10,6 +10,7 @@
 #include "Material.hpp"
 #include "Mesh.hpp"
 #include "Primitive.hpp"
+#include "Scene.hpp"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE 0x809D
@@ -31,6 +32,14 @@ QSize Viewer::sizeHint() const {
 
 Shader& Viewer::getShader() {
     return shader;
+}
+
+const SceneNode* Viewer::getScene() const {
+    return scene;
+}
+
+void Viewer::setScene(SceneNode* scene) {
+    this->scene = scene;
 }
 
 void Viewer::initializeGL() {

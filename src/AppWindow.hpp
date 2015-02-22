@@ -12,8 +12,13 @@
 class AppWindow : public QMainWindow {
     Q_OBJECT
 
+    SceneNode* scene = NULL;
+
 public:
     AppWindow();
+    ~AppWindow();
+
+    void loadScene(const std::string& path);
 
 private:
     void createActions();

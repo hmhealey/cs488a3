@@ -3,6 +3,11 @@
 #include <iostream>
 #include <QtWidgets>
 
+#include "Scene.hpp"
+#include "scene_lua.hpp"
+
+using namespace std;
+
 AppWindow::AppWindow() {
     setWindowTitle("488 Assignment Two");
 
@@ -19,6 +24,12 @@ AppWindow::AppWindow() {
 
     createActions();
     createMenu();
+}
+
+AppWindow::~AppWindow() {
+    if (scene != NULL) {
+        delete scene;
+    }
 }
 
 void AppWindow::createActions() {
@@ -45,3 +56,16 @@ void AppWindow::createMenu() {
     }
 }
 
+void AppWindow::loadScene(const string& path) {
+    // get rid of the old scene
+    if (scene != NULL) {
+        delete scene;
+    }
+
+    scene = import_lua(path);
+    viewer->setScene(scene);
+
+    if (scene == NULL) {
+        cerr << "AppWindow::loadScene - Could not open " << path << endl;
+    }
+}
