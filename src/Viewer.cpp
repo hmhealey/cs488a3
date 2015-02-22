@@ -52,6 +52,9 @@ void Viewer::initializeGL() {
     shader.initialize("phong");
     interfaceShader.initialize("flat");
 
+    // sets the camera position
+    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 20));
+
     // construct circle for trackball
     float circleData[120];
 
@@ -95,26 +98,38 @@ void Viewer::paintGL() {
     // Clear framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    static double angle = 0;
-    angle += M_PI / 240;
-
-    shader.setModelMatrix(Matrix4::makeTranslation(0, -0.5, 0) * Matrix4::makeRotation(0, angle, 0));
+    // set the camera for our test shapes (remove me when attempting to draw the scene)
     shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
 
-    shader.use();
-
+    // construct the shapes for drawing
     PhongMaterial material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
     //FlatMaterial material(Colour(1.0, 0.0, 0.0));
+
     Sphere sphere;
     sphere.setMaterial(material);
-    sphere.draw(shader);
-
-    shader.setModelMatrix(Matrix4::makeTranslation(0, -1, 0) * Matrix4::makeRotation(0, angle, 0));
-    shader.use();
 
     Cube cube;
     cube.setMaterial(material);
+
+    // hackish rotation so we can test stuff
+    static double angle = 0;
+    angle += M_PI / 240;
+
+    // draw sphere (i should really make it so that you don't need to call use to update the shader's uniforms)
+    shader.setModelMatrix(Matrix4::makeTranslation(0, 0, 0) * Matrix4::makeRotation(0, angle, 0) * Matrix4::makeScaling(1, 1, 2));
+    shader.use();
+
+    sphere.draw(shader);
+
+    // draw cube
+    shader.setModelMatrix(Matrix4::makeTranslation(0, -1, 0) * Matrix4::makeRotation(0, angle, 0) * Matrix4::makeScaling(2, 1, 1));
+    shader.use();
+
     cube.draw(shader);
+
+    /*if (scene != NULL) {
+        scene->walk_gl(shader, Matrix4(), false);
+    }*/
 
     draw_trackball_circle();
 

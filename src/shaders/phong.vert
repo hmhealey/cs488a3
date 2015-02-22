@@ -13,5 +13,5 @@ void main() {
     gl_Position = modelViewProjection * vec4(vert, 1.0);
 
     fVert = vec3(modelView * vec4(vert, 1.0));
-    fNormal = normalize(mat3(transpose(inverse(modelView))) * normal); // this may not work once non-uniform scaling is applied
+    fNormal = normalize(mat3(transpose(inverse(modelView))) * normal);
 }
