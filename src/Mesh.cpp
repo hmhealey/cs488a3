@@ -20,11 +20,6 @@ void Mesh::draw(Shader& shader) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    int error = glGetError();
-    if (error != GL_NO_ERROR) {
-        cerr << "Mesh::draw - Error at start of drawing " << error << endl;
-    }
-    
     vertexArrayObject.bind();
 
     // bind vertex positions
@@ -38,27 +33,12 @@ void Mesh::draw(Shader& shader) {
     }
 
     if (indexBuffer != NULL) {
-        error = glGetError();
-        if (error != GL_NO_ERROR) {
-            cerr << "Mesh::draw - Error before binding " << error << endl;
-        }
-
         if (!indexBuffer->bind()) {
             cerr << "Mesh::draw - Unable to bind index buffer" << endl;
             return;
         }
 
-        error = glGetError();
-        if (error != GL_NO_ERROR) {
-            cerr << "Mesh::draw - Error before drawing " << error << endl;
-        }
-
         glDrawElements(type, numIndices, GL_UNSIGNED_INT, NULL);
-
-        error = glGetError();
-        if (error != GL_NO_ERROR) {
-            cerr << "Mesh::draw - Error after drawing" << error << endl;
-        }
 
         indexBuffer->release();
     } else {
