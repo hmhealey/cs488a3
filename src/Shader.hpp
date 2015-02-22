@@ -5,8 +5,8 @@
 #include <QtOpenGL>
 
 #include "Algebra.hpp"
+#include "Material.hpp"
 
-struct PhongMaterial;
 class QOpenGLBuffer;
 
 class Shader {
@@ -15,8 +15,6 @@ class Shader {
     Matrix4 model;
     Matrix4 view;
     Matrix4 projection;
-
-    Colour colour;
 
 public:
     Shader();
@@ -39,7 +37,7 @@ public:
     const Matrix4& getProjectionMatrix() const;
     void setProjectionMatrix(const Matrix4& projection);
 
-    void setMaterial(const PhongMaterial& material);
+    void applyMaterial(const Material& material);
 
 private:
     static std::string generateShaderPath(const char* path, const char* name, const char* type);

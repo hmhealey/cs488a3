@@ -4,7 +4,6 @@ uniform vec4 materialAmbient;
 uniform vec4 materialSpecular;
 uniform vec4 materialDiffuse;
 uniform float materialShininess;
-uniform vec4 colour;
 
 in vec3 fVert;
 in vec3 fNormal;
@@ -36,5 +35,5 @@ void main() {
     vec4 iSpec = specular * pow(max(dot(R, E), 0.0), 0.3 * shininess);
     iSpec = clamp(iSpec, 0.0, 1.0);
 
-    fragColour = iAmbient + colour * iDiff + iSpec;
+    fragColour = iAmbient + iDiff + iSpec;
 }

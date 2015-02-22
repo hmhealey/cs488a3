@@ -5,18 +5,17 @@
 #include <sstream>
 
 #include "AlgebraToQt.hpp"
-#include "Material.hpp"
 
 using namespace std;
 
 // shaders can either be located in the current directory or a src subdirectory
 static const char* SHADER_PATHS[] = {
-    ".",
-    "src",
+    "shaders",
+    "src/shaders",
     NULL
 };
 
-Shader::Shader() : colour(Colour(1.0, 1.0, 1.0)) { }
+Shader::Shader() { }
 
 void Shader::initialize(const char* name) {
     for (int i = 0; SHADER_PATHS[i] != NULL; i++) {
@@ -50,8 +49,6 @@ void Shader::use() {
 
     program.setUniformValue("modelView", toQt(view.inverse() * model));
     program.setUniformValue("modelViewProjection", toQt(projection * view.inverse() * model));
-
-    program.setUniformValue("colour", colour[0], colour[1], colour[2], 1.0);
 }
 
 void Shader::bindBuffer(const char* name, QOpenGLBuffer& buffer, unsigned int type, int components) {
@@ -90,13 +87,6 @@ const Matrix4& Shader::getProjectionMatrix() const {
 
 void Shader::setProjectionMatrix(const Matrix4& projection) {
     this->projection = projection;
-}
-
-void Shader::setMaterial(const PhongMaterial& material) {
-    program.setUniformValue("materialAmbient", 1.0, 1.0, 1.0, 1.0);
-    program.setUniformValue("materialDiffuse", material.kd[0], material.kd[1], material.kd[2], 1.0);
-    program.setUniformValue("materialSpecular", material.ks[0], material.ks[1], material.ks[2], 1.0);
-    program.setUniformValue("materialShininess", (GLfloat) material.shininess);
 }
 
 string Shader::generateShaderPath(const char* basePath, const char* name, const char* type) {
