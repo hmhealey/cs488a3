@@ -140,40 +140,6 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
     cerr << "Stub: Motion at " << event->x() << ", " << event->y() << endl;
 }
 
-QMatrix4x4 Viewer::getCameraMatrix() {
-    // Todo: Ask if we want to keep this.
-    QMatrix4x4 vMatrix;
-
-    QMatrix4x4 cameraTransformation;
-    QVector3D cameraPosition = cameraTransformation * QVector3D(0, 0, 20.0);
-    QVector3D cameraUpDirection = cameraTransformation * QVector3D(0, 1, 0);
-
-    vMatrix.lookAt(cameraPosition, QVector3D(0, 0, 0), cameraUpDirection);
-
-    return vMatrix * mTransformMatrix;
-}
-
-void Viewer::translateWorld(float x, float y, float z) {
-    // Todo: Ask if we want to keep this.
-    mTransformMatrix.translate(x, y, z);
-}
-
-void Viewer::rotateWorld(float x, float y, float z) {
-    // Todo: Ask if we want to keep this.
-    mTransformMatrix.rotate(x, y, z);
-}
-
-void Viewer::scaleWorld(float x, float y, float z) {
-    // Todo: Ask if we want to keep this.
-    mTransformMatrix.scale(x, y, z);
-}
-
-void Viewer::set_colour(const QColor& col) {
-    //interfaceShader.setMaterial(PhongMaterial(Colour(col.redF(), col.greenF(), col.blueF()), Colour(), 128));
-    //interfaceShader.setMaterial(FlatMaterial(Colour(col.redF(), col.greenF(), col.blueF())));
-    FlatMaterial(Colour(col.redF(), col.greenF(), col.blueF())).applyTo(interfaceShader);
-}
-
 void Viewer::draw_trackball_circle() {
     glDisable(GL_DEPTH_TEST);
 
@@ -186,7 +152,7 @@ void Viewer::draw_trackball_circle() {
     // You'll want to make the rest of the function conditional on
     // whether or not we want to draw the circle this time around.
 
-    set_colour(QColor(0.0, 0.0, 0.0));
+    FlatMaterial(Colour(0.0, 0.0, 0.0)).applyTo(interfaceShader);
 
     // Translate the view to the middle
     interfaceShader.setModelMatrix(Matrix4::makeTranslation(current_width / 2, current_height / 2, 0));
