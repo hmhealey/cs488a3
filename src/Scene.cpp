@@ -2,12 +2,22 @@
 
 #include <iostream>
 
+#include "Primitive.hpp"
+#include "Viewer.hpp"
+
 SceneNode::SceneNode(const std::string& name) : m_name(name) { }
 
 SceneNode::~SceneNode() { }
 
-void SceneNode::walk_gl(bool picking) const {
-    // Fill me in
+void SceneNode::walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
+    walk_children(viewer, parentTransform, picking);
+}
+
+void SceneNode::walk_children(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
+    const Matrix4 transform(parentTransform * m_trans);
+    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+        (*i)->walk_gl(viewer, transform, picking);
+    }
 }
 
 void SceneNode::rotate(char axis, double angle) {
@@ -33,8 +43,8 @@ JointNode::JointNode(const std::string& name) : SceneNode(name) { }
 
 JointNode::~JointNode() { }
 
-void JointNode::walk_gl(bool picking) const {
-    // Fill me in
+void JointNode::walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
+    walk_children(viewer, parentTransform, picking);
 }
 
 bool JointNode::is_joint() const {
@@ -57,7 +67,9 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
 
 GeometryNode::~GeometryNode() { }
 
-void GeometryNode::walk_gl(bool picking) const {
-    // Fill me in
+void GeometryNode::walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
+    m_primitive->draw(viewer.getShader(), picking);
+
+    walk_children(viewer, parentTransform, picking);
 }
  

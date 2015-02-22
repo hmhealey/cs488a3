@@ -7,20 +7,34 @@
 #include "Material.hpp"
 
 class Primitive;
+class Viewer;
 
 class SceneNode {
+protected:
+    // Useful for picking
+    int m_id;
+    std::string m_name;
+
+    // Transformations
+    Matrix4 m_trans;
+    Matrix4 m_invtrans;
+
+    // Hierarchy
+    std::list<SceneNode*> m_children;
+
 public:
     SceneNode(const std::string& name);
     virtual ~SceneNode();
 
-    virtual void walk_gl(bool picking = false) const;
+    virtual void walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
+    void walk_children(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
 
     const Matrix4& get_transform() const { return m_trans; }
     const Matrix4& get_inverse() const { return m_invtrans; }
   
     void set_transform(const Matrix4& m) {
         m_trans = m;
-        m_invtrans = m.invert();
+        m_invtrans = m.inverse();
     }
 
     void set_transform(const Matrix4& m, const Matrix4& i) {
@@ -44,19 +58,6 @@ public:
 
     // Returns true if and only if this node is a JointNode
     virtual bool is_joint() const;
-  
-protected:
-    // Useful for picking
-    int m_id;
-    std::string m_name;
-
-    // Transformations
-    Matrix4 m_trans;
-    Matrix4 m_invtrans;
-
-    // Hierarchy
-    typedef std::list<SceneNode*> ChildList;
-    ChildList m_children;
 };
 
 class JointNode : public SceneNode {
@@ -64,7 +65,7 @@ public:
     JointNode(const std::string& name);
     virtual ~JointNode();
 
-    virtual void walk_gl(bool bicking = false) const;
+    virtual void walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
 
     virtual bool is_joint() const;
 
@@ -84,7 +85,7 @@ public:
     GeometryNode(const std::string& name, Primitive* primitive);
     virtual ~GeometryNode();
 
-    virtual void walk_gl(bool picking = false) const;
+    virtual void walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
 
     const Material* get_material() const;
     Material* get_material();
