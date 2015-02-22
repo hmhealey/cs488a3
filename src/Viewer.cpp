@@ -47,11 +47,12 @@ void Viewer::initializeGL() {
 
     glShadeModel(GL_SMOOTH);
     glClearColor(0.4, 0.4, 0.4, 0.0);
-    glEnable(GL_DEPTH_TEST);
 
+    // set up shaders
     shader.initialize("phong");
     interfaceShader.initialize("flat");
 
+    // construct circle for trackball
     float circleData[120];
 
     double radius = width() < height() ? (float)width() * 0.25 : (float)height() * 0.25;
@@ -75,14 +76,16 @@ void Viewer::initializeGL() {
 
     mCircleBufferObject.allocate(circleData, 40 * 3 * sizeof(float));
 
+    // set up trackball vertices to shader
     interfaceShader.getProgram().bind();
 
     interfaceShader.getProgram().enableAttributeArray("vert");
     interfaceShader.getProgram().setAttributeBuffer("vert", GL_FLOAT, 0, 3);
 
-    mMvpMatrixLocation = interfaceShader.getProgram().uniformLocation("modelViewProjection");
-    mColorLocation = interfaceShader.getProgram().uniformLocation("colour");
+    // set interface colour
+    FlatMaterial(Colour(0.0, 0.0, 0.0)).applyTo(interfaceShader);
 
+    // release interface stuff so that we can be sure we're not affecting it later when setting up other meshes
     interfaceShader.getProgram().release();
     mCircleBufferObject.release();
     mVertexArrayObject.release();
@@ -125,6 +128,9 @@ void Viewer::resizeGL(int width, int height) {
     shader.setProjectionMatrix(Matrix4::makePerspective(30, (float) height / (float) width, 0.001, 1000));
     interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, width, 0, height, -0.1, 0.1));
 
+    // center interface in the window
+    interfaceShader.setModelMatrix(Matrix4::makeTranslation((float) width / 2, (float) height / 2, 0));
+
     glViewport(0, 0, width, height);
 }
 
@@ -143,26 +149,12 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
 void Viewer::draw_trackball_circle() {
     glDisable(GL_DEPTH_TEST);
 
-    mVertexArrayObject.bind();
-
-    int current_width = width();
-    int current_height = height();
-
-    // Set up for orthogonal drawing to draw a circle on screen.
-    // You'll want to make the rest of the function conditional on
-    // whether or not we want to draw the circle this time around.
-
-    FlatMaterial(Colour(0.0, 0.0, 0.0)).applyTo(interfaceShader);
-
-    // Translate the view to the middle
-    interfaceShader.setModelMatrix(Matrix4::makeTranslation(current_width / 2, current_height / 2, 0));
-
     interfaceShader.use();
 
-    // Bind buffer object
+    mVertexArrayObject.bind();
     mCircleBufferObject.bind();
 
-    // Draw buffer
+    // actually draw trackball
     glDrawArrays(GL_LINE_LOOP, 0, 40);
 
     glEnable(GL_DEPTH_TEST);

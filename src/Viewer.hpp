@@ -21,6 +21,9 @@ class Viewer : public QGLWidget {
 
     SceneNode* scene = NULL;
 
+    QOpenGLBuffer mCircleBufferObject;
+    QOpenGLVertexArrayObject mVertexArrayObject;
+
 public:
     Viewer(const QGLFormat& format, QWidget *parent = 0);
     virtual ~Viewer();
@@ -51,14 +54,6 @@ protected:
     // Draw a circle for the trackball, with OpenGL commands.
     // Assumes the context for the viewer is active.
     void draw_trackball_circle();
-
-private:
-
-    QOpenGLBuffer mCircleBufferObject;
-    QOpenGLVertexArrayObject mVertexArrayObject;
-    
-    int mMvpMatrixLocation;
-    int mColorLocation;
 };
 
 #endif
