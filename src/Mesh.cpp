@@ -300,6 +300,7 @@ Mesh* Mesh::makeIcosphere(float radius, int refinement) {
 Mesh* RawMesh::construct() const {
     Mesh* mesh = new Mesh(type);
 
+    mesh->vertexArrayObject.create();
     mesh->vertexArrayObject.bind();
 
     if (vertices != NULL && numVertices > 0) {
