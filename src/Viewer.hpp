@@ -24,11 +24,7 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
-    QGLShaderProgram& getProgram();
     Shader& getShader();
-
-    const Matrix4& getViewTransform() const;
-    const Matrix4& getInverseViewTransform() const;
 
     // If you want to render a new frame, call do not call paintGL(),
     // instead, call update() to ensure that the view gets a paint 

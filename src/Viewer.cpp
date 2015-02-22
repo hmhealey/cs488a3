@@ -29,23 +29,8 @@ QSize Viewer::sizeHint() const {
     return QSize(300, 300);
 }
 
-QGLShaderProgram& Viewer::getProgram() {
-    return shader.getProgram();
-}
 Shader& Viewer::getShader() {
     return shader;
-}
-
-const Matrix4& Viewer::getViewTransform() const {
-    // this probably isnt the best way to do this, but we're not saving a reference to view anyway
-    static Matrix4 view = Matrix4::makeTranslation(0, 0, -2);
-    return view;
-}
-
-const Matrix4& Viewer::getInverseViewTransform() const {
-    // this probably isnt the best way to do this, but we're not saving a reference to view anyway
-    static Matrix4 inverseView = Matrix4::makeTranslation(0, 0, -2).inverse();
-    return inverseView;
 }
 
 void Viewer::initializeGL() {
@@ -121,7 +106,7 @@ void Viewer::paintGL() {
     static double angle = 0;
     angle += M_PI / 240;
 
-    shader.setModelMatrix(Matrix4::makeRotation(0, angle, 0));
+    shader.setModelMatrix(Matrix4::makeTranslation(0, -0.5, 0) * Matrix4::makeRotation(0, angle, 0));
     shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
     shader.setProjectionMatrix(Matrix4::makePerspective(30, 1, 0.1, 10));
 
@@ -131,6 +116,13 @@ void Viewer::paintGL() {
     Sphere sphere;
     sphere.setMaterial(material);
     sphere.draw(shader);
+
+    shader.setModelMatrix(Matrix4::makeTranslation(0, -1, 0) * Matrix4::makeRotation(0, angle, 0));
+    shader.use();
+
+    Cube cube;
+    cube.setMaterial(material);
+    cube.draw(shader);
 
     error = glGetError();
     if (error != GL_NO_ERROR) {
