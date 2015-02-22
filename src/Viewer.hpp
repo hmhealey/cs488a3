@@ -16,6 +16,7 @@ class Viewer : public QGLWidget {
     Q_OBJECT
 
     Shader shader;
+    Shader interfaceShader;
 
 public:
     Viewer(const QGLFormat& format, QWidget *parent = 0);
