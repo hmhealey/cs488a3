@@ -3,7 +3,25 @@
 
 #include "Algebra.hpp"
 
-struct Material { };
+class Shader;
+
+struct Material {
+    virtual ~Material();
+
+    virtual void applyTo(Shader& shader) const = 0;
+};
+
+struct FlatMaterial : public Material {
+    Colour colour;
+
+    FlatMaterial();
+    FlatMaterial(const Colour& colour);
+    FlatMaterial(const FlatMaterial& other);
+
+    FlatMaterial& operator=(const FlatMaterial& other);
+
+    virtual void applyTo(Shader& shader) const;
+};
 
 struct PhongMaterial : public Material {
     Colour kd;
@@ -16,6 +34,8 @@ struct PhongMaterial : public Material {
     PhongMaterial(const PhongMaterial& other);
 
     PhongMaterial& operator=(const PhongMaterial& other);
+
+    virtual void applyTo(Shader& shader) const;
 };
 
 #endif
