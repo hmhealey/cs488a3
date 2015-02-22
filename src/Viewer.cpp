@@ -30,10 +30,6 @@ QSize Viewer::sizeHint() const {
     return QSize(300, 300);
 }
 
-Shader& Viewer::getShader() {
-    return shader;
-}
-
 const SceneNode* Viewer::getScene() const {
     return scene;
 }

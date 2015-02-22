@@ -3,20 +3,20 @@
 #include <iostream>
 
 #include "Primitive.hpp"
-#include "Viewer.hpp"
+#include "Shader.hpp"
 
 SceneNode::SceneNode(const std::string& name) : m_name(name) { }
 
 SceneNode::~SceneNode() { }
 
-void SceneNode::walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
-    walk_children(viewer, parentTransform, picking);
+void SceneNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
+    walk_children(shader, parentTransform, picking);
 }
 
-void SceneNode::walk_children(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
+void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     const Matrix4 transform(parentTransform * m_trans);
     for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
-        (*i)->walk_gl(viewer, transform, picking);
+        (*i)->walk_gl(shader, transform, picking);
     }
 }
 
@@ -43,8 +43,8 @@ JointNode::JointNode(const std::string& name) : SceneNode(name) { }
 
 JointNode::~JointNode() { }
 
-void JointNode::walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
-    walk_children(viewer, parentTransform, picking);
+void JointNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
+    walk_children(shader, parentTransform, picking);
 }
 
 bool JointNode::is_joint() const {
@@ -67,9 +67,9 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
 
 GeometryNode::~GeometryNode() { }
 
-void GeometryNode::walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking) const {
-    m_primitive->draw(viewer.getShader(), picking);
+void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
+    m_primitive->draw(shader, picking);
 
-    walk_children(viewer, parentTransform, picking);
+    walk_children(shader, parentTransform, picking);
 }
  

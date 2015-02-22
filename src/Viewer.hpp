@@ -28,8 +28,6 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
-    Shader& getShader();
-
     const SceneNode* getScene() const;
     void setScene(SceneNode* scene);
 

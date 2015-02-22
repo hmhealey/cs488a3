@@ -7,7 +7,7 @@
 #include "Material.hpp"
 
 class Primitive;
-class Viewer;
+class Shader;
 
 class SceneNode {
 protected:
@@ -26,8 +26,8 @@ public:
     SceneNode(const std::string& name);
     virtual ~SceneNode();
 
-    virtual void walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
-    void walk_children(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
+    virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
+    void walk_children(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
     const Matrix4& get_transform() const { return m_trans; }
     const Matrix4& get_inverse() const { return m_invtrans; }
@@ -65,7 +65,7 @@ public:
     JointNode(const std::string& name);
     virtual ~JointNode();
 
-    virtual void walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
+    virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
     virtual bool is_joint() const;
 
@@ -85,7 +85,7 @@ public:
     GeometryNode(const std::string& name, Primitive* primitive);
     virtual ~GeometryNode();
 
-    virtual void walk_gl(Viewer& viewer, const Matrix4& parentTransform, bool picking = false) const;
+    virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
     const Material* get_material() const;
     Material* get_material();
