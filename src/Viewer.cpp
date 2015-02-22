@@ -77,6 +77,10 @@ void Viewer::initializeGL() {
 
     mMvpMatrixLocation = interfaceShader.getProgram().uniformLocation("modelViewProjection");
     mColorLocation = interfaceShader.getProgram().uniformLocation("colour");
+
+    interfaceShader.getProgram().release();
+    mCircleBufferObject.release();
+    mVertexArrayObject.release();
 }
 
 void Viewer::paintGL() {
@@ -105,7 +109,7 @@ void Viewer::paintGL() {
     cube.setMaterial(material);
     cube.draw(shader);
 
-    //draw_trackball_circle();
+    draw_trackball_circle();
 
     update();
 }
@@ -181,35 +185,19 @@ void Viewer::draw_trackball_circle() {
 
     set_colour(QColor(0.0, 0.0, 0.0));
 
-    interfaceShader.setViewMatrix(Matrix4());
-
     // Set orthographic Matrix
     interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, current_width, 0, current_height, -0.1, 0.1));
-    //Matrix4 orthoMatrix = Matrix4::makeOrtho(0, current_width, 0, current_height, -0.1, 0.1);
 
     // Translate the view to the middle
     interfaceShader.setModelMatrix(Matrix4::makeTranslation(current_width / 2, current_height / 2, 0));
-    //Matrix4 transformMatrix = Matrix4::makeTranslation(current_width / 2, current_height / 2, 0);
 
     interfaceShader.use();
 
     // Bind buffer object
     mCircleBufferObject.bind();
-    //interfaceShader.getProgram().setUniformValue(mMvpMatrixLocation, toQt(orthoMatrix * transformMatrix));
-
-    int error = glGetError();
-    if (error != GL_NO_ERROR) {
-        cerr << "Viewer::draw_trackball_circle - error before drawing trackball " << error << endl;
-    }
 
     // Draw buffer
     glDrawArrays(GL_LINE_LOOP, 0, 40);
-    cerr << "drwaingz" << endl;
-
-    error = glGetError();
-    if (error != GL_NO_ERROR) {
-        cerr << "Viewer::draw_trackball_circle - error after drawing trackball " << error << endl;
-    }
 
     glEnable(GL_DEPTH_TEST);
 }
