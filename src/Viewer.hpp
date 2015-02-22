@@ -66,7 +66,6 @@ private:
     int mMvpMatrixLocation;
     int mColorLocation;
 
-    QMatrix4x4 mPerspMatrix;
     QMatrix4x4 mTransformMatrix;
 };
 

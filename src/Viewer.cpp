@@ -97,7 +97,6 @@ void Viewer::paintGL() {
 
     shader.setModelMatrix(Matrix4::makeTranslation(0, -0.5, 0) * Matrix4::makeRotation(0, angle, 0));
     shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
-    shader.setProjectionMatrix(Matrix4::makePerspective(30, 1, 0.1, 10));
 
     shader.use();
 
@@ -120,12 +119,11 @@ void Viewer::paintGL() {
 }
 
 void Viewer::resizeGL(int width, int height) {
-    if (height == 0) {
-        height = 1;
-    }
+    height = max(height, 1);
 
-    mPerspMatrix.setToIdentity();
-    mPerspMatrix.perspective(60.0, (float) width / (float) height, 0.001, 1000);
+    // update perspective matrixes for both the scene and interface
+    shader.setProjectionMatrix(Matrix4::makePerspective(30, (float) height / (float) width, 0.001, 1000));
+    interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, width, 0, height, -0.1, 0.1));
 
     glViewport(0, 0, width, height);
 }
@@ -152,7 +150,7 @@ QMatrix4x4 Viewer::getCameraMatrix() {
 
     vMatrix.lookAt(cameraPosition, QVector3D(0, 0, 0), cameraUpDirection);
 
-    return mPerspMatrix * vMatrix * mTransformMatrix;
+    return vMatrix * mTransformMatrix;
 }
 
 void Viewer::translateWorld(float x, float y, float z) {
@@ -189,9 +187,6 @@ void Viewer::draw_trackball_circle() {
     // whether or not we want to draw the circle this time around.
 
     set_colour(QColor(0.0, 0.0, 0.0));
-
-    // Set orthographic Matrix
-    interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, current_width, 0, current_height, -0.1, 0.1));
 
     // Translate the view to the middle
     interfaceShader.setModelMatrix(Matrix4::makeTranslation(current_width / 2, current_height / 2, 0));
