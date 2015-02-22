@@ -28,7 +28,7 @@ Sphere::~Sphere() {
 }
 
 void Sphere::draw(Shader& shader, bool picking) const {
-    material->apply(shader);
+    material->applyTo(shader);
     mesh->draw(shader);
 }
 
@@ -39,6 +39,6 @@ Cube::~Cube() {
 }
 
 void Cube::draw(Shader& shader, bool picking) const {
-    material->apply(shader);
+    material->applyTo(shader);
     mesh->draw(shader);
 }
