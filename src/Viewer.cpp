@@ -53,7 +53,7 @@ void Viewer::initializeGL() {
     interfaceShader.initialize("flat");
 
     // sets the camera position
-    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 1));
+    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
 
     // construct circle for trackball
     float circleData[120];
@@ -127,7 +127,7 @@ void Viewer::paintGL() {
         scene->walk_gl(shader, Matrix4(), false);
     }
 
-    draw_trackball_circle();
+    //draw_trackball_circle();
 
     update();
 }
