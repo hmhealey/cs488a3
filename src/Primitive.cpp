@@ -23,16 +23,20 @@ void Primitive::setMaterial(const Material& material) {
     this->material = material;
 }
 
-Sphere::Sphere(double radius) : mesh(Mesh::makeUvSphere(radius, 64, 64)) { } 
+Mesh* Sphere::mesh = NULL;
 
-Sphere::~Sphere() {
-    delete mesh;
-}
+Sphere::Sphere() { } 
+
+Sphere::~Sphere() { }
 
 void Sphere::draw(Shader& shader, bool picking) const {
+    if (Sphere::mesh == NULL) {
+        Sphere::mesh = Mesh::makeUvSphere(1.0, 64, 64);
+    }
+
     shader.use();
     material.applyTo(shader);
-    mesh->draw(shader);
+    Sphere::mesh->draw(shader);
 }
 
 Cube::Cube(double size) : mesh(Mesh::makeCube(size)) { }

@@ -23,13 +23,15 @@ public:
 };
 
 class Sphere : public Primitive {
-    Mesh* mesh;
+    // maintain only a single Mesh here because the assignment states that we should only use one for all instances
+    static Mesh* mesh;
 
 public:
-    Sphere(double radius = 1.0);
+    Sphere();
     virtual ~Sphere();
 
     virtual void draw(Shader& shader, bool picking = false) const;
+
 };
 
 class Cube : public Primitive {
