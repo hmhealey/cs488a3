@@ -98,9 +98,6 @@ void Viewer::paintGL() {
     // Clear framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // set the camera for our test shapes (remove me when attempting to draw the scene)
-    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
-
     // construct the shapes for drawing
     Material material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
 
