@@ -5,6 +5,8 @@
 #include "Primitive.hpp"
 #include "Shader.hpp"
 
+using namespace std;
+
 SceneNode::SceneNode(const std::string& name) : m_name(name) { }
 
 SceneNode::~SceneNode() { }
@@ -21,18 +23,31 @@ void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bo
 }
 
 void SceneNode::rotate(char axis, double angle) {
-    std::cerr << "Stub: Rotate " << m_name << " around " << axis << " by " << angle << std::endl;
-    // Fill me in
+    cerr << "SceneNode::rotate - Rotating " << m_name << " around " << axis << " by " << angle << endl;
+    switch(axis) {
+    case 'x':
+        m_trans = m_trans * Matrix4::makeRotation(angle, 0, 0);
+        break;
+    case 'y':
+        m_trans = m_trans * Matrix4::makeRotation(0, angle, 0);
+        break;
+    case 'z':
+        m_trans = m_trans * Matrix4::makeRotation(0, 0, angle);
+        break;
+    default:
+        cerr << "SceneNode::rotate - " << axis << " isn't a valid axis" << endl;
+        break;
+    }
 }
 
 void SceneNode::scale(const Vector3& amount) {
-    std::cerr << "Stub: Scale " << m_name << " by " << amount << std::endl;
-    // Fill me in
+    cerr << "SceneNode::scale - Scaling " << m_name << " by " << amount << endl;
+    m_trans = m_trans * Matrix4::makeScaling(amount[0], amount[1], amount[2]);
 }
 
 void SceneNode::translate(const Vector3& amount) {
-    std::cerr << "Stub: Translate " << m_name << " by " << amount << std::endl;
-    // Fill me in
+    cerr << "SceneNode::scale - Translating " << m_name << " by " << amount << endl;
+    m_trans = m_trans * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
 bool SceneNode::is_joint() const {
@@ -68,6 +83,7 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
 GeometryNode::~GeometryNode() { }
 
 void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
+    shader.setModelMatrix(parentTransform * m_trans);
     m_primitive->draw(shader, picking);
 
     walk_children(shader, parentTransform, picking);
