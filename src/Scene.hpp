@@ -16,8 +16,8 @@ protected:
     std::string m_name;
 
     // Transformations
-    Matrix4 m_trans;
-    Matrix4 m_invtrans;
+    Matrix4 translationRotation;
+    Matrix4 scaling;
 
     // Hierarchy
     std::list<SceneNode*> m_children;
@@ -26,21 +26,11 @@ public:
     SceneNode(const std::string& name);
     virtual ~SceneNode();
 
+    Matrix4 getTransform() const;
+    void setTransform(const Matrix4& translationRotation, const Matrix4& scaling);
+
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
     void walk_children(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
-
-    const Matrix4& get_transform() const { return m_trans; }
-    const Matrix4& get_inverse() const { return m_invtrans; }
-  
-    void set_transform(const Matrix4& m) {
-        m_trans = m;
-        m_invtrans = m.inverse();
-    }
-
-    void set_transform(const Matrix4& m, const Matrix4& i) {
-        m_trans = m;
-        m_invtrans = i;
-    }
 
     void add_child(SceneNode* child) {
         m_children.push_back(child);

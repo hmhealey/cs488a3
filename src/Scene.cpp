@@ -11,12 +11,21 @@ SceneNode::SceneNode(const std::string& name) : m_name(name) { }
 
 SceneNode::~SceneNode() { }
 
+Matrix4 SceneNode::getTransform() const {
+    return translationRotation * scaling;
+}
+
+void SceneNode::setTransform(const Matrix4& translationRotation, const Matrix4& scaling) {
+    this->translationRotation = translationRotation;
+    this->scaling = scaling;
+}
+
 void SceneNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     walk_children(shader, parentTransform, picking);
 }
 
 void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bool picking) const {
-    const Matrix4 transform(parentTransform * m_trans);
+    const Matrix4 transform(parentTransform * getTransform());
     for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
         (*i)->walk_gl(shader, transform, picking);
     }
@@ -26,13 +35,13 @@ void SceneNode::rotate(char axis, double angle) {
     cerr << "SceneNode::rotate - Rotating " << m_name << " around " << axis << " by " << angle << endl;
     switch(axis) {
     case 'x':
-        m_trans = m_trans * Matrix4::makeRotation(angle, 0, 0);
+        translationRotation = translationRotation * Matrix4::makeXRotation(angle);
         break;
     case 'y':
-        m_trans = m_trans * Matrix4::makeRotation(0, angle, 0);
+        translationRotation = translationRotation * Matrix4::makeYRotation(angle);
         break;
     case 'z':
-        m_trans = m_trans * Matrix4::makeRotation(0, 0, angle);
+        translationRotation = translationRotation * Matrix4::makeZRotation(angle);
         break;
     default:
         cerr << "SceneNode::rotate - " << axis << " isn't a valid axis" << endl;
@@ -42,12 +51,12 @@ void SceneNode::rotate(char axis, double angle) {
 
 void SceneNode::scale(const Vector3& amount) {
     cerr << "SceneNode::scale - Scaling " << m_name << " by " << amount << endl;
-    m_trans = m_trans * Matrix4::makeScaling(amount[0], amount[1], amount[2]);
+    scaling = scaling * Matrix4::makeScaling(amount[0], amount[1], amount[2]);
 }
 
 void SceneNode::translate(const Vector3& amount) {
     cerr << "SceneNode::scale - Translating " << m_name << " by " << amount << endl;
-    m_trans = m_trans * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
+    translationRotation = translationRotation * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
 bool SceneNode::is_joint() const {
@@ -83,7 +92,7 @@ GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : Scen
 GeometryNode::~GeometryNode() { }
 
 void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
-    shader.setModelMatrix(parentTransform * m_trans);
+    shader.setModelMatrix(parentTransform * getTransform());
     m_primitive->draw(shader, picking);
 
     walk_children(shader, parentTransform, picking);

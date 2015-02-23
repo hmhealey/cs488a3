@@ -53,7 +53,7 @@ void Viewer::initializeGL() {
     interfaceShader.initialize("flat");
 
     // sets the camera position
-    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 5));
+    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 1));
 
     // construct circle for trackball
     float circleData[120];
@@ -99,7 +99,7 @@ void Viewer::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // construct the shapes for drawing
-    Material material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
+    /*Material material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
 
     Sphere sphere;
     sphere.setMaterial(material);
@@ -121,11 +121,11 @@ void Viewer::paintGL() {
     shader.setModelMatrix(Matrix4::makeTranslation(0, -1, 0) * Matrix4::makeRotation(0, angle, 0) * Matrix4::makeScaling(2, 1, 1));
     shader.use();
 
-    cube.draw(shader);
+    cube.draw(shader);*/
 
-    /*if (scene != NULL) {
+    if (scene != NULL) {
         scene->walk_gl(shader, Matrix4(), false);
-    }*/
+    }
 
     draw_trackball_circle();
 
