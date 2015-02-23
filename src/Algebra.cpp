@@ -233,6 +233,9 @@ Matrix4 Matrix4::makeOrtho(double left, double right, double bottom, double top,
 }
 
 Matrix4 Matrix4::makePerspective(double fov, double aspect, double near, double far) {
+    // because holy crap I just wasted so much time by passing in fov in degrees when it expected radians
+    fov = fov * M_PI / 180;
+
     // formula adapted from http://www.songho.ca/opengl/gl_projectionmatrix.html
     double right = near * tan(fov / 2);
     double top = aspect * right;
