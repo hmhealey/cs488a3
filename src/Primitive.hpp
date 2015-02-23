@@ -26,7 +26,7 @@ class Sphere : public Primitive {
     Mesh* mesh;
 
 public:
-    Sphere(double radius = 0.5);
+    Sphere(double radius = 1.0);
     virtual ~Sphere();
 
     virtual void draw(Shader& shader, bool picking = false) const;
