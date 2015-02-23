@@ -86,7 +86,7 @@ void Viewer::initializeGL() {
     interfaceShader.getProgram().setAttributeBuffer("vert", GL_FLOAT, 0, 3);
 
     // set interface colour
-    FlatMaterial(Colour(0.0, 0.0, 0.0)).applyTo(interfaceShader);
+    Material(Colour(0.0, 0.0, 0.0)).applyTo(interfaceShader);
 
     // release interface stuff so that we can be sure we're not affecting it later when setting up other meshes
     interfaceShader.getProgram().release();
@@ -102,8 +102,7 @@ void Viewer::paintGL() {
     shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
 
     // construct the shapes for drawing
-    PhongMaterial material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
-    //FlatMaterial material(Colour(1.0, 0.0, 0.0));
+    Material material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
 
     Sphere sphere;
     sphere.setMaterial(material);

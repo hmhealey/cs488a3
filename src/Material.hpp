@@ -6,36 +6,18 @@
 class Shader;
 
 struct Material {
-    virtual ~Material();
-
-    virtual void applyTo(Shader& shader) const = 0;
-};
-
-struct FlatMaterial : public Material {
-    Colour colour;
-
-    FlatMaterial();
-    FlatMaterial(const Colour& colour);
-    FlatMaterial(const FlatMaterial& other);
-
-    FlatMaterial& operator=(const FlatMaterial& other);
-
-    virtual void applyTo(Shader& shader) const;
-};
-
-struct PhongMaterial : public Material {
-    Colour kd;
-    Colour ks;
-
+    Colour diffuse;
+    Colour specular;
     double shininess;
 
-    PhongMaterial();
-    PhongMaterial(const Colour& kd, const Colour& ks, double shininess);
-    PhongMaterial(const PhongMaterial& other);
+    Material();
+    Material(const Colour& diffuse);
+    Material(const Colour& diffuse, const Colour& specular, double shininess);
+    Material(const Material& other);
 
-    PhongMaterial& operator=(const PhongMaterial& other);
+    Material& operator=(const Material& other);
 
-    virtual void applyTo(Shader& shader) const;
+    void applyTo(Shader& shader) const;
 };
 
 #endif

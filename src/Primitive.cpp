@@ -7,18 +7,12 @@
 #include "Shader.hpp"
 #include "Viewer.hpp"
 
-Primitive::Primitive() : material(new FlatMaterial()) { }
+Primitive::Primitive() { }
 
 Primitive::~Primitive() { }
 
-// I feel like I don't understand enough about templates to make this more elegant
-void Primitive::setMaterial(const FlatMaterial& material) {
-    delete this->material;
-    this->material = new FlatMaterial(material);
-}
-void Primitive::setMaterial(const PhongMaterial& material) {
-    delete this->material;
-    this->material = new PhongMaterial(material);
+void Primitive::setMaterial(const Material& material) {
+    this->material = material;
 }
 
 Sphere::Sphere(double radius) : mesh(Mesh::makeUvSphere(radius, 64, 64)) { } 
@@ -29,7 +23,7 @@ Sphere::~Sphere() {
 
 void Sphere::draw(Shader& shader, bool picking) const {
     shader.use();
-    material->applyTo(shader);
+    material.applyTo(shader);
     mesh->draw(shader);
 }
 
@@ -41,6 +35,6 @@ Cube::~Cube() {
 
 void Cube::draw(Shader& shader, bool picking) const {
     shader.use();
-    material->applyTo(shader);
+    material.applyTo(shader);
     mesh->draw(shader);
 }

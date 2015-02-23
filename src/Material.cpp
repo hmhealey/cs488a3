@@ -2,52 +2,30 @@
 
 #include "Shader.hpp"
 
-Material::~Material() { }
+Material::Material() : diffuse(0.2, 0.2, 0.2), specular(0.8, 0.8, 0.8), shininess(64) { }
 
-FlatMaterial::FlatMaterial() { }
+Material::Material(const Colour& diffuse) : diffuse(diffuse), specular(0.8, 0.8, 0.8), shininess(64) { }
 
-FlatMaterial::FlatMaterial(const Colour& colour) : colour(colour) { }
+Material::Material(const Colour& diffuse, const Colour& specular, double shininess) : diffuse(diffuse), specular(specular), shininess(shininess) { }
 
-FlatMaterial::FlatMaterial(const FlatMaterial& other) {
-    colour = other.colour;
-}
-
-FlatMaterial& FlatMaterial::operator=(const FlatMaterial& other) {
-    colour = other.colour;
-    return *this;
-}
-
-void FlatMaterial::applyTo(Shader& shader) const {
-    QGLShaderProgram& program = shader.getProgram();
-
-    program.setUniformValue("materialAmbient", 0.0, 0.0, 0.0, 1.0);
-    program.setUniformValue("materialDiffuse", colour[0], colour[1], colour[2], 1.0);
-    program.setUniformValue("materialSpecular", 0.0, 0.0, 0.0, 1.0);
-    program.setUniformValue("materialShininess", 128.0f);
-}
-
-PhongMaterial::PhongMaterial() : kd(0.2, 0.2, 0.2), ks(0.8, 0.8, 0.8), shininess(64) { }
-
-PhongMaterial::PhongMaterial(const Colour& kd, const Colour& ks, double shininess) : kd(kd), ks(ks), shininess(shininess) { }
-
-PhongMaterial::PhongMaterial(const PhongMaterial& other) {
-    kd = other.kd;
-    ks = other.ks;
+Material::Material(const Material& other) {
+    diffuse = other.diffuse;
+    specular = other.specular;
     shininess = other.shininess;
 }
 
-PhongMaterial& PhongMaterial::operator=(const PhongMaterial& other) {
-    kd = other.kd;
-    ks = other.ks;
+Material& Material::operator=(const Material& other) {
+    diffuse = other.diffuse;
+    specular = other.specular;
     shininess = other.shininess;
     return *this;
 }
 
-void PhongMaterial::applyTo(Shader& shader) const {
+void Material::applyTo(Shader& shader) const {
     QGLShaderProgram& program = shader.getProgram();
 
     program.setUniformValue("materialAmbient", 1.0, 1.0, 1.0, 1.0);
-    program.setUniformValue("materialDiffuse", kd[0], kd[1], kd[2], 1.0);
-    program.setUniformValue("materialSpecular", ks[0], ks[1], ks[2], 1.0);
+    program.setUniformValue("materialDiffuse", diffuse[0], diffuse[1], diffuse[2], 1.0);
+    program.setUniformValue("materialSpecular", specular[0], specular[1], specular[2], 1.0);
     program.setUniformValue("materialShininess", (GLfloat) shininess);
 }

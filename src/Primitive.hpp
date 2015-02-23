@@ -9,14 +9,13 @@ class Shader;
 
 class Primitive {
 protected:
-    Material* material;
+    Material material;
     
 public:
     Primitive();
     virtual ~Primitive();
 
-    void setMaterial(const FlatMaterial& material);
-    void setMaterial(const PhongMaterial& material);
+    void setMaterial(const Material& material);
 
     virtual void draw(Shader& shader, bool picking = false) const = 0;
 };
