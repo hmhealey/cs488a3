@@ -1,6 +1,12 @@
+# temporary files
+*.d
 *.o
 *.swp
 *.stash
-*.app
 
-src/puppeteer
+# executable
+*.app
+puppeteer
+
+# assignment spec
+assign3.pdf
