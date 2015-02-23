@@ -87,15 +87,11 @@ public:
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
-    const Material* get_material() const;
-    Material* get_material();
-
-    void set_material(Material* material) {
-        m_material = material;
-    }
+    const Material& getMaterial() const;
+    Material& getMaterial();
+    void setMaterial(const Material& material);
 
 protected:
-    Material* m_material;
     Primitive* m_primitive;
 };
 

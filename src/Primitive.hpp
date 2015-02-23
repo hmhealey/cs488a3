@@ -15,6 +15,8 @@ public:
     Primitive();
     virtual ~Primitive();
 
+    const Material& getMaterial() const;
+    Material& getMaterial();
     void setMaterial(const Material& material);
 
     virtual void draw(Shader& shader, bool picking = false) const = 0;

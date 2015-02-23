@@ -228,7 +228,7 @@ int gr_node_set_material_cmd(lua_State* L)
 
   Material* material = matdata->material;
 
-  self->set_material(material);
+  self->setMaterial(*material);
 
   return 0;
 }

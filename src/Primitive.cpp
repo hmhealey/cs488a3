@@ -11,6 +11,14 @@ Primitive::Primitive() { }
 
 Primitive::~Primitive() { }
 
+const Material& Primitive::getMaterial() const {
+    return material;
+}
+
+Material& Primitive::getMaterial() {
+    return material;
+}
+
 void Primitive::setMaterial(const Material& material) {
     this->material = material;
 }
