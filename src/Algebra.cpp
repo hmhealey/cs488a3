@@ -148,6 +148,8 @@ Matrix4 Matrix4::inverse() const
 }
 
 Matrix4 Matrix4::makeXRotation(double angle) {
+    angle = angle * M_PI / 180.0;
+
     float ca = cos(angle);
     float sa = sin(angle);
 
@@ -160,6 +162,8 @@ Matrix4 Matrix4::makeXRotation(double angle) {
 }
 
 Matrix4 Matrix4::makeYRotation(double angle) {
+    angle = angle * M_PI / 180.0;
+
     float ca = cos(angle);
     float sa = sin(angle);
 
@@ -172,6 +176,8 @@ Matrix4 Matrix4::makeYRotation(double angle) {
 }
 
 Matrix4 Matrix4::makeZRotation(double angle) {
+    angle = angle * M_PI / 180.0;
+
     float ca = cos(angle);
     float sa = sin(angle);
 
@@ -188,6 +194,8 @@ Matrix4 Matrix4::makeRotation(double pitch, double yaw, double roll) {
 }
 
 Matrix4 Matrix4::makeRotation(double angle, const Vector3& axis) {
+    angle = angle * M_PI / 180.0;
+
     // formula taken from http://en.wikipedia.org/wiki/Rotation_matrix
     float ux = axis[0];
     float uy = axis[1];
@@ -234,7 +242,7 @@ Matrix4 Matrix4::makeOrtho(double left, double right, double bottom, double top,
 
 Matrix4 Matrix4::makePerspective(double fov, double aspect, double near, double far) {
     // because holy crap I just wasted so much time by passing in fov in degrees when it expected radians
-    fov = fov * M_PI / 180;
+    fov = fov * M_PI / 180.0;
 
     // formula adapted from http://www.songho.ca/opengl/gl_projectionmatrix.html
     double right = near * tan(fov / 2);

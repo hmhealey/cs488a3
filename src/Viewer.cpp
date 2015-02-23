@@ -53,7 +53,7 @@ void Viewer::initializeGL() {
     interfaceShader.initialize("flat");
 
     // sets the camera position
-    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 20));
+    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 5));
 
     // construct circle for trackball
     float circleData[120];
@@ -109,7 +109,7 @@ void Viewer::paintGL() {
 
     // hackish rotation so we can test stuff
     static double angle = 0;
-    angle += M_PI / 240;
+    angle += 1;
 
     // draw sphere (i should really make it so that you don't need to call use to update the shader's uniforms)
     shader.setModelMatrix(Matrix4::makeTranslation(0, 0, 0) * Matrix4::makeRotation(0, angle, 0) * Matrix4::makeScaling(1, 1, 2));
