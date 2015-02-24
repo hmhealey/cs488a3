@@ -61,16 +61,11 @@ void Viewer::resetAll() {
 }
 
 Viewer::InputMode Viewer::getInputMode() const {
-    // TODO return input mode
-    cerr << "Viewer::getInputMode - Not yet implemented" << endl;
-    return InputMode::Puppet;
+    return mode;
 }
 
 void Viewer::setInputMode(InputMode mode) {
-    ((void) mode);
-    // TODO set default input mode to Viewer::Puppet
-    // TODO set input mode
-    cerr << "Viewer::setInputMode - Not yet implemented" << endl;
+    this->mode = mode;
 }
 
 int Viewer::getUndoStackSize() const {

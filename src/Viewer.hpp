@@ -31,6 +31,8 @@ private:
     QOpenGLBuffer mCircleBufferObject;
     QOpenGLVertexArrayObject mVertexArrayObject;
 
+    InputMode mode = Viewer::Puppet;
+
     bool trackballVisible = false;
     bool depthBufferEnabled = true;
     bool backfaceCullingEnabled = true;
