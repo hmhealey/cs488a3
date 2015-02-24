@@ -246,11 +246,12 @@ void Viewer::resizeGL(int width, int height) {
     height = max(height, 1);
 
     // update perspective matrixes for both the scene and interface
-    shader.setProjectionMatrix(Matrix4::makePerspective(30, (float) height / (float) width, 0.001, 1000));
+    shader.setProjectionMatrix(Matrix4::makePerspective(30, (double) height / (double) width, 0.001, 1000));
     interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, width, 0, height, -0.1, 0.1));
 
     // center interface in the window
-    interfaceShader.setModelMatrix(Matrix4::makeTranslation((float) width / 2, (float) height / 2, 0) * Matrix4::makeScaling((float) width / 2, (float) width / 2, 1));
+    double radius = min(width / 2.0, height / 2.0);
+    interfaceShader.setModelMatrix(Matrix4::makeTranslation((double) width / 2, (double) height / 2, 0) * Matrix4::makeScaling(radius, radius, 1));
 
     glViewport(0, 0, width, height);
 }
