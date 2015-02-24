@@ -72,6 +72,14 @@ public:
         return v_[1];
     }
 
+    bool operator==(const Point2D& other) {
+        return other.x() == x() && other.y() == y();
+    }
+
+    bool operator!=(const Point2D& other) {
+        return !(*this == other);
+    }
+
 private:
   double v_[2];
 };
@@ -134,6 +142,14 @@ public:
     }
     double& z() {
         return v_[2];
+    }
+
+    bool operator==(const Point3D& other) {
+        return other.x() == x() && other.y() == y() && other.z() == z();
+    }
+
+    bool operator!=(const Point3D& other) {
+        return !(*this == other);
     }
 
 private:
@@ -211,6 +227,14 @@ public:
     }
     double& z() {
         return v_[2];
+    }
+
+    bool operator==(const Vector3& other) {
+        return other.x() == x() && other.y() == y() && other.z() == z();
+    }
+
+    bool operator!=(const Vector3& other) {
+        return !(*this == other);
     }
 
   double dot(const Vector3& other) const
@@ -378,6 +402,14 @@ public:
     }
     double& w() {
         return v_[3];
+    }
+
+    bool operator==(const Vector4D& other) {
+        return other.x() == x() && other.y() == y() && other.z() == z() && other.w() == w();
+    }
+
+    bool operator!=(const Vector4D& other) {
+        return !(*this == other);
     }
 
 private:
