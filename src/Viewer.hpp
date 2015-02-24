@@ -8,6 +8,7 @@
 #include <QtGlobal>
 
 #include "Shader.hpp"
+#include "Trackball.hpp"
 
 struct Matrix4;
 class QGLShaderProgram;
@@ -28,7 +29,10 @@ private:
 
     SceneNode* scene = NULL;
 
+    Trackball trackball;
+
     Matrix4 sceneTranslation;
+    Matrix4 sceneRotation;
 
     QOpenGLBuffer mCircleBufferObject;
     QOpenGLVertexArrayObject mVertexArrayObject;

@@ -27,6 +27,7 @@ HEADERS += Algebra.hpp \
            Scene.hpp \
            scene_lua.hpp \
            Shader.hpp \
+           Trackball.hpp \
            Viewer.hpp
 SOURCES += Algebra.cpp \
            AlgebraToQt.cpp \
@@ -38,4 +39,5 @@ SOURCES += Algebra.cpp \
            Scene.cpp \
            scene_lua.cpp \
            Shader.cpp \
+           Trackball.cpp \
            Viewer.cpp

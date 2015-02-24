@@ -47,8 +47,7 @@ void Viewer::resetPosition() {
 }
 
 void Viewer::resetOrientation() {
-    // TODO reset orientation of the puppet
-    cerr << "Viewer::resetOrientation - Not yet implemented" << endl;
+    sceneRotation = Matrix4();
 }
 
 void Viewer::resetJoints() {
@@ -142,7 +141,7 @@ void Viewer::initializeGL() {
     interfaceShader.initialize("flat");
 
     // sets the camera position
-    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 2));
+    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 20));
 
     // construct circle for trackball
     float circleData[120];
@@ -228,7 +227,7 @@ void Viewer::paintGL() {
     cube.draw(shader);*/
 
     if (scene != NULL) {
-        scene->walk_gl(shader, sceneTranslation, false);
+        scene->walk_gl(shader, sceneTranslation * sceneRotation, false);
     }
 
     // disable options after drawing
@@ -250,8 +249,12 @@ void Viewer::resizeGL(int width, int height) {
     interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, width, 0, height, -0.1, 0.1));
 
     // center interface in the window
-    double radius = min(width / 2.0, height / 2.0);
-    interfaceShader.setModelMatrix(Matrix4::makeTranslation((double) width / 2, (double) height / 2, 0) * Matrix4::makeScaling(radius, radius, 1));
+    double radius = min(width / 4.0, height / 4.0);
+    interfaceShader.setModelMatrix(Matrix4::makeTranslation((double) width / 2, (double) height / 2, 0) * Matrix4::makeScaling(radius * 2, radius * 2, 1));
+
+    // resize the virtual trackball
+    trackball.radius = radius;
+    trackball.center = Point2D(width / 2.0, height / 2.0);
 
     glViewport(0, 0, width, height);
 }
@@ -268,19 +271,39 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
 void Viewer::mouseMoveEvent(QMouseEvent* event) {
     int dx = lastMouseX - event->x();
     int dy = lastMouseY - event->y();
-        
-    if (mode == Viewer::Puppet) {
-        // don't allow multiple operations to work at once since that really doesn't make sense here
-        if ((event->buttons() & Qt::LeftButton) != 0) { 
-            sceneTranslation = sceneTranslation * Matrix4::makeTranslation(dx * PUPPET_TRANSLATION_X_FACTOR, dy * PUPPET_TRANSLATION_Y_FACTOR, 0);
-        } else if ((event->buttons() & Qt::RightButton) != 0) {
-            sceneTranslation = sceneTranslation * Matrix4::makeTranslation(0, 0, dy * PUPPET_TRANSLATION_Z_FACTOR);
-        } else if ((event->buttons() & Qt::MiddleButton) != 0) {
-            // TODO allow puppet rotation with the virtual trackball
+    
+    if (dx != 0 || dy != 0) {
+        if (mode == Viewer::Puppet) {
+            // don't allow multiple operations to work at once since that really doesn't make sense here
+            if ((event->buttons() & Qt::LeftButton) != 0) { 
+                cerr << "translating on xy" << endl;
+                sceneTranslation = sceneTranslation * Matrix4::makeTranslation(dx * PUPPET_TRANSLATION_X_FACTOR, dy * PUPPET_TRANSLATION_Y_FACTOR, 0);
+            } else if ((event->buttons() & Qt::RightButton) != 0) {
+                // find where the mouse was/is in the trackball's coordinate system
+                Vector3 fNewVec = trackball.windowToTrackball(Point2D(event->x(), event->y()));
+                Vector3 fOldVec = trackball.windowToTrackball(Point2D(lastMouseX, lastMouseY));
+
+                // flip y from window coordinates to OpenGL ones
+                fNewVec.y() = -fNewVec.y();
+                fOldVec.y() = -fOldVec.y();
+
+                // despite the mouse having actually moved, these rarely end up being equal which results in their cross product being
+                // the zero vector which causes everything to break
+                if (fNewVec != fOldVec) {
+                    // we can cross those vectors to get a vector representing the axis of rotation which has length matching the angle to rotate
+                    Vector3 fVec = fNewVec.cross(fOldVec);
+
+                    // fVec.length() is in radians
+                    sceneRotation = sceneRotation * Matrix4::makeRotation(fVec.length() * 180 / M_PI, fVec.normalized()).transposed();
+                }
+            } else if ((event->buttons() & Qt::MiddleButton) != 0) {
+                cerr << "translating on z" << endl;
+                sceneTranslation = sceneTranslation * Matrix4::makeTranslation(0, 0, dy * PUPPET_TRANSLATION_Z_FACTOR);
+            }
+        } else if (mode == Viewer::Joints) {
+            // but allow multiple operations at once since it actually works here
+            // TODO joint manipulation
         }
-    } else if (mode == Viewer::Joints) {
-        // but allow multiple operations at once since it actually works here
-        // TODO joint manipulation
     }
 
     lastMouseX = event->x();
@@ -296,9 +319,15 @@ void Viewer::mouseReleaseEvent(QMouseEvent* event) {
 void Viewer::draw_trackball_circle() {
     interfaceShader.use();
 
+    Material material(Colour(0.0, 0.0, 0.0));
+    material.applyTo(interfaceShader);
+
     mVertexArrayObject.bind();
     mCircleBufferObject.bind();
 
     // actually draw trackball
     glDrawArrays(GL_LINE_LOOP, 0, 40);
+
+    mCircleBufferObject.release();
+    mVertexArrayObject.release();
 }
