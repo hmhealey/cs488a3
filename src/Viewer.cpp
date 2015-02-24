@@ -38,6 +38,113 @@ void Viewer::setScene(SceneNode* scene) {
     this->scene = scene;
 }
 
+void Viewer::resetPosition() {
+    // TODO reset position of the puppet
+    cerr << "Viewer::resetPosition - Not yet implemented" << endl;
+}
+
+void Viewer::resetOrientation() {
+    // TODO reset orientation of the puppet
+    cerr << "Viewer::resetOrientation - Not yet implemented" << endl;
+}
+
+void Viewer::resetJoints() {
+    // TODO reset puppet joint positions
+    // TODO clear undo/redo stack
+    cerr << "Viewer::resetJoints - Not yet implemented" << endl;
+}
+
+void Viewer::resetAll() {
+    resetPosition();
+    resetOrientation();
+    resetJoints();
+}
+
+Viewer::InputMode Viewer::getInputMode() const {
+    // TODO return input mode
+    cerr << "Viewer::getInputMode - Not yet implemented" << endl;
+    return InputMode::Puppet;
+}
+
+void Viewer::setInputMode(InputMode mode) {
+    ((void) mode);
+    // TODO set default input mode to Viewer::Puppet
+    // TODO set input mode
+    cerr << "Viewer::setInputMode - Not yet implemented" << endl;
+}
+
+int Viewer::getUndoStackSize() const {
+    // TODO get undo stack size
+    cerr << "Viewer::getUndoStackSize - Not yet implemented" << endl;
+    return 0;
+}
+
+int Viewer::undo() {
+    // TODO undo the last joint manipulation
+    cerr << "Viewer::undo - Not yet implemented" << endl;
+    return getUndoStackSize();
+}
+
+int Viewer::getRedoStackSize() const {
+    // TODO get redo stack size
+    cerr << "Viewer::getRedoStackSize - Not yet implemented" << endl;
+    return 0;
+}
+
+int Viewer::redo() {
+    // TODO redo the last undid reverted joint manipulation
+    cerr << "Viewer::redo - Not yet implemented" << endl;
+    return getRedoStackSize();
+}
+
+bool Viewer::isTrackballVisible() const {
+    // TODO get trackball visibility
+    cerr << "Viewer::isTrackballVisible - Not yet implemented" << endl;
+    return false;
+}
+
+void Viewer::setTrackballVisible(bool trackballVisible) {
+    ((void) trackballVisible);
+    // TODO set trackball visibility
+    cerr << "Viewer::setTrackballVisible - Not yet implemented" << endl;
+}
+
+bool Viewer::isDepthBufferEnabled() const {
+    // TODO get depth buffer enabledness
+    cerr << "Viewer::isDepthBufferEnabled - Not yet implemented" << endl;
+    return false;
+}
+
+void Viewer::setDepthBufferEnabled(bool depthBufferEnabled) {
+    ((void) depthBufferEnabled);
+    // TODO set depth buffer
+    cerr << "Viewer::setDepthBufferEnabled - Not yet implemented" << endl;
+}
+
+bool Viewer::isBackfaceCullingEnabled() const {
+    // TODO get backface cullingness
+    cerr << "Viewer::isBackfaceCullingEnabled - Not yet implemented" << endl;
+    return false;
+}
+
+void Viewer::setBackfaceCullingEnabled(bool backfaceCullingEnabled) {
+    ((void) backfaceCullingEnabled);
+    // TODO set backface culling
+    cerr << "Viewer::setBackfaceCullingEnabled - Not yet implemented" << endl;
+}
+
+bool Viewer::isFrontfaceCullingEnabled() const {
+    // TODO get frontclungl
+    cerr << "Viewer::isFrontfaceCullingEnabled - Not yet implemented" << endl;
+    return false;
+}
+
+void Viewer::setFrontfaceCullingEnabled(bool frontfaceCullingEnabled) {
+    ((void) frontfaceCullingEnabled);
+    // TODO set frontface culling
+    cerr << "Viewer::setFrontfaceCullingEnabled - Not yet implemented" << endl;
+}
+
 void Viewer::initializeGL() {
     QGLFormat glFormat = QGLWidget::format();
     if (!glFormat.sampleBuffers()) {

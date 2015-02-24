@@ -16,6 +16,13 @@ class SceneNode;
 class Viewer : public QGLWidget {
     Q_OBJECT
 
+public:
+    enum InputMode {
+        Puppet,
+        Joints
+    };
+
+private:
     Shader shader;
     Shader interfaceShader;
 
@@ -31,8 +38,38 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
+    // TODO do we need to call this manually since the window is receiving these events
+    // Called when a mouse button is released
+    virtual void mouseReleaseEvent(QMouseEvent* event);
+
     const SceneNode* getScene() const;
     void setScene(SceneNode* scene);
+
+    void resetPosition();
+    void resetOrientation();
+    void resetJoints();
+    void resetAll();
+
+    InputMode getInputMode() const;
+    void setInputMode(InputMode mode);
+
+    int getUndoStackSize() const;
+    int undo();
+
+    int getRedoStackSize() const;
+    int redo();
+
+    bool isTrackballVisible() const;
+    void setTrackballVisible(bool trackballVisible);
+
+    bool isDepthBufferEnabled() const;
+    void setDepthBufferEnabled(bool depthBufferEnabled);
+
+    bool isBackfaceCullingEnabled() const;
+    void setBackfaceCullingEnabled(bool backfaceCullingEnabled);
+
+    bool isFrontfaceCullingEnabled() const;
+    void setFrontfaceCullingEnabled(bool frontfaceCullingEnabled);
 
 protected:
 
@@ -46,8 +83,6 @@ protected:
     virtual void resizeGL(int width, int height);
     // Called when a mouse button is pressed
     virtual void mousePressEvent(QMouseEvent* event);
-    // Called when a mouse button is released
-    virtual void mouseReleaseEvent(QMouseEvent* event);
     // Called when the mouse moves
     virtual void mouseMoveEvent(QMouseEvent* event);
     
