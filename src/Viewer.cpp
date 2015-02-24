@@ -147,11 +147,11 @@ void Viewer::initializeGL() {
     // construct circle for trackball
     float circleData[120];
 
-    double radius = width() < height() ? (float)width() * 0.25 : (float)height() * 0.25;
-        
+    // just construct the circle with a radius of 1 for now and transform it later since we don't know 
+    // the final window size yet
     for(size_t i = 0; i < 40; ++i) {
-        circleData[i * 3] = radius * cos(i * 2 * M_PI / 40);
-        circleData[i * 3 + 1] = radius * sin(i * 2 * M_PI / 40);
+        circleData[i * 3] = 0.5 * cos(i * 2 * M_PI / 40);
+        circleData[i * 3 + 1] = 0.5 * sin(i * 2 * M_PI / 40);
         circleData[i * 3 + 2] = 0.0;
     }
 
@@ -250,7 +250,7 @@ void Viewer::resizeGL(int width, int height) {
     interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, width, 0, height, -0.1, 0.1));
 
     // center interface in the window
-    interfaceShader.setModelMatrix(Matrix4::makeTranslation((float) width / 2, (float) height / 2, 0));
+    interfaceShader.setModelMatrix(Matrix4::makeTranslation((float) width / 2, (float) height / 2, 0) * Matrix4::makeScaling((float) width / 2, (float) width / 2, 1));
 
     glViewport(0, 0, width, height);
 }
