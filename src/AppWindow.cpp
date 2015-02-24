@@ -181,6 +181,7 @@ void AppWindow::createMenu() {
         toggleDepthBuffer = new QAction(tr("&Z-Buffer"), this);
         toggleDepthBuffer->setStatusTip(tr("Toggles the usage of the depth buffer"));
         toggleDepthBuffer->setCheckable(true);
+        toggleDepthBuffer->setChecked(true);
         toggleDepthBuffer->setShortcuts(QList<QKeySequence>({ Qt::Key_Z, Qt::SHIFT + Qt::Key_Z }));
         connect(toggleDepthBuffer, &QAction::triggered, [=] { doToggleDepthBuffer(); });
         optionsMenu->addAction(toggleDepthBuffer);
@@ -188,6 +189,7 @@ void AppWindow::createMenu() {
         toggleBackfaceCulling = new QAction(tr("&Backface Cull"), this);
         toggleBackfaceCulling->setStatusTip(tr("Toggles the culling of backfacing polygons"));
         toggleBackfaceCulling->setCheckable(true);
+        toggleBackfaceCulling->setChecked(true);
         toggleBackfaceCulling->setShortcuts(QList<QKeySequence>({ Qt::Key_B, Qt::SHIFT + Qt::Key_B }));
         connect(toggleBackfaceCulling, &QAction::triggered, [=] { doToggleBackfaceCulling(); });
         optionsMenu->addAction(toggleBackfaceCulling);

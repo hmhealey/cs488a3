@@ -32,8 +32,8 @@ private:
     QOpenGLVertexArrayObject mVertexArrayObject;
 
     bool trackballVisible = false;
-    bool depthBufferEnabled = false;
-    bool backfaceCullingEnabled = false;
+    bool depthBufferEnabled = true;
+    bool backfaceCullingEnabled = true;
     bool frontfaceCullingEnabled = false;
 
 public:
