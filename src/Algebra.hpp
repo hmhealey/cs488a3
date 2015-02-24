@@ -509,7 +509,7 @@ struct Matrix4
     return getRow(row);
   }
 
-  Matrix4 transpose() const
+  Matrix4 transposed() const
   {
     return Matrix4(getColumn(0), getColumn(1), 
                       getColumn(2), getColumn(3));

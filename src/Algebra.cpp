@@ -205,7 +205,7 @@ Matrix4 Matrix4::makeRotation(double angle, const Vector3& axis) {
     float sa = sin(angle);
 
     return Matrix4(
-        ca + ux * ux * (1 - ca),        ux * uy * (1 - ca) - uz * sa,   ux * uz * ca + uy * sa,         0,
+        ca + ux * ux * (1 - ca),        ux * uy * (1 - ca) - uz * sa,   ux * uz * (1 - ca) + uy * sa,   0,
         uy * ux * (1 - ca) + uz * sa,   ca + uy * uy * (1 - ca),        uy * uz * (1 - ca) - ux * sa,   0,
         uz * ux * (1 - ca) - uy * sa,   uz * uy * (1 - ca) + ux * sa,   ca + uz * uz * (1 - ca),        0,
         0,                              0,                              0,                              1
