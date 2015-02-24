@@ -58,6 +58,20 @@ public:
     return v_[ idx ];
   }
 
+    double x() const {
+        return v_[0];
+    }
+    double& x() {
+        return v_[0];
+    }
+
+    double y() const {
+        return v_[1];
+    }
+    double& y() {
+        return v_[1];
+    }
+
 private:
   double v_[2];
 };
@@ -100,6 +114,27 @@ public:
   {
     return v_[ idx ];
   }
+
+    double x() const {
+        return v_[0];
+    }
+    double& x() {
+        return v_[0];
+    }
+
+    double y() const {
+        return v_[1];
+    }
+    double& y() {
+        return v_[1];
+    }
+
+    double z() const {
+        return v_[2];
+    }
+    double& z() {
+        return v_[2];
+    }
 
 private:
   double v_[3];
@@ -156,6 +191,27 @@ public:
   {
     return v_[ idx ];
   }
+
+    double x() const {
+        return v_[0];
+    }
+    double& x() {
+        return v_[0];
+    }
+
+    double y() const {
+        return v_[1];
+    }
+    double& y() {
+        return v_[1];
+    }
+
+    double z() const {
+        return v_[2];
+    }
+    double& z() {
+        return v_[2];
+    }
 
   double dot(const Vector3& other) const
   {
@@ -295,6 +351,34 @@ public:
   {
     return v_[ idx ];
   }
+
+    double x() const {
+        return v_[0];
+    }
+    double& x() {
+        return v_[0];
+    }
+
+    double y() const {
+        return v_[1];
+    }
+    double& y() {
+        return v_[1];
+    }
+
+    double z() const {
+        return v_[2];
+    }
+    double& z() {
+        return v_[2];
+    }
+
+    double w() const {
+        return v_[3];
+    }
+    double& w() {
+        return v_[3];
+    }
 
 private:
   double v_[4];
