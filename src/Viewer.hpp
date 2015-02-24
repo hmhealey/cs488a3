@@ -28,7 +28,7 @@ private:
 
     SceneNode* scene = NULL;
 
-    Matrix4 sceneTransformation;
+    Matrix4 sceneTranslation;
 
     QOpenGLBuffer mCircleBufferObject;
     QOpenGLVertexArrayObject mVertexArrayObject;
