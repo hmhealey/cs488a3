@@ -32,7 +32,6 @@ void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bo
 }
 
 void SceneNode::rotate(char axis, double angle) {
-    cerr << "SceneNode::rotate - Rotating " << m_name << " around " << axis << " by " << angle << endl;
     switch(axis) {
     case 'x':
         translationRotation = translationRotation * Matrix4::makeXRotation(angle);
@@ -50,12 +49,10 @@ void SceneNode::rotate(char axis, double angle) {
 }
 
 void SceneNode::scale(const Vector3& amount) {
-    cerr << "SceneNode::scale - Scaling " << m_name << " by " << amount << endl;
     scaling = scaling * Matrix4::makeScaling(amount[0], amount[1], amount[2]);
 }
 
 void SceneNode::translate(const Vector3& amount) {
-    cerr << "SceneNode::scale - Translating " << m_name << " by " << amount << endl;
     translationRotation = translationRotation * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
