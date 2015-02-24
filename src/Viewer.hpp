@@ -28,10 +28,15 @@ private:
 
     SceneNode* scene = NULL;
 
+    Matrix4 sceneTransformation;
+
     QOpenGLBuffer mCircleBufferObject;
     QOpenGLVertexArrayObject mVertexArrayObject;
 
     InputMode mode = Viewer::Puppet;
+
+    int lastMouseX = -1;
+    int lastMouseY = -1;
 
     bool trackballVisible = false;
     bool depthBufferEnabled = true;

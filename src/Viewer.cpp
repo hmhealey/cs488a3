@@ -18,6 +18,10 @@
 
 using namespace std;
 
+static const double PUPPET_TRANSLATION_X_FACTOR = -0.02;
+static const double PUPPET_TRANSLATION_Y_FACTOR = 0.02;
+static const double PUPPET_TRANSLATION_Z_FACTOR = 0.05;
+
 Viewer::Viewer(const QGLFormat& format, QWidget *parent) : QGLWidget(format, parent), mCircleBufferObject(QOpenGLBuffer::VertexBuffer), mVertexArrayObject(this) { }
 
 Viewer::~Viewer() { }
@@ -225,7 +229,7 @@ void Viewer::paintGL() {
     cube.draw(shader);*/
 
     if (scene != NULL) {
-        scene->walk_gl(shader, Matrix4(), false);
+        scene->walk_gl(shader, sceneTransformation, false);
     }
 
     // disable options after drawing
@@ -253,15 +257,40 @@ void Viewer::resizeGL(int width, int height) {
 }
 
 void Viewer::mousePressEvent(QMouseEvent* event) {
-    cerr << "Stub: button " << event->button() << " pressed" << endl;
-}
+    lastMouseX = event->x();
+    lastMouseY = event->y();
 
-void Viewer::mouseReleaseEvent(QMouseEvent* event) {
-    cerr << "Stub: button " << event->button() << " released" << endl;
+    if (mode == Viewer::Joints) {
+        // TODO joint manipulation
+    }
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent* event) {
-    cerr << "Stub: Motion at " << event->x() << ", " << event->y() << endl;
+    int dx = lastMouseX - event->x();
+    int dy = lastMouseY - event->y();
+        
+    if (mode == Viewer::Puppet) {
+        // don't allow multiple operations to work at once since that really doesn't make sense here
+        if ((event->buttons() & Qt::LeftButton) != 0) { 
+            sceneTransformation = sceneTransformation * Matrix4::makeTranslation(dx * PUPPET_TRANSLATION_X_FACTOR, dy * PUPPET_TRANSLATION_Y_FACTOR, 0);
+        } else if ((event->buttons() & Qt::RightButton) != 0) {
+            sceneTransformation = sceneTransformation * Matrix4::makeTranslation(0, 0, dy * PUPPET_TRANSLATION_Z_FACTOR);
+        } else if ((event->buttons() & Qt::MiddleButton) != 0) {
+            // TODO allow puppet rotation with the virtual trackball
+        }
+    } else if (mode == Viewer::Joints) {
+        // but allow multiple operations at once since it actually works here
+        // TODO joint manipulation
+    }
+
+    lastMouseX = event->x();
+    lastMouseY = event->y();
+}
+
+void Viewer::mouseReleaseEvent(QMouseEvent* event) {
+    if (mode == Viewer::Joints) {
+        // TODO joint manipulation
+    }
 }
 
 void Viewer::draw_trackball_circle() {
