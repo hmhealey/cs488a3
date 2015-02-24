@@ -31,6 +31,11 @@ private:
     QOpenGLBuffer mCircleBufferObject;
     QOpenGLVertexArrayObject mVertexArrayObject;
 
+    bool trackballVisible = false;
+    bool depthBufferEnabled = false;
+    bool backfaceCullingEnabled = false;
+    bool frontfaceCullingEnabled = false;
+
 public:
     Viewer(const QGLFormat& format, QWidget *parent = 0);
     virtual ~Viewer();

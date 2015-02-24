@@ -98,51 +98,35 @@ int Viewer::redo() {
 }
 
 bool Viewer::isTrackballVisible() const {
-    // TODO get trackball visibility
-    cerr << "Viewer::isTrackballVisible - Not yet implemented" << endl;
-    return false;
+    return trackballVisible;
 }
 
 void Viewer::setTrackballVisible(bool trackballVisible) {
-    ((void) trackballVisible);
-    // TODO set trackball visibility
-    cerr << "Viewer::setTrackballVisible - Not yet implemented" << endl;
+    this->trackballVisible = trackballVisible;
 }
 
 bool Viewer::isDepthBufferEnabled() const {
-    // TODO get depth buffer enabledness
-    cerr << "Viewer::isDepthBufferEnabled - Not yet implemented" << endl;
-    return false;
+    return depthBufferEnabled;
 }
 
 void Viewer::setDepthBufferEnabled(bool depthBufferEnabled) {
-    ((void) depthBufferEnabled);
-    // TODO set depth buffer
-    cerr << "Viewer::setDepthBufferEnabled - Not yet implemented" << endl;
+    this->depthBufferEnabled = depthBufferEnabled;
 }
 
 bool Viewer::isBackfaceCullingEnabled() const {
-    // TODO get backface cullingness
-    cerr << "Viewer::isBackfaceCullingEnabled - Not yet implemented" << endl;
-    return false;
+    return backfaceCullingEnabled;
 }
 
 void Viewer::setBackfaceCullingEnabled(bool backfaceCullingEnabled) {
-    ((void) backfaceCullingEnabled);
-    // TODO set backface culling
-    cerr << "Viewer::setBackfaceCullingEnabled - Not yet implemented" << endl;
+    this->backfaceCullingEnabled = backfaceCullingEnabled;
 }
 
 bool Viewer::isFrontfaceCullingEnabled() const {
-    // TODO get frontclungl
-    cerr << "Viewer::isFrontfaceCullingEnabled - Not yet implemented" << endl;
-    return false;
+    return frontfaceCullingEnabled;
 }
 
 void Viewer::setFrontfaceCullingEnabled(bool frontfaceCullingEnabled) {
-    ((void) frontfaceCullingEnabled);
-    // TODO set frontface culling
-    cerr << "Viewer::setFrontfaceCullingEnabled - Not yet implemented" << endl;
+    this->frontfaceCullingEnabled = frontfaceCullingEnabled;
 }
 
 void Viewer::initializeGL() {
@@ -205,6 +189,21 @@ void Viewer::paintGL() {
     // Clear framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // set up OpenGL state based on options
+    if (depthBufferEnabled) {
+        glEnable(GL_DEPTH_TEST);
+    }
+    if (backfaceCullingEnabled || frontfaceCullingEnabled) {
+        if (backfaceCullingEnabled && frontfaceCullingEnabled) {
+            glCullFace(GL_FRONT_AND_BACK);
+        } else if (backfaceCullingEnabled) {
+            glCullFace(GL_BACK);
+        } else /*if (frontfaceCullingEnabled)*/ {
+            glCullFace(GL_FRONT);
+        }
+        glEnable(GL_CULL_FACE);
+    }
+
     // construct the shapes for drawing
     /*Material material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
 
@@ -234,7 +233,13 @@ void Viewer::paintGL() {
         scene->walk_gl(shader, Matrix4(), false);
     }
 
-    //draw_trackball_circle();
+    // disable options after drawing
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+
+    if (trackballVisible) {
+        draw_trackball_circle();
+    }
 
     update();
 }
@@ -265,8 +270,6 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
 }
 
 void Viewer::draw_trackball_circle() {
-    glDisable(GL_DEPTH_TEST);
-
     interfaceShader.use();
 
     mVertexArrayObject.bind();
@@ -274,6 +277,4 @@ void Viewer::draw_trackball_circle() {
 
     // actually draw trackball
     glDrawArrays(GL_LINE_LOOP, 0, 40);
-
-    glEnable(GL_DEPTH_TEST);
 }

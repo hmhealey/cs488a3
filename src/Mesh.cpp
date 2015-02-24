@@ -17,9 +17,6 @@ Mesh::~Mesh() {
 }
 
 void Mesh::draw(Shader& shader) {
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
     vertexArrayObject.bind();
 
     // bind vertex positions
@@ -46,9 +43,6 @@ void Mesh::draw(Shader& shader) {
     }
 
     vertexArrayObject.release();
-
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
 }
 
 /** Returns a square mesh with the given side length that is centered at (0, 0, 0). **/
