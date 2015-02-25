@@ -149,8 +149,14 @@ void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool 
     shader.use();
 
     if (!picking) {
-        // use the primitive's built-in material
-        m_primitive->getMaterial().applyTo(shader);
+        const Material& material = m_primitive->getMaterial();
+        if (!selected) {
+            // use the primitive's built-in material
+            material.applyTo(shader);
+        } else {
+            // make a selected shape's material just the inverse of the normal one
+            Material(material.diffuse.inverse(), material.specular, material.shininess).applyTo(shader);
+        }
     } else {
         // assign a different material that we can later query while picking
         Material(Colour(m_id / 255.0, m_id / 255.0, m_id / 255.0)).applyTo(shader);
