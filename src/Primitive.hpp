@@ -5,7 +5,9 @@
 
 struct Matrix4;
 class Mesh;
+class Point3D;
 class Shader;
+class Vector3;
 
 class Primitive {
 protected:
@@ -15,11 +17,13 @@ public:
     Primitive();
     virtual ~Primitive();
 
+    virtual void draw(Shader& shader, bool picking = false) const = 0;
+
+    virtual bool raycast(const Point3D& point, const Vector3& direction) const = 0;;
+
     const Material& getMaterial() const;
     Material& getMaterial();
     void setMaterial(const Material& material);
-
-    virtual void draw(Shader& shader, bool picking = false) const = 0;
 };
 
 class Sphere : public Primitive {
@@ -32,6 +36,7 @@ public:
 
     virtual void draw(Shader& shader, bool picking = false) const;
 
+    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
 
 class Cube : public Primitive {
@@ -42,6 +47,8 @@ public:
     virtual ~Cube();
 
     virtual void draw(Shader& shader, bool picking = false) const;
+
+    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
 
 #endif
