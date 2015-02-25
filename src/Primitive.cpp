@@ -18,10 +18,6 @@ const Material& Primitive::getMaterial() const {
     return material;
 }
 
-Material& Primitive::getMaterial() {
-    return material;
-}
-
 void Primitive::setMaterial(const Material& material) {
     this->material = material;
 }
@@ -32,11 +28,15 @@ Sphere::Sphere() { }
 
 Sphere::~Sphere() { }
 
-void Sphere::draw(Shader& shader, bool picking) const {
+Mesh& Sphere::getMesh() {
     if (Sphere::mesh == NULL) {
         Sphere::mesh = Mesh::makeUvSphere(1.0, 64, 64);
     }
 
+    return *Sphere::mesh;
+}
+
+void Sphere::draw(Shader& shader, bool picking) {
     shader.use();
 
     if (!picking) {
@@ -44,7 +44,7 @@ void Sphere::draw(Shader& shader, bool picking) const {
         material.applyTo(shader);
     }
 
-    Sphere::mesh->draw(shader);
+    getMesh().draw(shader);
 }
 
 bool Sphere::raycast(const Point3D& point, const Vector3& direction) const {
@@ -67,7 +67,11 @@ Cube::~Cube() {
     delete mesh;
 }
 
-void Cube::draw(Shader& shader, bool picking) const {
+Mesh& Cube::getMesh() {
+    return *mesh;
+}
+
+void Cube::draw(Shader& shader, bool picking) {
     shader.use();
 
     if (!picking) {

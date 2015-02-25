@@ -17,13 +17,14 @@ public:
     Primitive();
     virtual ~Primitive();
 
-    virtual void draw(Shader& shader, bool picking = false) const = 0;
+    const Material& getMaterial() const;
+    void setMaterial(const Material& material);
+
+    virtual Mesh& getMesh() = 0;
+
+    virtual void draw(Shader& shader, bool picking = false) = 0;
 
     virtual bool raycast(const Point3D& point, const Vector3& direction) const = 0;;
-
-    const Material& getMaterial() const;
-    Material& getMaterial();
-    void setMaterial(const Material& material);
 };
 
 class Sphere : public Primitive {
@@ -34,7 +35,9 @@ public:
     Sphere();
     virtual ~Sphere();
 
-    virtual void draw(Shader& shader, bool picking = false) const;
+    virtual Mesh& getMesh();
+
+    virtual void draw(Shader& shader, bool picking = false);
 
     virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
@@ -46,7 +49,9 @@ public:
     Cube(double size = 1.0);
     virtual ~Cube();
 
-    virtual void draw(Shader& shader, bool picking = false) const;
+    virtual Mesh& getMesh();
+
+    virtual void draw(Shader& shader, bool picking = false);
 
     virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
