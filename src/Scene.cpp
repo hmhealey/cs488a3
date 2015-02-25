@@ -12,6 +12,14 @@ SceneNode::SceneNode(const std::string& name, int id) : m_id(id), m_name(name) {
 
 SceneNode::~SceneNode() { }
 
+string SceneNode::getName() const {
+    return m_name;
+}
+
+int SceneNode::getId() const {
+    return m_id;
+}
+
 Matrix4 SceneNode::getTransform() const {
     return translationRotation * scaling;
 }
@@ -51,6 +59,22 @@ void SceneNode::raycastAll(const Point3D& point, const Vector3& direction) const
 
     for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
         (*i)->raycastAll(childPoint, childDirection);
+    }
+}
+
+SceneNode* SceneNode::getById(int id) {
+    if (id == m_id) {
+        return this;
+    } else {
+        for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+            SceneNode* node = (*i)->getById(id);
+
+            if (node != NULL) {
+                return node;
+            }
+        }
+
+        return NULL;
     }
 }
 

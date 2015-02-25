@@ -32,6 +32,9 @@ public:
     SceneNode(const std::string& name, int id);
     virtual ~SceneNode();
 
+    std::string getName() const;
+    int getId() const;
+
     Matrix4 getTransform() const;
     void setTransform(const Matrix4& translationRotation, const Matrix4& scaling);
 
@@ -50,6 +53,8 @@ public:
     void remove_child(SceneNode* child) {
         m_children.remove(child);
     }
+
+    SceneNode* getById(int id);
 
     // Callbacks to be implemented.
     // These will be called from Lua.

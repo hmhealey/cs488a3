@@ -30,6 +30,8 @@ private:
 
     SceneNode* scene = NULL;
 
+    std::list<SceneNode*> selection;
+
     Trackball trackball;
 
     Matrix4 sceneTranslation;

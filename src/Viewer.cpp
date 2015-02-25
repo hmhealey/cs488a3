@@ -313,14 +313,18 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
                 float depth;
                 glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
 
-                char colour[4];
-                glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, colour);
+                if (depth < 1) {
+                    // our cursor is actually over something so now we can pull the id from the greyscale colour
+                    // value stored in the picking buffer
+                    char id;
+                    glReadPixels(x, y, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &id);
 
-                cerr << "point: " << x << ", " << y << endl;
-                cerr << "colour: " << (int) colour[0] << ", " << (int) colour[1] << ", " << (int) colour[2] << ", " << (int) colour[3] << endl;
-                cerr << "depth: " << depth << endl;
+                    cerr << "clicked on " << scene->getById(id)->getName() << endl;
+                } else {
+                    cerr << "you aren't clicking on anything" << endl;
+                }
 
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0;
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
             } else {
                 // this should never happen
                 cerr << "picking buffer is null when going to do picking" << endl;
