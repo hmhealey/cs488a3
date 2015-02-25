@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Algebra.hpp"
+#include "Mesh.hpp"
 #include "Primitive.hpp"
 #include "Shader.hpp"
 
@@ -145,16 +146,17 @@ GeometryNode::~GeometryNode() { }
 
 void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     shader.setModelMatrix(parentTransform * getTransform());
+    shader.use();
 
-    if (picking) {
-        // I didn't really think out this workflow well so we bind the shader all over the place
-        shader.use();
-
+    if (!picking) {
+        // use the primitive's built-in material
+        m_primitive->getMaterial().applyTo(shader);
+    } else {
         // assign a different material that we can later query while picking
         Material(Colour(m_id / 255.0, m_id / 255.0, m_id / 255.0)).applyTo(shader);
     }
 
-    m_primitive->draw(shader, picking);
+    m_primitive->getMesh().draw(shader);
 
     walk_children(shader, parentTransform, picking);
 }

@@ -36,17 +36,6 @@ Mesh& Sphere::getMesh() {
     return *Sphere::mesh;
 }
 
-void Sphere::draw(Shader& shader, bool picking) {
-    shader.use();
-
-    if (!picking) {
-        // we've already been assigned a material by the GeometryNode
-        material.applyTo(shader);
-    }
-
-    getMesh().draw(shader);
-}
-
 bool Sphere::raycast(const Point3D& point, const Vector3& direction) const {
     Vector3 pointToCenter = Point3D(0, 0, 0) - point;
 
@@ -69,17 +58,6 @@ Cube::~Cube() {
 
 Mesh& Cube::getMesh() {
     return *mesh;
-}
-
-void Cube::draw(Shader& shader, bool picking) {
-    shader.use();
-
-    if (!picking) {
-        // we've already been assigned a material by the GeometryNode
-        material.applyTo(shader);
-    }
-
-    mesh->draw(shader);
 }
 
 bool Cube::raycast(const Point3D& point, const Vector3& direction) const {

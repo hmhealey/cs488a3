@@ -22,8 +22,6 @@ public:
 
     virtual Mesh& getMesh() = 0;
 
-    virtual void draw(Shader& shader, bool picking = false) = 0;
-
     virtual bool raycast(const Point3D& point, const Vector3& direction) const = 0;;
 };
 
@@ -37,8 +35,6 @@ public:
 
     virtual Mesh& getMesh();
 
-    virtual void draw(Shader& shader, bool picking = false);
-
     virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
 
@@ -50,8 +46,6 @@ public:
     virtual ~Cube();
 
     virtual Mesh& getMesh();
-
-    virtual void draw(Shader& shader, bool picking = false);
 
     virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
