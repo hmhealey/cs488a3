@@ -24,7 +24,11 @@ static const double PUPPET_TRANSLATION_Z_FACTOR = 0.05;
 
 Viewer::Viewer(const QGLFormat& format, QWidget *parent) : QGLWidget(format, parent), mCircleBufferObject(QOpenGLBuffer::VertexBuffer), mVertexArrayObject(this) { }
 
-Viewer::~Viewer() { }
+Viewer::~Viewer() {
+    if (pickingBuffer != NULL) {
+        delete pickingBuffer;
+    }
+}
 
 QSize Viewer::minimumSizeHint() const {
     return QSize(50, 50);
@@ -139,9 +143,11 @@ void Viewer::initializeGL() {
     // set up shaders
     shader.initialize("phong");
     interfaceShader.initialize("flat");
+    pickingShader.initialize("flat");
 
     // sets the camera position
     shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 20));
+    pickingShader.setViewMatrix(Matrix4::makeTranslation(0, 0, 20));
 
     // construct circle for trackball
     float circleData[120];
@@ -228,6 +234,21 @@ void Viewer::paintGL() {
 
     if (scene != NULL) {
         scene->walk_gl(shader, sceneTranslation * sceneRotation, false);
+
+        if (pickingBuffer != NULL) {
+            if (!pickingBuffer->bind()) cerr << "binding picking buffer failed" << endl;
+
+            scene->walk_gl(pickingShader, sceneTranslation * sceneRotation, true);
+
+            if (!pickingBuffer->release()) cerr << "releasing picking buffer failed" << endl;
+        } else {
+            cerr << "picking buffer is NULL" << endl;
+        }
+    }
+
+    int error = glGetError();
+    if (error != GL_NO_ERROR) {
+        cerr << "error after drawing " << error << endl;
     }
 
     // disable options after drawing
@@ -246,6 +267,7 @@ void Viewer::resizeGL(int width, int height) {
 
     // update perspective matrixes for both the scene and interface
     shader.setProjectionMatrix(Matrix4::makePerspective(30, (double) height / (double) width, 0.001, 1000));
+    pickingShader.setProjectionMatrix(Matrix4::makePerspective(30, (double) height / (double) width, 0.001, 1000));
     interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, width, 0, height, -0.1, 0.1));
 
     // center interface in the window
@@ -255,6 +277,14 @@ void Viewer::resizeGL(int width, int height) {
     // resize the virtual trackball
     trackball.radius = radius;
     trackball.center = Point2D(width / 2.0, height / 2.0);
+
+    // resize the picking buffer
+    if (pickingBuffer == NULL || pickingBuffer->size().width() != width || pickingBuffer->size().height() != height) {
+        if (pickingBuffer != NULL) {
+            delete pickingBuffer;
+        }
+        pickingBuffer = new QGLFramebufferObject(width, height);
+    }
 
     glViewport(0, 0, width, height);
 }

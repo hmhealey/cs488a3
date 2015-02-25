@@ -1,6 +1,7 @@
 #ifndef CS488_VIEWER_HPP
 #define CS488_VIEWER_HPP
 
+#include <QGLFrameBufferObject>
 #include <QGLWidget>
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
@@ -46,6 +47,9 @@ private:
     bool depthBufferEnabled = true;
     bool backfaceCullingEnabled = true;
     bool frontfaceCullingEnabled = false;
+
+    Shader pickingShader;
+    QGLFramebufferObject* pickingBuffer = NULL;
 
 public:
     Viewer(const QGLFormat& format, QWidget *parent = 0);
