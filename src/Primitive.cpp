@@ -33,15 +33,17 @@ Sphere::Sphere() { }
 Sphere::~Sphere() { }
 
 void Sphere::draw(Shader& shader, bool picking) const {
-    // TODO implement picking
-    (void) picking;
-
     if (Sphere::mesh == NULL) {
         Sphere::mesh = Mesh::makeUvSphere(1.0, 64, 64);
     }
 
     shader.use();
-    material.applyTo(shader);
+
+    if (!picking) {
+        // we've already been assigned a material by the GeometryNode
+        material.applyTo(shader);
+    }
+
     Sphere::mesh->draw(shader);
 }
 
@@ -66,11 +68,13 @@ Cube::~Cube() {
 }
 
 void Cube::draw(Shader& shader, bool picking) const {
-    // TODO implement picking
-    (void) picking;
-
     shader.use();
-    material.applyTo(shader);
+
+    if (!picking) {
+        // we've already been assigned a material by the GeometryNode
+        material.applyTo(shader);
+    }
+
     mesh->draw(shader);
 }
 

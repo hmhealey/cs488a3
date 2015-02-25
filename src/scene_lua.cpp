@@ -56,6 +56,8 @@
 #  define GRLUA_DEBUG_CALL do { } while (0)
 #endif
 
+static int nextId = 0;
+
 // You may wonder, for the following types, why we use special "_ud"
 // types instead of, for example, just allocating SceneNodes directly
 // from lua. Part of the answer is that Lua is a C api. It doesn't
@@ -91,7 +93,7 @@ int gr_node_cmd(lua_State* L)
   data->node = 0;
 
   const char* name = luaL_checkstring(L, 1);
-  data->node = new SceneNode(name);
+  data->node = new SceneNode(name, nextId++);
 
   luaL_getmetatable(L, "gr.node");
   lua_setmetatable(L, -2);
@@ -109,7 +111,7 @@ int gr_joint_cmd(lua_State* L)
   data->node = 0;
 
   const char* name = luaL_checkstring(L, 1);
-  JointNode* node = new JointNode(name);
+  JointNode* node = new JointNode(name, nextId++);
 
   luaL_checktype(L, 2, LUA_TTABLE);
   luaL_argcheck(L, luaL_getn(L, 2) == 3, 2, "Three-tuple expected");
@@ -146,7 +148,7 @@ int gr_sphere_cmd(lua_State* L)
   data->node = 0;
   
   const char* name = luaL_checkstring(L, 1);
-  data->node = new GeometryNode(name, new Sphere());
+  data->node = new GeometryNode(name, nextId++, new Sphere());
 
   luaL_getmetatable(L, "gr.node");
   lua_setmetatable(L, -2);

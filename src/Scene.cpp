@@ -8,7 +8,7 @@
 
 using namespace std;
 
-SceneNode::SceneNode(const std::string& name) : m_name(name) { }
+SceneNode::SceneNode(const std::string& name, int id) : m_id(id), m_name(name) { }
 
 SceneNode::~SceneNode() { }
 
@@ -83,7 +83,7 @@ SceneNode::NodeType SceneNode::getType() const {
     return SceneNode::Node;
 }
 
-JointNode::JointNode(const std::string& name) : SceneNode(name) { }
+JointNode::JointNode(const std::string& name, int id) : SceneNode(name, id) { }
 
 JointNode::~JointNode() { }
 
@@ -107,12 +107,21 @@ void JointNode::set_joint_y(double min, double init, double max) {
     m_joint_y.max = max;
 }
 
-GeometryNode::GeometryNode(const std::string& name, Primitive* primitive) : SceneNode(name), m_primitive(primitive) { }
+GeometryNode::GeometryNode(const std::string& name, int id, Primitive* primitive) : SceneNode(name, id), m_primitive(primitive) { }
 
 GeometryNode::~GeometryNode() { }
 
 void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     shader.setModelMatrix(parentTransform * getTransform());
+
+    if (picking) {
+        // I didn't really think out this workflow well so we bind the shader all over the place
+        shader.use();
+
+        // assign a different material that we can later query while picking
+        Material(Colour(m_id / 255.0, m_id / 255.0, m_id / 255.0)).applyTo(shader);
+    }
+
     m_primitive->draw(shader, picking);
 
     walk_children(shader, parentTransform, picking);

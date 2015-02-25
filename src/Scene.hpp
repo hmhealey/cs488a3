@@ -29,7 +29,7 @@ protected:
     std::list<SceneNode*> m_children;
 
 public:
-    SceneNode(const std::string& name);
+    SceneNode(const std::string& name, int id);
     virtual ~SceneNode();
 
     Matrix4 getTransform() const;
@@ -62,7 +62,7 @@ public:
 
 class JointNode : public SceneNode {
 public:
-    JointNode(const std::string& name);
+    JointNode(const std::string& name, int id);
     virtual ~JointNode();
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
@@ -82,7 +82,7 @@ protected:
 
 class GeometryNode : public SceneNode {
 public:
-    GeometryNode(const std::string& name, Primitive* primitive);
+    GeometryNode(const std::string& name, int id, Primitive* primitive);
     virtual ~GeometryNode();
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
