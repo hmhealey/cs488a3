@@ -276,28 +276,29 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
         if (mode == Viewer::Puppet) {
             // don't allow multiple operations to work at once since that really doesn't make sense here
             if ((event->buttons() & Qt::LeftButton) != 0) { 
-                cerr << "translating on xy" << endl;
                 sceneTranslation = sceneTranslation * Matrix4::makeTranslation(dx * PUPPET_TRANSLATION_X_FACTOR, dy * PUPPET_TRANSLATION_Y_FACTOR, 0);
             } else if ((event->buttons() & Qt::RightButton) != 0) {
                 // find where the mouse was/is in the trackball's coordinate system
-                Vector3 fNewVec = trackball.windowToTrackball(Point2D(event->x(), event->y()));
-                Vector3 fOldVec = trackball.windowToTrackball(Point2D(lastMouseX, lastMouseY));
+                Vector3 current = trackball.windowToTrackball(Point2D(event->x(), event->y()));
+                Vector3 old = trackball.windowToTrackball(Point2D(lastMouseX, lastMouseY));
 
                 // flip y from window coordinates to OpenGL ones
-                fNewVec.y() = -fNewVec.y();
-                fOldVec.y() = -fOldVec.y();
+                current.y() = -current.y();
+                old.y() = -old.y();
 
                 // despite the mouse having actually moved, these rarely end up being equal which results in their cross product being
                 // the zero vector which causes everything to break
-                if (fNewVec != fOldVec) {
+                if (current != old) {
                     // we can cross those vectors to get a vector representing the axis of rotation which has length matching the angle to rotate
-                    Vector3 fVec = fNewVec.cross(fOldVec);
+                    Vector3 vec = old.cross(current);
 
                     // fVec.length() is in radians
-                    sceneRotation = sceneRotation * Matrix4::makeRotation(fVec.length() * 180 / M_PI, (sceneRotation.inverse() * fVec).normalized()).transposed();
+                    double angle = vec.length() * 180 / M_PI;
+                    Vector3 axis = (sceneRotation.inverse() * vec).normalized();
+
+                    sceneRotation = sceneRotation * Matrix4::makeRotation(angle, axis);
                 }
             } else if ((event->buttons() & Qt::MiddleButton) != 0) {
-                cerr << "translating on z" << endl;
                 sceneTranslation = sceneTranslation * Matrix4::makeTranslation(0, 0, dy * PUPPET_TRANSLATION_Z_FACTOR);
             }
         } else if (mode == Viewer::Joints) {
