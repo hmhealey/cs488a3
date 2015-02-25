@@ -173,10 +173,6 @@ const Material& GeometryNode::getMaterial() const {
     return m_primitive->getMaterial();
 }
 
-Material& GeometryNode::getMaterial() {
-    return m_primitive->getMaterial();
-}
-
 void GeometryNode::setMaterial(const Material& material) {
     m_primitive->setMaterial(material);
 }

@@ -102,7 +102,6 @@ public:
     virtual SceneNode::NodeType getType() const;
 
     const Material& getMaterial() const;
-    Material& getMaterial();
     void setMaterial(const Material& material);
 
 protected:
