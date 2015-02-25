@@ -319,10 +319,7 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
                     char id;
                     glReadPixels(x, y, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &id);
 
-                    SceneNode* node = scene->getById(id);
-
-                    bool selected = !node->isSelected();
-                    node->setSelected(selected);
+                    scene->pick(id);
                 }
 
                 glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);

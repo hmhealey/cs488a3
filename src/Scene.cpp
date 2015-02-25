@@ -87,6 +87,32 @@ SceneNode* SceneNode::getById(int id) {
     }
 }
 
+bool SceneNode::pick(int id) {
+    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+        SceneNode* child = *i;
+
+        if (child->m_id == id) {
+            // we've found the node we're looking for, but only nodes directly under Joints are selectable
+            // so we only actually select it if we're a joint
+            if (getType() == SceneNode::Joint) {
+                child->selected = !child->selected;
+            }
+
+            // even if we couldn't select the node, return true to indicate that we found it
+            return true;
+        } else {
+            // search depth-first for the node with the given id
+            bool found = child->pick(id);
+
+            if (found) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void SceneNode::rotate(char axis, double angle) {
     switch(axis) {
     case 'x':

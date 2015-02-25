@@ -61,6 +61,8 @@ public:
 
     SceneNode* getById(int id);
 
+    bool pick(int id);
+
     // Callbacks to be implemented.
     // These will be called from Lua.
     void rotate(char axis, double angle);
