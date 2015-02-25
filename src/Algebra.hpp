@@ -645,6 +645,8 @@ public:
     return b_;
   }
 
+    Colour inverse() const;
+
 private:
   double r_;
   double g_;

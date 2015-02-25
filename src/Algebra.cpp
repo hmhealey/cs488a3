@@ -255,3 +255,7 @@ Matrix4 Matrix4::makePerspective(double fov, double aspect, double near, double 
         0,              0,          -1,                             0
     );
 }
+
+Colour Colour::inverse() const {
+    return Colour(1 - r_, 1 - g_, 1 - b_);
+}
