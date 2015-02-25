@@ -323,12 +323,6 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
 
                     bool selected = !node->isSelected();
                     node->setSelected(selected);
-
-                    if (selected) {
-                        cerr << "Selected node " << node->getName() << endl;
-                    } else {
-                        cerr << "Unselected node " << node->getName() << endl;
-                    }
                 }
 
                 glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
