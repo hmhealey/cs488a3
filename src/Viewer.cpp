@@ -207,31 +207,6 @@ void Viewer::paintGL() {
         glEnable(GL_CULL_FACE);
     }
 
-    // construct the shapes for drawing
-    /*Material material(Colour(0.5, 0.0, 1.0), Colour(0.8, 0.8, 0.8), 64);
-
-    Sphere sphere;
-    sphere.setMaterial(material);
-
-    Cube cube;
-    cube.setMaterial(material);
-
-    // hackish rotation so we can test stuff
-    static double angle = 0;
-    angle += 1;
-
-    // draw sphere (i should really make it so that you don't need to call use to update the shader's uniforms)
-    shader.setModelMatrix(Matrix4::makeTranslation(0, 0, 0) * Matrix4::makeRotation(0, angle, 0) * Matrix4::makeScaling(1, 1, 2));
-    shader.use();
-
-    sphere.draw(shader);
-
-    // draw cube
-    shader.setModelMatrix(Matrix4::makeTranslation(0, -1, 0) * Matrix4::makeRotation(0, angle, 0) * Matrix4::makeScaling(2, 1, 1));
-    shader.use();
-
-    cube.draw(shader);*/
-
     if (scene != NULL) {
         scene->walk_gl(shader, sceneTranslation * sceneRotation, false);
 
