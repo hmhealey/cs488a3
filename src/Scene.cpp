@@ -24,6 +24,10 @@ void SceneNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool pic
     walk_children(shader, parentTransform, picking);
 }
 
+SceneNode::NodeType SceneNode::getType() const {
+    return SceneNode::Node;
+}
+
 void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     const Matrix4 transform(parentTransform * getTransform());
     for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
@@ -56,10 +60,6 @@ void SceneNode::translate(const Vector3& amount) {
     translationRotation = translationRotation * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
-bool SceneNode::is_joint() const {
-    return false;
-}
-
 JointNode::JointNode(const std::string& name) : SceneNode(name) { }
 
 JointNode::~JointNode() { }
@@ -68,8 +68,8 @@ void JointNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool pic
     walk_children(shader, parentTransform, picking);
 }
 
-bool JointNode::is_joint() const {
-    return true;
+SceneNode::NodeType JointNode::getType() const {
+    return SceneNode::Joint;
 }
 
 void JointNode::set_joint_x(double min, double init, double max) {
@@ -93,6 +93,10 @@ void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool 
     m_primitive->draw(shader, picking);
 
     walk_children(shader, parentTransform, picking);
+}
+
+SceneNode::NodeType GeometryNode::getType() const {
+    return SceneNode::Geometry;
 }
 
 const Material& GeometryNode::getMaterial() const {

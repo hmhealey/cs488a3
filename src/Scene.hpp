@@ -10,6 +10,12 @@ class Primitive;
 class Shader;
 
 class SceneNode {
+public:
+    enum NodeType {
+        Node,
+        Joint,
+        Geometry
+    };
 protected:
     // Useful for picking
     int m_id;
@@ -46,8 +52,7 @@ public:
     void scale(const Vector3& amount);
     void translate(const Vector3& amount);
 
-    // Returns true if and only if this node is a JointNode
-    virtual bool is_joint() const;
+    virtual NodeType getType() const;
 };
 
 class JointNode : public SceneNode {
@@ -57,7 +62,7 @@ public:
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
-    virtual bool is_joint() const;
+    virtual SceneNode::NodeType getType() const;
 
     void set_joint_x(double min, double init, double max);
     void set_joint_y(double min, double init, double max);
@@ -76,6 +81,8 @@ public:
     virtual ~GeometryNode();
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
+
+    virtual SceneNode::NodeType getType() const;
 
     const Material& getMaterial() const;
     Material& getMaterial();
