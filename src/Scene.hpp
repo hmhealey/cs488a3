@@ -21,6 +21,8 @@ protected:
     int m_id;
     std::string m_name;
 
+    bool selected = false;
+
     // Transformations
     Matrix4 translationRotation;
     Matrix4 scaling;
@@ -34,6 +36,9 @@ public:
 
     std::string getName() const;
     int getId() const;
+
+    bool isSelected() const;
+    void setSelected(bool selected);
 
     Matrix4 getTransform() const;
     void setTransform(const Matrix4& translationRotation, const Matrix4& scaling);

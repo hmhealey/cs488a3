@@ -20,6 +20,14 @@ int SceneNode::getId() const {
     return m_id;
 }
 
+bool SceneNode::isSelected() const {
+    return selected;
+}
+
+void SceneNode::setSelected(bool selected) {
+    this->selected = selected;
+}
+
 Matrix4 SceneNode::getTransform() const {
     return translationRotation * scaling;
 }
