@@ -294,7 +294,7 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
                     Vector3 fVec = fNewVec.cross(fOldVec);
 
                     // fVec.length() is in radians
-                    sceneRotation = sceneRotation * Matrix4::makeRotation(fVec.length() * 180 / M_PI, fVec.normalized()).transposed();
+                    sceneRotation = sceneRotation * Matrix4::makeRotation(fVec.length() * 180 / M_PI, (sceneRotation.inverse() * fVec).normalized()).transposed();
                 }
             } else if ((event->buttons() & Qt::MiddleButton) != 0) {
                 cerr << "translating on z" << endl;
