@@ -28,6 +28,7 @@ class AppWindow : public QMainWindow {
     QAction* toggleDepthBuffer;
     QAction* toggleBackfaceCulling;
     QAction* toggleFrontfaceCulling;
+    QAction* toggleDrawPickingBuffer;
 
     SceneNode* scene = NULL;
 
@@ -53,6 +54,7 @@ private:
     void doToggleDepthBuffer();
     void doToggleBackfaceCulling();
     void doToggleFrontfaceCulling();
+    void doToggleDrawPickingBuffer();
 };
 
 #endif

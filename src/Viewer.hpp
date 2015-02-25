@@ -47,6 +47,7 @@ private:
     bool depthBufferEnabled = true;
     bool backfaceCullingEnabled = true;
     bool frontfaceCullingEnabled = false;
+    bool drawPickingBufferEnabled = false;
 
     Shader pickingShader;
     QGLFramebufferObject* pickingBuffer = NULL;
@@ -90,6 +91,9 @@ public:
 
     bool isFrontfaceCullingEnabled() const;
     void setFrontfaceCullingEnabled(bool frontfaceCullingEnabled);
+
+    bool isDrawPickingBufferEnabled() const;
+    void setDrawPickingBufferEnabled(bool drawPickingBufferEnabled);
 
 protected:
 

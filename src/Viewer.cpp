@@ -130,6 +130,14 @@ void Viewer::setFrontfaceCullingEnabled(bool frontfaceCullingEnabled) {
     this->frontfaceCullingEnabled = frontfaceCullingEnabled;
 }
 
+bool Viewer::isDrawPickingBufferEnabled() const {
+    return drawPickingBufferEnabled;
+}
+
+void Viewer::setDrawPickingBufferEnabled(bool drawPickingBufferEnabled) {
+    this->drawPickingBufferEnabled = drawPickingBufferEnabled;
+}
+
 void Viewer::initializeGL() {
     QGLFormat glFormat = QGLWidget::format();
     if (!glFormat.sampleBuffers()) {
@@ -137,8 +145,8 @@ void Viewer::initializeGL() {
         return;
     }
 
-    glShadeModel(GL_SMOOTH);
     glClearColor(0.4, 0.4, 0.4, 0.0);
+    glShadeModel(GL_SMOOTH);
 
     // set up shaders
     shader.initialize("phong");
@@ -186,38 +194,64 @@ void Viewer::initializeGL() {
     interfaceShader.getProgram().release();
     mCircleBufferObject.release();
     mVertexArrayObject.release();
+
+    // set the pixel alignment to 1 so that we can read from any size of frame buffer without worrying about data being offset
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
 }
 
 void Viewer::paintGL() {
-    // Clear framebuffer
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // set up OpenGL state based on options
-    if (depthBufferEnabled) {
-        glEnable(GL_DEPTH_TEST);
-    }
-    if (backfaceCullingEnabled || frontfaceCullingEnabled) {
-        if (backfaceCullingEnabled && frontfaceCullingEnabled) {
-            glCullFace(GL_FRONT_AND_BACK);
-        } else if (backfaceCullingEnabled) {
-            glCullFace(GL_BACK);
-        } else /*if (frontfaceCullingEnabled)*/ {
-            glCullFace(GL_FRONT);
-        }
-        glEnable(GL_CULL_FACE);
-    }
-
     if (scene != NULL) {
+        // clear main framebuffer
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // set up OpenGL state based on options
+        if (depthBufferEnabled) {
+            glEnable(GL_DEPTH_TEST);
+        }
+        if (backfaceCullingEnabled || frontfaceCullingEnabled) {
+            if (backfaceCullingEnabled && frontfaceCullingEnabled) {
+                glCullFace(GL_FRONT_AND_BACK);
+            } else if (backfaceCullingEnabled) {
+                glCullFace(GL_BACK);
+            } else /*if (frontfaceCullingEnabled)*/ {
+                glCullFace(GL_FRONT);
+            }
+            glEnable(GL_CULL_FACE);
+        }
+
+        // actually draw scene
         scene->walk_gl(shader, sceneTranslation * sceneRotation, false);
 
+        // disable options after drawing
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
+
+        // draw to picking buffer so that picking works
         if (pickingBuffer != NULL) {
             if (!pickingBuffer->bind()) cerr << "binding picking buffer failed" << endl;
 
+            glEnable(GL_DEPTH_TEST);
+            glCullFace(GL_BACK);
+            glEnable(GL_CULL_FACE);
+
+            // clear picking buffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             scene->walk_gl(pickingShader, sceneTranslation * sceneRotation, true);
 
+            glDisable(GL_CULL_FACE);
+            glDisable(GL_DEPTH_TEST);
+
             if (!pickingBuffer->release()) cerr << "releasing picking buffer failed" << endl;
-        } else {
-            cerr << "picking buffer is NULL" << endl;
+
+            if (drawPickingBufferEnabled) {
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickingBuffer->handle());
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+                glBlitFramebuffer(0, 0, width(), height(), 0, 0, width(), height(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            }
         }
     }
 
@@ -225,10 +259,6 @@ void Viewer::paintGL() {
     if (error != GL_NO_ERROR) {
         cerr << "error after drawing " << error << endl;
     }
-
-    // disable options after drawing
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
 
     if (trackballVisible) {
         draw_trackball_circle();
@@ -253,15 +283,18 @@ void Viewer::resizeGL(int width, int height) {
     trackball.radius = radius;
     trackball.center = Point2D(width / 2.0, height / 2.0);
 
-    // resize the picking buffer
-    if (pickingBuffer == NULL || pickingBuffer->size().width() != width || pickingBuffer->size().height() != height) {
+    // update the viewport in the main buffer
+    glViewport(0, 0, width, height);
+
+    // resize the picking buffer to the next largest power of two so we aren't constantly resizing it
+    int size = pow(2, ceil(log2(max(width, height))));
+    if (pickingBuffer == NULL || pickingBuffer->size().width() != size) {
         if (pickingBuffer != NULL) {
             delete pickingBuffer;
         }
-        pickingBuffer = new QGLFramebufferObject(width, height);
-    }
 
-    glViewport(0, 0, width, height);
+        pickingBuffer = new QGLFramebufferObject(size, size, QGLFramebufferObject::Depth);
+    }
 }
 
 void Viewer::mousePressEvent(QMouseEvent* event) {
@@ -269,7 +302,32 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
     lastMouseY = event->y();
 
     if (mode == Viewer::Joints) {
-        // TODO joint manipulation
+        if (event->button() == Qt::LeftButton) {
+            if (pickingBuffer != NULL) {
+                // bind the picking buffer for reading
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickingBuffer->handle());
+
+                int x = event->x();
+                int y = height() - event->y();
+
+                float depth;
+                glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+
+                char colour[4];
+                glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, colour);
+
+                cerr << "point: " << x << ", " << y << endl;
+                cerr << "colour: " << (int) colour[0] << ", " << (int) colour[1] << ", " << (int) colour[2] << ", " << (int) colour[3] << endl;
+                cerr << "depth: " << depth << endl;
+
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0;
+            } else {
+                // this should never happen
+                cerr << "picking buffer is null when going to do picking" << endl;
+            }
+        } else {
+            // TODO joint manipulation
+        }
     }
 }
 

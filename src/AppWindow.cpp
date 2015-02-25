@@ -68,6 +68,8 @@ void AppWindow::keyPressEvent(QKeyEvent* event) {
         doToggleBackfaceCulling();
     } else if (event->key() == Qt::Key_F) {
         doToggleFrontfaceCulling();
+    } else if (event->key() == Qt::Key_D) {
+        doToggleDrawPickingBuffer();
 #endif
     }
 }
@@ -200,6 +202,13 @@ void AppWindow::createMenu() {
         toggleFrontfaceCulling->setShortcuts(QList<QKeySequence>({ Qt::Key_F, Qt::SHIFT + Qt::Key_F }));
         connect(toggleFrontfaceCulling, &QAction::triggered, [=] { doToggleFrontfaceCulling(); });
         optionsMenu->addAction(toggleFrontfaceCulling);
+
+        toggleDrawPickingBuffer = new QAction(tr("&Draw Picking Buffer"), this);
+        toggleDrawPickingBuffer->setStatusTip(tr("Toggles the drawing of the picking buffer instead of the normal framebuffer"));
+        toggleDrawPickingBuffer->setCheckable(true);
+        toggleDrawPickingBuffer->setShortcuts(QList<QKeySequence>({ Qt::Key_D, Qt::SHIFT + Qt::Key_D }));
+        connect(toggleDrawPickingBuffer, &QAction::triggered, [=] { doToggleDrawPickingBuffer(); });
+        optionsMenu->addAction(toggleDrawPickingBuffer);
     }
 }
 
@@ -265,4 +274,11 @@ void AppWindow::doToggleFrontfaceCulling() {
 
     viewer->setFrontfaceCullingEnabled(!enabled);
     toggleFrontfaceCulling->setChecked(!enabled);
+}
+
+void AppWindow::doToggleDrawPickingBuffer() {
+    bool enabled = viewer->isDrawPickingBufferEnabled();
+
+    viewer->setDrawPickingBufferEnabled(!enabled);
+    toggleDrawPickingBuffer->setChecked(!enabled);
 }
