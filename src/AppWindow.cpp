@@ -75,12 +75,17 @@ void AppWindow::keyPressEvent(QKeyEvent* event) {
 }
 
 void AppWindow::mouseReleaseEvent(QMouseEvent* event) {
-    // we just finished manipulating a joint so we've wiped out the redo stack
-    if (viewer->getInputMode() == Viewer::Joints) {
-        redo->setEnabled(false);
-    }
-
     viewer->mouseReleaseEvent(event);
+
+    cerr << "releasebf" << endl;
+    if (viewer->getInputMode() == Viewer::Joints) {
+        // we just finished moving joints so update the states of the undo and redo stack
+        undo->setEnabled(viewer->getUndoStackSize() > 0);
+        redo->setEnabled(viewer->getRedoStackSize() > 0);
+
+        cerr << "u" << viewer->getUndoStackSize() << endl;
+        cerr << "r" << viewer->getRedoStackSize() << endl;
+    }
 }
 
 void AppWindow::loadScene(const string& path) {
@@ -169,6 +174,15 @@ void AppWindow::createMenu() {
         redo->setEnabled(false);
         connect(redo, &QAction::triggered, [=] { doRedo(); });
         editMenu->addAction(redo);
+
+        // attach a handler so that we can update the undo/redo buttons when the undo stack changes
+        connect(viewer, &Viewer::undoStackUpdated, [=] {
+            undo->setEnabled(viewer->getUndoStackSize() > 0);
+            redo->setEnabled(viewer->getRedoStackSize() > 0);
+
+            cerr << "u" << viewer->getUndoStackSize() << endl;
+            cerr << "r" << viewer->getRedoStackSize() << endl;
+        });
     }
 
     optionsMenu = menuBar()->addMenu(tr("&Options"));
@@ -228,9 +242,9 @@ void AppWindow::doResetAll() {
 
 void AppWindow::doUndo() {
     if (viewer->getUndoStackSize() > 0) {
-        int remaining = viewer->undo();
+        bool remaining = viewer->undo();
 
-        undo->setEnabled(remaining > 0);
+        undo->setEnabled(remaining);
     } else {
         QApplication::beep();
         undo->setEnabled(false);
@@ -239,9 +253,9 @@ void AppWindow::doUndo() {
 
 void AppWindow::doRedo() {
     if (viewer->getRedoStackSize() > 0) {
-        int remaining = viewer->redo();
+        bool remaining = viewer->redo();
 
-        redo->setEnabled(remaining > 0);
+        redo->setEnabled(remaining);
     } else {
         QApplication::beep();
         redo->setEnabled(false);

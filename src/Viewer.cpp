@@ -58,8 +58,10 @@ void Viewer::resetOrientation() {
 }
 
 void Viewer::resetJoints() {
-    // TODO clear undo/redo stack
     scene->resetJoints();
+    undoStack.clear();
+
+    emit undoStackUpdated();
 }
 
 void Viewer::resetAll() {
@@ -77,27 +79,27 @@ void Viewer::setInputMode(InputMode mode) {
 }
 
 int Viewer::getUndoStackSize() const {
-    // TODO get undo stack size
-    cerr << "Viewer::getUndoStackSize - Not yet implemented" << endl;
-    return 0;
+    return undoStack.getUndoStackSize();
 }
 
-int Viewer::undo() {
-    // TODO undo the last joint manipulation
-    cerr << "Viewer::undo - Not yet implemented" << endl;
-    return getUndoStackSize();
+bool Viewer::undo() {
+    bool ret = undoStack.undo();
+
+    emit undoStackUpdated();
+
+    return ret;
 }
 
 int Viewer::getRedoStackSize() const {
-    // TODO get redo stack size
-    cerr << "Viewer::getRedoStackSize - Not yet implemented" << endl;
-    return 0;
+    return undoStack.getRedoStackSize();
 }
 
-int Viewer::redo() {
-    // TODO redo the last undid reverted joint manipulation
-    cerr << "Viewer::redo - Not yet implemented" << endl;
-    return getRedoStackSize();
+bool Viewer::redo() {
+    bool ret = undoStack.redo();
+
+    emit undoStackUpdated();
+
+    return ret;
 }
 
 bool Viewer::isTrackballVisible() const {
@@ -375,12 +377,22 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
 
                 // rotate joint around its y axis based on x movement while right clicking
                 if ((event->buttons() & Qt::RightButton) != 0) {
-                    joint->setYRotation(joint->getYRotation() + dx * JOINT_ROTATION_Y_FACTOR);
+                    double from = joint->getYRotation();
+                    double to = joint->setYRotation(from + dx * JOINT_ROTATION_Y_FACTOR);
+
+                    if (from != to) {
+                        updateStepRotation(pendingStep, joint, 'y', from, to);
+                    }
                 }
 
                 // rotate joint around its x axis based on y movement while middle clicking
                 if ((event->buttons() & Qt::MiddleButton) != 0) {
-                    joint->setXRotation(joint->getXRotation() + dy * JOINT_ROTATION_X_FACTOR);
+                    double from = joint->getXRotation();
+                    double to = joint->setXRotation(from + dy * JOINT_ROTATION_X_FACTOR);
+
+                    if (from != to) {
+                        updateStepRotation(pendingStep, joint, 'x', from, to);
+                    }
                 }
             }
         }
@@ -392,7 +404,17 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
 
 void Viewer::mouseReleaseEvent(QMouseEvent* event) {
     if (mode == Viewer::Joints) {
-        // TODO joint manipulation
+        // push the pending step onto the undo stack if any joints have actually changed
+        if (!pendingStep.empty()) {
+            undoStack.push(pendingStep);
+
+            emit undoStackUpdated();
+
+            // and clear the pending step so any further actions are separate from these ones
+            pendingStep.clear();
+        } else {
+            cerr << "there's nothing to push onto the undo stack" << endl;
+        }
     }
 }
 

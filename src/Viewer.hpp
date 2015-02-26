@@ -10,6 +10,7 @@
 
 #include "Shader.hpp"
 #include "Trackball.hpp"
+#include "UndoStack.hpp"
 
 struct Matrix4;
 class QGLShaderProgram;
@@ -52,6 +53,9 @@ private:
     Shader pickingShader;
     QGLFramebufferObject* pickingBuffer = NULL;
 
+    UndoStack undoStack;
+    UndoStep pendingStep;
+
 public:
     Viewer(const QGLFormat& format, QWidget *parent = 0);
     virtual ~Viewer();
@@ -75,10 +79,10 @@ public:
     void setInputMode(InputMode mode);
 
     int getUndoStackSize() const;
-    int undo();
+    bool undo();
 
     int getRedoStackSize() const;
-    int redo();
+    bool redo();
 
     bool isTrackballVisible() const;
     void setTrackballVisible(bool trackballVisible);
@@ -94,6 +98,9 @@ public:
 
     bool isDrawPickingBufferEnabled() const;
     void setDrawPickingBufferEnabled(bool drawPickingBufferEnabled);
+
+signals:
+    void undoStackUpdated();
 
 protected:
 
