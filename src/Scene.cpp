@@ -151,7 +151,7 @@ JointNode::JointNode(const std::string& name, int id) : SceneNode(name, id) { }
 JointNode::~JointNode() { }
 
 Matrix4 JointNode::getTransform() const {
-    return Matrix4::makeYRotation(yRotation) * Matrix4::makeXRotation(xRotation) * transform;
+    return transform * Matrix4::makeYRotation(yRotation) * Matrix4::makeXRotation(xRotation);
 }
 
 void JointNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
