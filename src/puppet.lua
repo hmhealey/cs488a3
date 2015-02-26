@@ -33,13 +33,17 @@ hips:add_child(hipShape)
 
 -- neck/head/nose
 
-neck = gr.joint('neck', {-15, 0, 40}, {0, 0, 0})
+sternum = gr.joint('sternum', {-15, 0, 15}, {0, 0, 0}) -- that's right! the sternum is now a joint!
+shoulder:add_child(sternum)
+
+neck = gr.node('neck')
 neck:translate(0, 2, 0)
-shoulder:add_child(neck)
+sternum:add_child(neck)
 
 neckShape = gr.sphere('neckShape')
+neckShape:translate(0, 2, 0)
 neckShape:scale(1, 2, 1)
-neck:add_child(neckShape)
+sternum:add_child(neckShape)
 
 head = gr.joint('head', {-15, 0, 15}, {-45, 0, 45})
 head:translate(0, 1.5, 0)
@@ -49,14 +53,17 @@ headShape = gr.sphere('headShape')
 headShape:scale(2, 2, 2)
 head:add_child(headShape)
 
+face = gr.node('face') -- prevents clicking on the nose to grab the whole head
+head:add_child(face)
+
 noseShape = gr.sphere('noseShape')
 noseShape:scale(0.4, 0.4, 0.4)
 noseShape:translate(0, 0, 5)
-head:add_child(noseShape)
+face:add_child(noseShape)
 
 -- left arm
 
-leftShoulder = gr.joint('leftShoulder', {-15, 0, 120}, {0, 0, 0})
+leftShoulder = gr.joint('leftShoulder', {-120, 0, 30}, {0, 0, 0})
 leftShoulder:translate(-3.5, 0, 0)
 shoulder:add_child(leftShoulder)
 
@@ -66,15 +73,14 @@ leftShoulder:add_child(leftArm)
 
 leftArmShape = gr.sphere('leftArmShape')
 leftArmShape:translate(0, -2, 0)
-leftArmShape:scale(1, 2.5, 1)
+leftArmShape:scale(1, 2, 1)
 leftShoulder:add_child(leftArmShape)
 
-leftElbow = gr.joint('leftElbow', {0, 0, 135}, {0, 0, 0})
+leftElbow = gr.joint('leftElbow', {-135, 0, 0}, {0, 0, 0})
 leftElbow:translate(0, -1, 0)
 leftArm:add_child(leftElbow)
 
 leftForearm = gr.node('leftForearm')
---leftForearm:rotate('y', -90)
 leftForearm:translate(0, -1, 0)
 leftElbow:add_child(leftForearm)
 
@@ -83,7 +89,7 @@ leftForearmShape:translate(0, -1, 0)
 leftForearmShape:scale(1, 2, 1)
 leftElbow:add_child(leftForearmShape)
 
-leftWrist = gr.joint('leftWrist', {-60, 0, 60}, {0, 0, 90})
+leftWrist = gr.joint('leftWrist', {-60, 0, 60}, {0, 0, 0})
 leftWrist:translate(0, -1, 0)
 leftForearm:add_child(leftWrist)
 
@@ -98,7 +104,7 @@ leftWrist:add_child(leftHandShape)
 
 -- right arm
 
-rightShoulder = gr.joint('rightShoulder', {-15, 0, 120}, {0, 0, 0})
+rightShoulder = gr.joint('rightShoulder', {-120, 0, 30}, {0, 0, 0})
 rightShoulder:translate(3.5, 0, 0)
 shoulder:add_child(rightShoulder)
 
@@ -108,15 +114,14 @@ rightShoulder:add_child(rightArm)
 
 rightArmShape = gr.sphere('rightArmShape')
 rightArmShape:translate(0, -2, 0)
-rightArmShape:scale(1, 2.5, 1)
+rightArmShape:scale(1, 2, 1)
 rightShoulder:add_child(rightArmShape)
 
-rightElbow = gr.joint('rightElbow', {0, 0, 135}, {0, 0, 0})
+rightElbow = gr.joint('rightElbow', {-135, 0, 0}, {0, 0, 0})
 rightElbow:translate(0, -1, 0)
 rightArm:add_child(rightElbow)
 
 rightForearm = gr.node('rightForearm')
---rightForearm:rotate('y', -90)
 rightForearm:translate(0, -1, 0)
 rightElbow:add_child(rightForearm)
 
@@ -125,7 +130,7 @@ rightForearmShape:translate(0, -1, 0)
 rightForearmShape:scale(1, 2, 1)
 rightElbow:add_child(rightForearmShape)
 
-rightWrist = gr.joint('rightWrist', {-60, 0, 60}, {0, 0, 90})
+rightWrist = gr.joint('rightWrist', {-60, 0, 60}, {0, 0, 0})
 rightWrist:translate(0, -1, 0)
 rightForearm:add_child(rightWrist)
 
@@ -140,56 +145,76 @@ rightWrist:add_child(rightHandShape)
 
 -- left leg
 
-leftThigh = gr.joint('leftThigh', {-45, 0, 45}, {0, 0, 0})
-leftThigh:translate(-2, -3, 0)
-hips:add_child(leftThigh)
+leftHip = gr.joint('leftHip', {-45, 0, 45}, {0, 0, 0})
+leftHip:translate(-2, 0, 0)
+hips:add_child(leftHip)
+
+leftThigh = gr.node('leftThigh')
+leftThigh:translate(0, -3, 0)
+leftHip:add_child(leftThigh)
 
 leftThighShape = gr.sphere('leftThighShape')
+leftThighShape:translate(0, -3, 0)
 leftThighShape:scale(1, 3, 1)
-leftThigh:add_child(leftThighShape)
+leftHip:add_child(leftThighShape)
 
-leftCalf = gr.joint('leftCalf', {0, 0, 60}, {0, 0, 0})
-leftCalf:translate(0, -3, 0)
-leftThigh:add_child(leftCalf)
+leftKnee = gr.joint('leftKnee', {0, 0, 90}, {0, 0, 0})
+leftKnee:translate(0, -2.5, 0)
+leftThigh:add_child(leftKnee)
+
+leftCalf = gr.node('leftCalf', {0, 0, 60}, {0, 0, 0})
+leftCalf:translate(0, -1.5, 0)
+leftKnee:add_child(leftCalf)
 
 leftCalfShape = gr.sphere('leftCalfShape')
-leftCalfShape:scale(1, 3, 1)
-leftCalf:add_child(leftCalfShape)
+leftCalfShape:translate(0, -1.5, 0)
+leftCalfShape:scale(1, 2, 1)
+leftKnee:add_child(leftCalfShape)
 
-leftFoot = gr.joint('leftFoot', {-15, 0, 15}, {0, 0, 0})
-leftFoot:translate(-1, -2.5, 1)
-leftFoot:rotate('y', 45)
+leftFoot = gr.joint('leftFoot', {-30, 0, 30}, {0, 0, 0})
+leftFoot:translate(0, -2.5, 0)
 leftCalf:add_child(leftFoot)
 
 leftFootShape = gr.sphere('leftFootShape')
-leftFootShape:scale(2, 1, 1)
+leftFootShape:translate(0, 0, 0.75)
+leftFootShape:scale(1, 1, 1.5)
 leftFoot:add_child(leftFootShape)
 
 -- right leg
 
-rightThigh = gr.joint('rightThigh', {-45, 0, 45}, {0, 0, 0})
-rightThigh:translate(2, -3, 0)
-hips:add_child(rightThigh)
+rightHip = gr.joint('rightHip', {-45, 0, 45}, {0, 0, 0})
+rightHip:translate(2, 0, 0)
+hips:add_child(rightHip)
+
+rightThigh = gr.node('rightThigh')
+rightThigh:translate(0, -3, 0)
+rightHip:add_child(rightThigh)
 
 rightThighShape = gr.sphere('rightThighShape')
+rightThighShape:translate(0, -3, 0)
 rightThighShape:scale(1, 3, 1)
-rightThigh:add_child(rightThighShape)
+rightHip:add_child(rightThighShape)
 
-rightCalf = gr.joint('rightCalf', {0, 0, 60}, {0, 0, 0})
-rightCalf:translate(0, -3, 0)
-rightThigh:add_child(rightCalf)
+rightKnee = gr.joint('rightKnee', {0, 0, 90}, {0, 0, 0})
+rightKnee:translate(0, -2.5, 0)
+rightThigh:add_child(rightKnee)
+
+rightCalf = gr.node('rightCalf', {0, 0, 60}, {0, 0, 0})
+rightCalf:translate(0, -1.5, 0)
+rightKnee:add_child(rightCalf)
 
 rightCalfShape = gr.sphere('rightCalfShape')
-rightCalfShape:scale(1, 3, 1)
-rightCalf:add_child(rightCalfShape)
+rightCalfShape:translate(0, -1.5, 0)
+rightCalfShape:scale(1, 2, 1)
+rightKnee:add_child(rightCalfShape)
 
-rightFoot = gr.joint('rightFoot', {-15, 0, 15}, {0, 0, 0})
-rightFoot:translate(1, -2.5, 1)
-rightFoot:rotate('y', -45)
+rightFoot = gr.joint('rightFoot', {-30, 0, 30}, {0, 0, 0})
+rightFoot:translate(0, -2.5, 0)
 rightCalf:add_child(rightFoot)
 
 rightFootShape = gr.sphere('rightFootShape')
-rightFootShape:scale(2, 1, 1)
+rightFootShape:translate(0, 0, 0.75)
+rightFootShape:scale(1, 1, 1.5)
 rightFoot:add_child(rightFootShape)
 
 return root
