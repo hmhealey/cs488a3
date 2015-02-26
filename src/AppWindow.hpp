@@ -41,12 +41,6 @@ private:
 
     void doUndo();
     void doRedo();
-
-    void doToggleTrackballVisibility();
-    void doToggleDepthBuffer();
-    void doToggleBackfaceCulling();
-    void doToggleFrontfaceCulling();
-    void doToggleDrawPickingBuffer();
 };
 
 #endif
