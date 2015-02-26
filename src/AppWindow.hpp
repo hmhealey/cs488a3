@@ -15,8 +15,8 @@ class AppWindow : public QMainWindow {
     Viewer* viewer;
 
     QMenu* applicationMenu;
-    QMenu* modeMenu;
     QMenu* editMenu;
+    QMenu* modeMenu;
     QMenu* optionsMenu;
 
     // keep a handle to these events so that we can check/enable/disable/fire them from key events

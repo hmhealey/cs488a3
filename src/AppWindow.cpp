@@ -52,10 +52,12 @@ void AppWindow::keyPressEvent(QKeyEvent* event) {
         QCoreApplication::instance()->quit();
     } else if (event->key() == Qt::Key_P) {
         viewer->setInputMode(Viewer::Puppet);
-        puppet->toggle();
+        puppet->setChecked(true);
+        joints->setChecked(false);
     } else if (event->key() == Qt::Key_J) {
         viewer->setInputMode(Viewer::Joints);
-        joints->toggle();
+        puppet->setChecked(false);
+        joints->setChecked(true);
     } else if (event->key() == Qt::Key_U) {
         doUndo();
     } else if (event->key() == Qt::Key_R) {
@@ -122,29 +124,6 @@ void AppWindow::createMenu() {
         applicationMenu->addAction(quit);
     }
 
-    modeMenu = menuBar()->addMenu(tr("&Mode"));
-    {
-        puppet = new QAction(tr("&Position/Orientation"), this);
-        puppet->setStatusTip(tr("Translate and rotate the entire puppet"));
-        puppet->setShortcuts(QList<QKeySequence>({ Qt::Key_P, Qt::SHIFT + Qt::Key_P }));
-        puppet->setCheckable(true);
-        connect(puppet, &QAction::triggered, [=] { viewer->setInputMode(Viewer::Puppet); });
-        modeMenu->addAction(puppet);
-
-        joints = new QAction(tr("&Joints"), this);
-        joints->setStatusTip(tr("Control joint angles"));
-        joints->setShortcuts(QList<QKeySequence>({ Qt::Key_J, Qt::SHIFT + Qt::Key_J }));
-        joints->setCheckable(true);
-        connect(joints, &QAction::triggered, [=] { viewer->setInputMode(Viewer::Joints); });
-        modeMenu->addAction(joints);
-
-        QActionGroup* group = new QActionGroup(this);
-        puppet->setActionGroup(group);
-        joints->setActionGroup(group);
-
-        puppet->toggle();
-    }
-
     editMenu = menuBar()->addMenu(tr("&Edit"));
     {
         QAction* undo = new QAction(tr("&Undo"), this);
@@ -168,7 +147,30 @@ void AppWindow::createMenu() {
         });
     }
 
-    optionsMenu = menuBar()->addMenu(tr("&BooleanOptions"));
+    modeMenu = menuBar()->addMenu(tr("&Mode"));
+    {
+        puppet = new QAction(tr("&Position/Orientation"), this);
+        puppet->setStatusTip(tr("Translate and rotate the entire puppet"));
+        puppet->setShortcuts(QList<QKeySequence>({ Qt::Key_P, Qt::SHIFT + Qt::Key_P }));
+        puppet->setCheckable(true);
+        connect(puppet, &QAction::triggered, [=] { viewer->setInputMode(Viewer::Puppet); });
+        modeMenu->addAction(puppet);
+
+        joints = new QAction(tr("&Joints"), this);
+        joints->setStatusTip(tr("Control joint angles"));
+        joints->setShortcuts(QList<QKeySequence>({ Qt::Key_J, Qt::SHIFT + Qt::Key_J }));
+        joints->setCheckable(true);
+        connect(joints, &QAction::triggered, [=] { viewer->setInputMode(Viewer::Joints); });
+        modeMenu->addAction(joints);
+
+        QActionGroup* group = new QActionGroup(this);
+        puppet->setActionGroup(group);
+        joints->setActionGroup(group);
+
+        puppet->setChecked(true);
+    }
+
+    optionsMenu = menuBar()->addMenu(tr("&Options"));
     {
         QAction* trackballVisibility = new QAction(tr("&Circle"), this);
         trackballVisibility->setStatusTip(tr("Sets visibility of the trackball circle"));
