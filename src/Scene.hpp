@@ -24,8 +24,7 @@ protected:
     bool selected = false;
 
     // Transformations
-    Matrix4 translationRotation;
-    Matrix4 scaling;
+    Matrix4 transform;
 
     // Hierarchy
     std::list<SceneNode*> m_children;
@@ -41,15 +40,10 @@ public:
     void setSelected(bool selected);
 
     Matrix4 getTransform() const;
-    void setTransform(const Matrix4& translationRotation, const Matrix4& scaling);
+    void setTransform(const Matrix4& transform);
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
     void walk_children(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
-
-    /** Returns true if a given ray intersects this node. It is assumed that the ray has already been transformed
-      * so that it is in the parent node's coordinate system. **/
-    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
-    void raycastAll(const Point3D& point, const Vector3& direction) const;
 
     void add_child(SceneNode* child) {
         m_children.push_back(child);
@@ -98,8 +92,6 @@ public:
     virtual ~GeometryNode();
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
-
-    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 
     virtual SceneNode::NodeType getType() const;
 

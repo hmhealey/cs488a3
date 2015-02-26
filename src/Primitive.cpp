@@ -36,20 +36,6 @@ Mesh& Sphere::getMesh() {
     return *Sphere::mesh;
 }
 
-bool Sphere::raycast(const Point3D& point, const Vector3& direction) const {
-    Vector3 pointToCenter = Point3D(0, 0, 0) - point;
-
-    // t * direction is the projection of pointToCenter onto directio
-    double t = pointToCenter.dot(direction) / direction.length();
-
-    // now we have a right-angle triangle made up of pointToCenter, t * direction, and the shortest line from the center
-    // of the sphere to the ray so we just take the distance of that last side
-    double distance = (pointToCenter - t * direction).length();
-
-    // our radius is 1
-    return distance <= 1;
-}
-
 Cube::Cube(double size) : mesh(Mesh::makeCube(size)) { }
 
 Cube::~Cube() {
@@ -58,11 +44,4 @@ Cube::~Cube() {
 
 Mesh& Cube::getMesh() {
     return *mesh;
-}
-
-bool Cube::raycast(const Point3D& point, const Vector3& direction) const {
-    (void) point;
-    (void) direction;
-    cerr << "Cube::raycast - Not yet implemented" << endl;
-    return false;
 }
