@@ -28,6 +28,7 @@ HEADERS += Algebra.hpp \
            scene_lua.hpp \
            Shader.hpp \
            Trackball.hpp \
+           UndoStack.hpp \
            Viewer.hpp
 SOURCES += Algebra.cpp \
            AlgebraToQt.cpp \
@@ -40,4 +41,5 @@ SOURCES += Algebra.cpp \
            scene_lua.cpp \
            Shader.cpp \
            Trackball.cpp \
+           UndoStack.cpp \
            Viewer.cpp
