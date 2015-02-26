@@ -145,7 +145,7 @@ void Viewer::setDrawPickingBufferEnabled(bool drawPickingBufferEnabled) {
 void Viewer::initializeGL() {
     QGLFormat glFormat = QGLWidget::format();
     if (!glFormat.sampleBuffers()) {
-        cerr << "Could not enable sample buffers." << endl;
+        cerr << "Viewer::initializeGL - Could not enable sample buffers." << endl;
         return;
     }
 
@@ -179,7 +179,7 @@ void Viewer::initializeGL() {
     mCircleBufferObject.setUsagePattern(QOpenGLBuffer::StaticDraw);
 
     if (!mCircleBufferObject.bind()) {
-        cerr << "could not bind vertex buffer to the context." << endl;
+        cerr << "Viewer::initializeGL - Could not bind vertex buffer to the context." << endl;
         return;
     }
 
@@ -232,7 +232,7 @@ void Viewer::paintGL() {
 
         // draw to picking buffer so that picking works
         if (pickingBuffer != NULL) {
-            if (!pickingBuffer->bind()) cerr << "binding picking buffer failed" << endl;
+            if (!pickingBuffer->bind()) cerr << "Viewer::paintGL - Binding picking buffer failed" << endl;
 
             glEnable(GL_DEPTH_TEST);
             glCullFace(GL_BACK);
@@ -246,7 +246,7 @@ void Viewer::paintGL() {
             glDisable(GL_CULL_FACE);
             glDisable(GL_DEPTH_TEST);
 
-            if (!pickingBuffer->release()) cerr << "releasing picking buffer failed" << endl;
+            if (!pickingBuffer->release()) cerr << "Viewer::paintGL - Releasing picking buffer failed" << endl;
 
             if (drawPickingBufferEnabled) {
                 if (QGLFramebufferObject::hasOpenGLFramebufferBlit()) {
@@ -269,7 +269,7 @@ void Viewer::paintGL() {
 
     int error = glGetError();
     if (error != GL_NO_ERROR) {
-        cerr << "error after drawing " << error << endl;
+        cerr << "Viewer::paintGL - Error after drawing " << error << endl;
     }
 
     if (trackballVisible) {
@@ -336,7 +336,7 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
                 pickingBuffer->release();
             } else {
                 // this should never happen
-                cerr << "picking buffer is null when going to do picking" << endl;
+                cerr << "Viewer::mousePressEvent - Picking buffer is null when going to do picking" << endl;
             }
         }
     }
@@ -410,6 +410,8 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent* event) {
+    (void) event;
+
     if (mode == Viewer::Joints) {
         // push the pending step onto the undo stack if any joints have actually changed
         if (!pendingStep.empty()) {
@@ -419,8 +421,6 @@ void Viewer::mouseReleaseEvent(QMouseEvent* event) {
 
             // and clear the pending step so any further actions are separate from these ones
             pendingStep.clear();
-        } else {
-            cerr << "there's nothing to push onto the undo stack" << endl;
         }
     }
 }
