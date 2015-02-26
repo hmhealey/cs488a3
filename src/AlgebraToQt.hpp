@@ -1,3 +1,7 @@
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
+
 #ifndef __ALGEBRA_TO_QT_HPP__
 #define __ALGEBRA_TO_QT_HPP__
 

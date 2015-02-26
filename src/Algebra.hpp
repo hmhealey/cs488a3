@@ -1,16 +1,6 @@
-//---------------------------------------------------------------------------
-//
-// CS488 -- Introduction to Computer Graphics
-//
-// algebra.hpp/algebra.cpp
-//
-// Classes and functions for manipulating points, vectors, matrices, 
-// and colours.  You probably won't need to modify anything in these
-// two files.
-//
-// University of Waterloo Computer Graphics Lab / 2003
-//
-//---------------------------------------------------------------------------
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
 
 #ifndef CS488_ALGEBRA_HPP
 #define CS488_ALGEBRA_HPP

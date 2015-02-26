@@ -1,3 +1,7 @@
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
+
 #ifndef APPWINDOW_HPP
 #define APPWINDOW_HPP
 

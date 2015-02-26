@@ -1,3 +1,7 @@
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
+
 #ifndef CS488_MATERIAL_HPP
 #define CS488_MATERIAL_HPP
 

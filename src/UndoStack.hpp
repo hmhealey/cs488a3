@@ -1,3 +1,7 @@
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
+
 #ifndef __UNDO_STACK_HPP__
 #define __UNDO_STACK_HPP__
 

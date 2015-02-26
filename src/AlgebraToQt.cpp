@@ -1,3 +1,7 @@
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
+
 #include "AlgebraToQt.hpp"
 
 #include <QMatrix4x4>
