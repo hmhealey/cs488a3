@@ -154,8 +154,8 @@ void Viewer::initializeGL() {
     pickingShader.initialize("flat");
 
     // sets the camera position
-    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 20));
-    pickingShader.setViewMatrix(Matrix4::makeTranslation(0, 0, 20));
+    shader.setViewMatrix(Matrix4::makeTranslation(0, 0, 40));
+    pickingShader.setViewMatrix(Matrix4::makeTranslation(0, 0, 40));
 
     // construct circle for trackball
     float circleData[120];
