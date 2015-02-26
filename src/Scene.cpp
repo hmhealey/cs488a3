@@ -49,27 +49,6 @@ void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bo
     }
 }
 
-bool SceneNode::raycast(const Point3D& point, const Vector3& direction) const {
-    // only GeometryNodes have a volume with which to intersect
-    (void) point;
-    (void) direction;
-    return false;
-}
-
-void SceneNode::raycastAll(const Point3D& point, const Vector3& direction) const {
-    if (raycast(point, direction)) {
-        cout << "ray intersects node " << m_name << endl;
-    }
-
-    Matrix4 inverse = transform.inverse();
-    Point3D childPoint = inverse * point;
-    Vector3 childDirection = inverse * direction;
-
-    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
-        (*i)->raycastAll(childPoint, childDirection);
-    }
-}
-
 SceneNode* SceneNode::getById(int id) {
     if (id == m_id) {
         return this;
@@ -190,12 +169,6 @@ void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool 
     m_primitive->getMesh().draw(shader);
 
     walk_children(shader, parentTransform, picking);
-}
-
-bool GeometryNode::raycast(const Point3D& point, const Vector3& direction) const {
-    (void) point;
-    (void) direction;
-    return false;
 }
 
 SceneNode::NodeType GeometryNode::getType() const {

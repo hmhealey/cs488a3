@@ -21,8 +21,6 @@ public:
     void setMaterial(const Material& material);
 
     virtual Mesh& getMesh() = 0;
-
-    virtual bool raycast(const Point3D& point, const Vector3& direction) const = 0;;
 };
 
 class Sphere : public Primitive {
@@ -34,8 +32,6 @@ public:
     virtual ~Sphere();
 
     virtual Mesh& getMesh();
-
-    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
 
 class Cube : public Primitive {
@@ -46,8 +42,6 @@ public:
     virtual ~Cube();
 
     virtual Mesh& getMesh();
-
-    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
 
 #endif
