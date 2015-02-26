@@ -273,8 +273,8 @@ void Viewer::resizeGL(int width, int height) {
     height = max(height, 1);
 
     // update perspective matrixes for both the scene and interface
-    shader.setProjectionMatrix(Matrix4::makePerspective(30, (double) height / (double) width, 0.001, 1000));
-    pickingShader.setProjectionMatrix(Matrix4::makePerspective(30, (double) height / (double) width, 0.001, 1000));
+    shader.setProjectionMatrix(Matrix4::makePerspective(30, (double) height / (double) width, 0.01, 100));
+    pickingShader.setProjectionMatrix(Matrix4::makePerspective(30, (double) height / (double) width, 0.01, 100));
     interfaceShader.setProjectionMatrix(Matrix4::makeOrtho(0, width, 0, height, -0.1, 0.1));
 
     // center interface in the window
