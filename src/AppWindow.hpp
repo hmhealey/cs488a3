@@ -22,8 +22,6 @@ class AppWindow : public QMainWindow {
     // keep a handle to these events so that we can check/enable/disable/fire them from key events
     QAction* puppet;
     QAction* joints;
-    QAction* undo;
-    QAction* redo;
     QAction* toggleTrackballVisibility;
     QAction* toggleDepthBuffer;
     QAction* toggleBackfaceCulling;
@@ -37,7 +35,6 @@ public:
     ~AppWindow();
 
     void keyPressEvent(QKeyEvent* event);
-    void mouseReleaseEvent(QMouseEvent* event);
 
     void loadScene(const std::string& path);
 

@@ -74,20 +74,6 @@ void AppWindow::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-void AppWindow::mouseReleaseEvent(QMouseEvent* event) {
-    viewer->mouseReleaseEvent(event);
-
-    cerr << "releasebf" << endl;
-    if (viewer->getInputMode() == Viewer::Joints) {
-        // we just finished moving joints so update the states of the undo and redo stack
-        undo->setEnabled(viewer->getUndoStackSize() > 0);
-        redo->setEnabled(viewer->getRedoStackSize() > 0);
-
-        cerr << "u" << viewer->getUndoStackSize() << endl;
-        cerr << "r" << viewer->getRedoStackSize() << endl;
-    }
-}
-
 void AppWindow::loadScene(const string& path) {
     // get rid of the old scene
     if (scene != NULL) {
@@ -161,14 +147,14 @@ void AppWindow::createMenu() {
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
     {
-        undo = new QAction(tr("&Undo"), this);
+        QAction* undo = new QAction(tr("&Undo"), this);
         undo->setStatusTip(tr("Undo the previous joint transformation"));
         undo->setShortcuts(QList<QKeySequence>({ Qt::Key_U, Qt::SHIFT + Qt::Key_U }));
         undo->setEnabled(false);
         connect(undo, &QAction::triggered, [=] { doUndo(); });
         editMenu->addAction(undo);
 
-        redo = new QAction(tr("&Redo"), this);
+        QAction* redo = new QAction(tr("&Redo"), this);
         redo->setStatusTip(tr("Redo the previously undone joint transformation"));
         redo->setShortcuts(QList<QKeySequence>({ Qt::Key_R, Qt::SHIFT + Qt::Key_R }));
         redo->setEnabled(false);
@@ -179,9 +165,6 @@ void AppWindow::createMenu() {
         connect(viewer, &Viewer::undoStackUpdated, [=] {
             undo->setEnabled(viewer->getUndoStackSize() > 0);
             redo->setEnabled(viewer->getRedoStackSize() > 0);
-
-            cerr << "u" << viewer->getUndoStackSize() << endl;
-            cerr << "r" << viewer->getRedoStackSize() << endl;
         });
     }
 
@@ -228,37 +211,25 @@ void AppWindow::createMenu() {
 
 void AppWindow::doResetJoints() {
     viewer->resetJoints();
-
-    undo->setEnabled(false);
-    redo->setEnabled(false);
 }
 
 void AppWindow::doResetAll() {
     viewer->resetAll();
-
-    undo->setEnabled(false);
-    redo->setEnabled(false);
 }
 
 void AppWindow::doUndo() {
     if (viewer->getUndoStackSize() > 0) {
-        bool remaining = viewer->undo();
-
-        undo->setEnabled(remaining);
+        viewer->undo();
     } else {
         QApplication::beep();
-        undo->setEnabled(false);
     }
 }
 
 void AppWindow::doRedo() {
     if (viewer->getRedoStackSize() > 0) {
-        bool remaining = viewer->redo();
-
-        redo->setEnabled(remaining);
+        viewer->redo();
     } else {
         QApplication::beep();
-        redo->setEnabled(false);
     }
 }
 
