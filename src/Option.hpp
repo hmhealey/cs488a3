@@ -3,30 +3,36 @@
 
 #include <QObject>
 
-class Option : QObject {
+class BooleanOption : public QObject {
     Q_OBJECT
 
-public:
     bool value;
 
-    Option();
-    Option(bool value);
-    Option(const Option& other);
+public:
+    BooleanOption();
+    BooleanOption(bool value);
+    BooleanOption(const BooleanOption& other);
 
-    Option& operator=(const Option& other);
+    BooleanOption& operator=(const BooleanOption& other);
     bool& operator=(bool value);
 
+    operator bool() const;
+
+    bool toggle();
+
+private:
     void setValue(bool value);
+
+    friend bool operator==(const BooleanOption& a, const BooleanOption& b);
+    friend bool operator==(const BooleanOption& a, bool b);
+    friend bool operator==(bool a, const BooleanOption& b);
 
 signals:
     void changed(bool oldValue, bool newValue);
-
 };
 
-bool operator==(const Option& a, const Option& b);
-
-bool operator==(const Option& a, bool b);
-
-bool operator==(bool a, const Option& b);
+bool operator==(const BooleanOption& a, const BooleanOption& b);
+bool operator==(const BooleanOption& a, bool b);
+bool operator==(bool a, const BooleanOption& b);
 
 #endif

@@ -1,36 +1,45 @@
 #include "Option.hpp"
 
-Option::Option() { }
+BooleanOption::BooleanOption() { }
 
-Option::Option(bool value) : value(value) { }
+BooleanOption::BooleanOption(bool value) : value(value) { }
 
-Option::Option(const Option& other) : value(other.value) { }
+BooleanOption::BooleanOption(const BooleanOption& other) : value(other.value) { }
 
-Option& Option::operator=(const Option& other) {
+BooleanOption& BooleanOption::operator=(const BooleanOption& other) {
     setValue(other.value);
     return *this;
 }
 
-bool& Option::operator=(bool value) {
+bool& BooleanOption::operator=(bool value) {
     setValue(value);
     return this->value;
 }
 
-void Option::setValue(bool value) {
+BooleanOption::operator bool() const {
+    return value;
+}
+
+bool BooleanOption::toggle() {
+    setValue(!value);
+    return value;
+}
+
+void BooleanOption::setValue(bool value) {
     bool oldValue = this->value;
     this->value = value;
 
     emit changed(oldValue, value);
 }
 
-bool operator==(const Option& a, const Option& b) {
+bool operator==(const BooleanOption& a, const BooleanOption& b) {
     return a.value == b.value;
 }
 
-bool operator==(const Option& a, bool b) {
+bool operator==(const BooleanOption& a, bool b) {
     return a.value == b;
 }
 
-bool operator==(bool a, const Option& b) {
+bool operator==(bool a, const BooleanOption& b) {
     return a == b.value;
 }
