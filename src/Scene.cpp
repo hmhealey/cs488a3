@@ -111,6 +111,12 @@ const list<JointNode*> SceneNode::getSelectedJoints() {
     return joints;
 }
 
+void SceneNode::resetJoints() {
+    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+        (*i)->resetJoints();
+    }
+}
+
 void SceneNode::rotate(char axis, double angle) {
     switch(axis) {
     case 'x':
@@ -150,6 +156,13 @@ Matrix4 JointNode::getTransform() const {
 
 void JointNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     walk_children(shader, parentTransform, picking);
+}
+
+void JointNode::resetJoints() {
+    setXRotation(xRange.init);
+    setYRotation(yRange.init);
+
+    SceneNode::resetJoints();
 }
 
 SceneNode::NodeType JointNode::getType() const {

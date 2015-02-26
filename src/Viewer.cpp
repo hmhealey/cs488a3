@@ -58,9 +58,8 @@ void Viewer::resetOrientation() {
 }
 
 void Viewer::resetJoints() {
-    // TODO reset puppet joint positions
     // TODO clear undo/redo stack
-    cerr << "Viewer::resetJoints - Not yet implemented" << endl;
+    scene->resetJoints();
 }
 
 void Viewer::resetAll() {

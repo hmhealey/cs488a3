@@ -59,6 +59,7 @@ public:
     bool pick(int id);
 
     const std::list<JointNode*> getSelectedJoints();
+    virtual void resetJoints();
 
     // Callbacks to be implemented.
     // These will be called from Lua.
@@ -88,6 +89,8 @@ public:
     virtual Matrix4 getTransform() const;
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
+
+    virtual void resetJoints();
 
     virtual SceneNode::NodeType getType() const;
 
