@@ -45,8 +45,8 @@ private:
     int lastMouseY = -1;
 
     bool trackballVisible = false;
-    bool depthBufferEnabled = true;
-    bool backfaceCullingEnabled = true;
+    bool depthBufferEnabled = false;
+    bool backfaceCullingEnabled = false;
     bool frontfaceCullingEnabled = false;
     bool drawPickingBufferEnabled = false;
 
