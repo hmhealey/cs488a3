@@ -22,9 +22,9 @@
 
 using namespace std;
 
-static const double PUPPET_TRANSLATION_X_FACTOR = -0.02;
-static const double PUPPET_TRANSLATION_Y_FACTOR = 0.02;
-static const double PUPPET_TRANSLATION_Z_FACTOR = 0.05;
+static const double PUPPET_TRANSLATION_X_FACTOR = -0.1;
+static const double PUPPET_TRANSLATION_Y_FACTOR = 0.1;
+static const double PUPPET_TRANSLATION_Z_FACTOR = 0.5;
 
 static const double JOINT_ROTATION_X_FACTOR = -1;
 static const double JOINT_ROTATION_Y_FACTOR = 1;
