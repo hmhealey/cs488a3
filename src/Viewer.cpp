@@ -249,12 +249,20 @@ void Viewer::paintGL() {
             if (!pickingBuffer->release()) cerr << "releasing picking buffer failed" << endl;
 
             if (drawPickingBufferEnabled) {
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickingBuffer->handle());
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+                if (QGLFramebufferObject::hasOpenGLFramebufferBlit()) {
+                    // on Ubuntu we can blit using QT, but not with the built-in commands for some reason
+                    /*glBindFramebuffer(GL_READ_FRAMEBUFFER, pickingBuffer->handle());
+                    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-                glBlitFramebuffer(0, 0, width(), height(), 0, 0, width(), height(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+                    glBlitFramebuffer(0, 0, width(), height(), 0, 0, width(), height(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                    glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
+
+                    QRect rect(0, 0, width(), height());
+                    QGLFramebufferObject::blitFramebuffer(0, rect, pickingBuffer, rect, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                } else {
+                    cerr << "Viewer::paintGL - Unable to draw picking buffer because this platform doesn't support blitting buffers" << endl;
+                }
             }
         }
     }
@@ -290,14 +298,13 @@ void Viewer::resizeGL(int width, int height) {
     // update the viewport in the main buffer
     glViewport(0, 0, width, height);
 
-    // resize the picking buffer to the next largest power of two so we aren't constantly resizing it
-    int size = pow(2, ceil(log2(max(width, height))));
-    if (pickingBuffer == NULL || pickingBuffer->size().width() != size) {
+    // resize the picking buffer
+    if (pickingBuffer == NULL || pickingBuffer->size().width() != width || pickingBuffer->size().height() != height) {
         if (pickingBuffer != NULL) {
             delete pickingBuffer;
         }
 
-        pickingBuffer = new QGLFramebufferObject(size, size, QGLFramebufferObject::Depth);
+        pickingBuffer = new QGLFramebufferObject(width, height, QGLFramebufferObject::Depth);
     }
 }
 
@@ -309,7 +316,7 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
         if (event->button() == Qt::LeftButton) {
             if (pickingBuffer != NULL) {
                 // bind the picking buffer for reading
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickingBuffer->handle());
+                pickingBuffer->bind();
 
                 int x = event->x();
                 int y = height() - event->y();
@@ -326,7 +333,7 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
                     scene->pick(id);
                 }
 
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+                pickingBuffer->release();
             } else {
                 // this should never happen
                 cerr << "picking buffer is null when going to do picking" << endl;
