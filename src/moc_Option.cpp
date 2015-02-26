@@ -18,29 +18,30 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-struct qt_meta_stringdata_Option_t {
+struct qt_meta_stringdata_BooleanOption_t {
     QByteArrayData data[5];
-    char stringdata[34];
+    char stringdata[41];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_Option_t, stringdata) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_BooleanOption_t, stringdata) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_Option_t qt_meta_stringdata_Option = {
+static const qt_meta_stringdata_BooleanOption_t qt_meta_stringdata_BooleanOption = {
     {
-QT_MOC_LITERAL(0, 0, 6), // "Option"
-QT_MOC_LITERAL(1, 7, 7), // "changed"
-QT_MOC_LITERAL(2, 15, 0), // ""
-QT_MOC_LITERAL(3, 16, 8), // "oldValue"
-QT_MOC_LITERAL(4, 25, 8) // "newValue"
+QT_MOC_LITERAL(0, 0, 13), // "BooleanOption"
+QT_MOC_LITERAL(1, 14, 7), // "changed"
+QT_MOC_LITERAL(2, 22, 0), // ""
+QT_MOC_LITERAL(3, 23, 8), // "oldValue"
+QT_MOC_LITERAL(4, 32, 8) // "newValue"
 
     },
-    "Option\0changed\0\0oldValue\0newValue"
+    "BooleanOption\0changed\0\0oldValue\0"
+    "newValue"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_Option[] = {
+static const uint qt_meta_data_BooleanOption[] = {
 
  // content:
        7,       // revision
@@ -62,10 +63,10 @@ static const uint qt_meta_data_Option[] = {
        0        // eod
 };
 
-void Option::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void BooleanOption::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        Option *_t = static_cast<Option *>(_o);
+        BooleanOption *_t = static_cast<BooleanOption *>(_o);
         switch (_id) {
         case 0: _t->changed((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
         default: ;
@@ -74,34 +75,34 @@ void Option::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (Option::*_t)(bool , bool );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Option::changed)) {
+            typedef void (BooleanOption::*_t)(bool , bool );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&BooleanOption::changed)) {
                 *result = 0;
             }
         }
     }
 }
 
-const QMetaObject Option::staticMetaObject = {
-    { &QObject::staticMetaObject, qt_meta_stringdata_Option.data,
-      qt_meta_data_Option,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+const QMetaObject BooleanOption::staticMetaObject = {
+    { &QObject::staticMetaObject, qt_meta_stringdata_BooleanOption.data,
+      qt_meta_data_BooleanOption,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
-const QMetaObject *Option::metaObject() const
+const QMetaObject *BooleanOption::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *Option::qt_metacast(const char *_clname)
+void *BooleanOption::qt_metacast(const char *_clname)
 {
     if (!_clname) return Q_NULLPTR;
-    if (!strcmp(_clname, qt_meta_stringdata_Option.stringdata))
-        return static_cast<void*>(const_cast< Option*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_BooleanOption.stringdata))
+        return static_cast<void*>(const_cast< BooleanOption*>(this));
     return QObject::qt_metacast(_clname);
 }
 
-int Option::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int BooleanOption::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QObject::qt_metacall(_c, _id, _a);
     if (_id < 0)
@@ -119,7 +120,7 @@ int Option::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void Option::changed(bool _t1, bool _t2)
+void BooleanOption::changed(bool _t1, bool _t2)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
