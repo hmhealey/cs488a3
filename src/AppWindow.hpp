@@ -22,11 +22,6 @@ class AppWindow : public QMainWindow {
     // keep a handle to these events so that we can check/enable/disable/fire them from key events
     QAction* puppet;
     QAction* joints;
-    QAction* toggleTrackballVisibility;
-    QAction* toggleDepthBuffer;
-    QAction* toggleBackfaceCulling;
-    QAction* toggleFrontfaceCulling;
-    QAction* toggleDrawPickingBuffer;
 
     SceneNode* scene = NULL;
 

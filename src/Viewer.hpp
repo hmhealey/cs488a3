@@ -8,6 +8,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <QtGlobal>
 
+#include "Option.hpp"
 #include "Shader.hpp"
 #include "Trackball.hpp"
 #include "UndoStack.hpp"
@@ -44,12 +45,6 @@ private:
     int lastMouseX = -1;
     int lastMouseY = -1;
 
-    bool trackballVisible = false;
-    bool depthBufferEnabled = false;
-    bool backfaceCullingEnabled = false;
-    bool frontfaceCullingEnabled = false;
-    bool drawPickingBufferEnabled = false;
-
     Shader pickingShader;
     QGLFramebufferObject* pickingBuffer = NULL;
 
@@ -57,15 +52,17 @@ private:
     UndoStep pendingStep;
 
 public:
+    BooleanOption trackballVisible = false;
+    BooleanOption depthBufferEnabled = false;
+    BooleanOption backfaceCullingEnabled = false;
+    BooleanOption frontfaceCullingEnabled = false;
+    BooleanOption drawPickingBufferEnabled = false;
+
     Viewer(const QGLFormat& format, QWidget *parent = 0);
     virtual ~Viewer();
     
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
-
-    // TODO do we need to call this manually since the window is receiving these events
-    // Called when a mouse button is released
-    virtual void mouseReleaseEvent(QMouseEvent* event);
 
     const SceneNode* getScene() const;
     void setScene(SceneNode* scene);
@@ -114,6 +111,8 @@ protected:
     virtual void resizeGL(int width, int height);
     // Called when a mouse button is pressed
     virtual void mousePressEvent(QMouseEvent* event);
+    // Called when a mouse button is released
+    virtual void mouseReleaseEvent(QMouseEvent* event);
     // Called when the mouse moves
     virtual void mouseMoveEvent(QMouseEvent* event);
     

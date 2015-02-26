@@ -61,15 +61,15 @@ void AppWindow::keyPressEvent(QKeyEvent* event) {
     } else if (event->key() == Qt::Key_R) {
         doRedo();
     } else if (event->key() == Qt::Key_C) {
-        doToggleTrackballVisibility();
+        viewer->trackballVisible.toggle();
     } else if (event->key() == Qt::Key_Z) {
-        doToggleDepthBuffer();
+        viewer->depthBufferEnabled.toggle();
     } else if (event->key() == Qt::Key_B) {
-        doToggleBackfaceCulling();
+        viewer->backfaceCullingEnabled.toggle();
     } else if (event->key() == Qt::Key_F) {
-        doToggleFrontfaceCulling();
+        viewer->frontfaceCullingEnabled.toggle();
     } else if (event->key() == Qt::Key_D) {
-        doToggleDrawPickingBuffer();
+        viewer->drawPickingBufferEnabled.toggle();
 #endif
     }
 }
@@ -168,44 +168,70 @@ void AppWindow::createMenu() {
         });
     }
 
-    optionsMenu = menuBar()->addMenu(tr("&Options"));
+    optionsMenu = menuBar()->addMenu(tr("&BooleanOptions"));
     {
-        toggleTrackballVisibility = new QAction(tr("&Circle"), this);
-        toggleTrackballVisibility->setStatusTip(tr("Sets visibility of the trackball circle"));
-        toggleTrackballVisibility->setCheckable(true);
-        toggleTrackballVisibility->setShortcuts(QList<QKeySequence>({ Qt::Key_C, Qt::SHIFT + Qt::Key_C }));
-        connect(toggleTrackballVisibility, &QAction::triggered, [=] { doToggleTrackballVisibility(); });
-        optionsMenu->addAction(toggleTrackballVisibility);
+        QAction* trackballVisibility = new QAction(tr("&Circle"), this);
+        trackballVisibility->setStatusTip(tr("Sets visibility of the trackball circle"));
+        trackballVisibility->setCheckable(true);
+        trackballVisibility->setShortcuts(QList<QKeySequence>({ Qt::Key_C, Qt::SHIFT + Qt::Key_C }));
+        connect(trackballVisibility, &QAction::triggered, [=] { viewer->trackballVisible.toggle(); });
+        optionsMenu->addAction(trackballVisibility);
 
-        toggleDepthBuffer = new QAction(tr("&Z-Buffer"), this);
-        toggleDepthBuffer->setStatusTip(tr("Toggles the usage of the depth buffer"));
-        toggleDepthBuffer->setCheckable(true);
-        toggleDepthBuffer->setChecked(true);
-        toggleDepthBuffer->setShortcuts(QList<QKeySequence>({ Qt::Key_Z, Qt::SHIFT + Qt::Key_Z }));
-        connect(toggleDepthBuffer, &QAction::triggered, [=] { doToggleDepthBuffer(); });
-        optionsMenu->addAction(toggleDepthBuffer);
+        // since keyboard input can trigger these options to change, we attach signals to update the checkedness of each menu option
+        connect(&viewer->trackballVisible, &BooleanOption::changed, [=] (bool oldValue, bool newValue) {
+            (void) oldValue;
+            trackballVisibility->setChecked(newValue);
+        });
 
-        toggleBackfaceCulling = new QAction(tr("&Backface Cull"), this);
-        toggleBackfaceCulling->setStatusTip(tr("Toggles the culling of backfacing polygons"));
-        toggleBackfaceCulling->setCheckable(true);
-        toggleBackfaceCulling->setChecked(true);
-        toggleBackfaceCulling->setShortcuts(QList<QKeySequence>({ Qt::Key_B, Qt::SHIFT + Qt::Key_B }));
-        connect(toggleBackfaceCulling, &QAction::triggered, [=] { doToggleBackfaceCulling(); });
-        optionsMenu->addAction(toggleBackfaceCulling);
+        QAction* depthBuffer = new QAction(tr("&Z-Buffer"), this);
+        depthBuffer->setStatusTip(tr("Toggles the usage of the depth buffer"));
+        depthBuffer->setCheckable(true);
+        depthBuffer->setChecked(true);
+        depthBuffer->setShortcuts(QList<QKeySequence>({ Qt::Key_Z, Qt::SHIFT + Qt::Key_Z }));
+        connect(depthBuffer, &QAction::triggered, [=] { viewer->depthBufferEnabled.toggle(); });
+        optionsMenu->addAction(depthBuffer);
 
-        toggleFrontfaceCulling = new QAction(tr("&Frontface Cull"), this);
-        toggleFrontfaceCulling->setStatusTip(tr("Toggles the culling of frontfacing polygons"));
-        toggleFrontfaceCulling->setCheckable(true);
-        toggleFrontfaceCulling->setShortcuts(QList<QKeySequence>({ Qt::Key_F, Qt::SHIFT + Qt::Key_F }));
-        connect(toggleFrontfaceCulling, &QAction::triggered, [=] { doToggleFrontfaceCulling(); });
-        optionsMenu->addAction(toggleFrontfaceCulling);
+        connect(&viewer->depthBufferEnabled, &BooleanOption::changed, [=] (bool oldValue, bool newValue) {
+            (void) oldValue;
+            depthBuffer->setChecked(newValue);
+        });
 
-        toggleDrawPickingBuffer = new QAction(tr("&Draw Picking Buffer"), this);
-        toggleDrawPickingBuffer->setStatusTip(tr("Toggles the drawing of the picking buffer instead of the normal framebuffer"));
-        toggleDrawPickingBuffer->setCheckable(true);
-        toggleDrawPickingBuffer->setShortcuts(QList<QKeySequence>({ Qt::Key_D, Qt::SHIFT + Qt::Key_D }));
-        connect(toggleDrawPickingBuffer, &QAction::triggered, [=] { doToggleDrawPickingBuffer(); });
-        optionsMenu->addAction(toggleDrawPickingBuffer);
+        QAction* backfaceCulling = new QAction(tr("&Backface Cull"), this);
+        backfaceCulling->setStatusTip(tr("Toggles the culling of backfacing polygons"));
+        backfaceCulling->setCheckable(true);
+        backfaceCulling->setChecked(true);
+        backfaceCulling->setShortcuts(QList<QKeySequence>({ Qt::Key_B, Qt::SHIFT + Qt::Key_B }));
+        connect(backfaceCulling, &QAction::triggered, [=] { viewer->backfaceCullingEnabled.toggle(); });
+        optionsMenu->addAction(backfaceCulling);
+
+        connect(&viewer->backfaceCullingEnabled, &BooleanOption::changed, [=] (bool oldValue, bool newValue) {
+            (void) oldValue;
+            backfaceCulling->setChecked(newValue);
+        });
+
+        QAction* frontfaceCulling = new QAction(tr("&Frontface Cull"), this);
+        frontfaceCulling->setStatusTip(tr("Toggles the culling of frontfacing polygons"));
+        frontfaceCulling->setCheckable(true);
+        frontfaceCulling->setShortcuts(QList<QKeySequence>({ Qt::Key_F, Qt::SHIFT + Qt::Key_F }));
+        connect(frontfaceCulling, &QAction::triggered, [=] { viewer->frontfaceCullingEnabled.toggle(); });
+        optionsMenu->addAction(frontfaceCulling);
+
+        connect(&viewer->frontfaceCullingEnabled, &BooleanOption::changed, [=] (bool oldValue, bool newValue) {
+            (void) oldValue;
+            frontfaceCulling->setChecked(newValue);
+        });
+
+        QAction* drawPickingBuffer = new QAction(tr("&Draw Picking Buffer"), this);
+        drawPickingBuffer->setStatusTip(tr("Toggles the drawing of the picking buffer instead of the normal framebuffer"));
+        drawPickingBuffer->setCheckable(true);
+        drawPickingBuffer->setShortcuts(QList<QKeySequence>({ Qt::Key_D, Qt::SHIFT + Qt::Key_D }));
+        connect(drawPickingBuffer, &QAction::triggered, [=] { viewer->drawPickingBufferEnabled.toggle(); });
+        optionsMenu->addAction(drawPickingBuffer);
+
+        connect(&viewer->drawPickingBufferEnabled, &BooleanOption::changed, [=] (bool oldValue, bool newValue) {
+            (void) oldValue;
+            drawPickingBuffer->setChecked(newValue);
+        });
     }
 }
 
@@ -231,39 +257,4 @@ void AppWindow::doRedo() {
     } else {
         QApplication::beep();
     }
-}
-
-void AppWindow::doToggleTrackballVisibility() {
-    bool visible = viewer->isTrackballVisible();
-
-    viewer->setTrackballVisible(!visible);
-    toggleTrackballVisibility->setChecked(!visible);
-}
-
-void AppWindow::doToggleDepthBuffer() {
-    bool enabled = viewer->isDepthBufferEnabled();
-
-    viewer->setDepthBufferEnabled(!enabled);
-    toggleDepthBuffer->setChecked(!enabled);
-}
-
-void AppWindow::doToggleBackfaceCulling() {
-    bool enabled = viewer->isBackfaceCullingEnabled();
-
-    viewer->setBackfaceCullingEnabled(!enabled);
-    toggleBackfaceCulling->setChecked(!enabled);
-}
-
-void AppWindow::doToggleFrontfaceCulling() {
-    bool enabled = viewer->isFrontfaceCullingEnabled();
-
-    viewer->setFrontfaceCullingEnabled(!enabled);
-    toggleFrontfaceCulling->setChecked(!enabled);
-}
-
-void AppWindow::doToggleDrawPickingBuffer() {
-    bool enabled = viewer->isDrawPickingBufferEnabled();
-
-    viewer->setDrawPickingBufferEnabled(!enabled);
-    toggleDrawPickingBuffer->setChecked(!enabled);
 }
