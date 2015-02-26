@@ -24,8 +24,7 @@ protected:
     bool selected = false;
 
     // Transformations
-    Matrix4 translationRotation;
-    Matrix4 scaling;
+    Matrix4 transform;
 
     // Hierarchy
     std::list<SceneNode*> m_children;
@@ -41,7 +40,7 @@ public:
     void setSelected(bool selected);
 
     Matrix4 getTransform() const;
-    void setTransform(const Matrix4& translationRotation, const Matrix4& scaling);
+    void setTransform(const Matrix4& transform);
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
     void walk_children(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;

@@ -30,12 +30,11 @@ void SceneNode::setSelected(bool selected) {
 }
 
 Matrix4 SceneNode::getTransform() const {
-    return translationRotation * scaling;
+    return transform;
 }
 
-void SceneNode::setTransform(const Matrix4& translationRotation, const Matrix4& scaling) {
-    this->translationRotation = translationRotation;
-    this->scaling = scaling;
+void SceneNode::setTransform(const Matrix4& transform) {
+    this->transform = transform;
 }
 
 void SceneNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
@@ -62,7 +61,7 @@ void SceneNode::raycastAll(const Point3D& point, const Vector3& direction) const
         cout << "ray intersects node " << m_name << endl;
     }
 
-    Matrix4 inverse = (translationRotation * scaling).inverse();
+    Matrix4 inverse = transform.inverse();
     Point3D childPoint = inverse * point;
     Vector3 childDirection = inverse * direction;
 
@@ -116,13 +115,13 @@ bool SceneNode::pick(int id) {
 void SceneNode::rotate(char axis, double angle) {
     switch(axis) {
     case 'x':
-        translationRotation = translationRotation * Matrix4::makeXRotation(angle);
+        transform = transform * Matrix4::makeXRotation(angle);
         break;
     case 'y':
-        translationRotation = translationRotation * Matrix4::makeYRotation(angle);
+        transform = transform * Matrix4::makeYRotation(angle);
         break;
     case 'z':
-        translationRotation = translationRotation * Matrix4::makeZRotation(angle);
+        transform = transform * Matrix4::makeZRotation(angle);
         break;
     default:
         cerr << "SceneNode::rotate - " << axis << " isn't a valid axis" << endl;
@@ -131,11 +130,11 @@ void SceneNode::rotate(char axis, double angle) {
 }
 
 void SceneNode::scale(const Vector3& amount) {
-    scaling = scaling * Matrix4::makeScaling(amount[0], amount[1], amount[2]);
+    transform = transform * Matrix4::makeScaling(amount[0], amount[1], amount[2]);
 }
 
 void SceneNode::translate(const Vector3& amount) {
-    translationRotation = translationRotation * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
+    transform = transform * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
 SceneNode::NodeType SceneNode::getType() const {
