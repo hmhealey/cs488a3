@@ -9,16 +9,16 @@
 
 using namespace std;
 
-SceneNode::SceneNode(const std::string& name, int id) : m_id(id), m_name(name) { }
+SceneNode::SceneNode(const std::string& name, int id) : id(id), name(name) { }
 
 SceneNode::~SceneNode() { }
 
 string SceneNode::getName() const {
-    return m_name;
+    return name;
 }
 
 int SceneNode::getId() const {
-    return m_id;
+    return id;
 }
 
 bool SceneNode::isSelected() const {
@@ -37,22 +37,19 @@ void SceneNode::setTransform(const Matrix4& transform) {
     this->transform = transform;
 }
 
-void SceneNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
-    walk_children(shader, parentTransform, picking);
+void SceneNode::add_child(SceneNode* child) {
+    children.push_back(child);
 }
 
-void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bool picking) const {
-    const Matrix4 transform(parentTransform * getTransform());
-    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
-        (*i)->walk_gl(shader, transform, picking);
-    }
+void SceneNode::remove_child(SceneNode* child) {
+    children.remove(child);
 }
 
 SceneNode* SceneNode::getById(int id) {
-    if (id == m_id) {
+    if (id == this->id) {
         return this;
     } else {
-        for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+        for (auto i = children.cbegin(); i != children.cend(); i++) {
             SceneNode* node = (*i)->getById(id);
 
             if (node != NULL) {
@@ -64,11 +61,22 @@ SceneNode* SceneNode::getById(int id) {
     }
 }
 
+void SceneNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
+    walk_children(shader, parentTransform, picking);
+}
+
+void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bool picking) const {
+    const Matrix4 transform(parentTransform * getTransform());
+    for (auto i = children.cbegin(); i != children.cend(); i++) {
+        (*i)->walk_gl(shader, transform, picking);
+    }
+}
+
 bool SceneNode::pick(int id) {
-    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+    for (auto i = children.cbegin(); i != children.cend(); i++) {
         SceneNode* child = *i;
 
-        if (child->m_id == id) {
+        if (child->id == id) {
             // we've found the node we're looking for, but only nodes directly under Joints are selectable
             // so we only actually select it if we're a joint
             if (getType() == SceneNode::Joint) {
@@ -96,7 +104,7 @@ const list<JointNode*> SceneNode::getSelectedJoints() {
 
     bool childSelected = false;
 
-    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+    for (auto i = children.cbegin(); i != children.cend(); i++) {
         auto childJoints = (*i)->getSelectedJoints();
 
         joints.splice(joints.end(), childJoints);
@@ -112,7 +120,7 @@ const list<JointNode*> SceneNode::getSelectedJoints() {
 }
 
 void SceneNode::resetJoints() {
-    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+    for (auto i = children.cbegin(); i != children.cend(); i++) {
         (*i)->resetJoints();
     }
 }
@@ -159,8 +167,8 @@ void JointNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool pic
 }
 
 void JointNode::resetJoints() {
-    setXRotation(xRange.init);
-    setYRotation(yRange.init);
+    setXRotation(xRange.initial);
+    setYRotation(yRange.initial);
 
     SceneNode::resetJoints();
 }
@@ -185,15 +193,15 @@ double JointNode::setYRotation(double yRotation) {
     return this->yRotation = min(max(yRotation, yRange.min), yRange.max);
 }
 
-void JointNode::setXRange(double min, double init, double max) {
+void JointNode::setXRange(double min, double initial, double max) {
     xRange.min = min;
-    xRange.init = init;
+    xRange.initial = initial;
     xRange.max = max;
 }
 
-void JointNode::setYRange(double min, double init, double max) {
+void JointNode::setYRange(double min, double initial, double max) {
     yRange.min = min;
-    yRange.init = init;
+    yRange.initial = initial;
     yRange.max = max;
 }
 
@@ -216,7 +224,7 @@ void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool 
         }
     } else {
         // assign a different material that we can later query while picking
-        Material(Colour(m_id / 255.0, m_id / 255.0, m_id / 255.0)).applyTo(shader);
+        Material(Colour(id / 255.0, id / 255.0, id / 255.0)).applyTo(shader);
     }
 
     m_primitive->getMesh().draw(shader);

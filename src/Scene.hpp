@@ -18,17 +18,14 @@ public:
         Geometry
     };
 protected:
-    // Useful for picking
-    int m_id;
-    std::string m_name;
+    int id;
+    std::string name;
+
+    std::list<SceneNode*> children;
 
     bool selected = false;
 
-    // Transformations
     Matrix4 transform;
-
-    // Hierarchy
-    std::list<SceneNode*> m_children;
 
 public:
     SceneNode(const std::string& name, int id);
@@ -43,26 +40,19 @@ public:
     virtual Matrix4 getTransform() const;
     void setTransform(const Matrix4& transform);
 
-    virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
-    void walk_children(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
-
-    void add_child(SceneNode* child) {
-        m_children.push_back(child);
-    }
-
-    void remove_child(SceneNode* child) {
-        m_children.remove(child);
-    }
+    void add_child(SceneNode* child);
+    void remove_child(SceneNode* child);
 
     SceneNode* getById(int id);
+
+    virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
+    void walk_children(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
     bool pick(int id);
 
     const std::list<JointNode*> getSelectedJoints();
     virtual void resetJoints();
 
-    // Callbacks to be implemented.
-    // These will be called from Lua.
     void rotate(char axis, double angle);
     void scale(const Vector3& amount);
     void translate(const Vector3& amount);
@@ -73,7 +63,9 @@ public:
 class JointNode : public SceneNode {
 protected:
     struct JointRange {
-        double min, init, max;
+        double min;
+        double initial;
+        double max;
     };
 
     JointRange xRange;
@@ -100,11 +92,13 @@ public:
     double getYRotation() const;
     double setYRotation(double yRotation);
 
-    void setXRange(double min, double init, double max);
-    void setYRange(double min, double init, double max);
+    void setXRange(double min, double initial, double max);
+    void setYRange(double min, double initial, double max);
 };
 
 class GeometryNode : public SceneNode {
+    Primitive* primitive;
+
 public:
     GeometryNode(const std::string& name, int id, Primitive* primitive);
     virtual ~GeometryNode();
@@ -115,9 +109,6 @@ public:
 
     const Material& getMaterial() const;
     void setMaterial(const Material& material);
-
-protected:
-    Primitive* m_primitive;
 };
 
 #endif
