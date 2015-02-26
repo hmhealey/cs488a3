@@ -23,6 +23,7 @@ HEADERS += Algebra.hpp \
            AppWindow.hpp \
            Material.hpp \
            Mesh.hpp \
+           Option.hpp \
            Primitive.hpp \
            Scene.hpp \
            scene_lua.hpp \
@@ -36,6 +37,7 @@ SOURCES += Algebra.cpp \
            Main.cpp \
            Material.cpp \
            Mesh.cpp \
+           Option.cpp \
            Primitive.cpp \
            Scene.cpp \
            scene_lua.cpp \

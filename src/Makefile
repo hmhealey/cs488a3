@@ -54,6 +54,7 @@ SOURCES       = Algebra.cpp \
 		Main.cpp \
 		Material.cpp \
 		Mesh.cpp \
+		Option.cpp \
 		Primitive.cpp \
 		Scene.cpp \
 		scene_lua.cpp \
@@ -61,6 +62,7 @@ SOURCES       = Algebra.cpp \
 		Trackball.cpp \
 		UndoStack.cpp \
 		Viewer.cpp moc_AppWindow.cpp \
+		moc_Option.cpp \
 		moc_Viewer.cpp
 OBJECTS       = Algebra.o \
 		AlgebraToQt.o \
@@ -68,6 +70,7 @@ OBJECTS       = Algebra.o \
 		Main.o \
 		Material.o \
 		Mesh.o \
+		Option.o \
 		Primitive.o \
 		Scene.o \
 		scene_lua.o \
@@ -76,6 +79,7 @@ OBJECTS       = Algebra.o \
 		UndoStack.o \
 		Viewer.o \
 		moc_AppWindow.o \
+		moc_Option.o \
 		moc_Viewer.o
 DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		/usr/local/qt/5.4/clang_64/mkspecs/qdevice.pri \
@@ -209,6 +213,7 @@ DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		AppWindow.hpp \
 		Material.hpp \
 		Mesh.hpp \
+		Option.hpp \
 		Primitive.hpp \
 		Scene.hpp \
 		scene_lua.hpp \
@@ -221,6 +226,7 @@ DIST          = /usr/local/qt/5.4/clang_64/mkspecs/features/spec_pre.prf \
 		Main.cpp \
 		Material.cpp \
 		Mesh.cpp \
+		Option.cpp \
 		Primitive.cpp \
 		Scene.cpp \
 		scene_lua.cpp \
@@ -565,8 +571,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.hpp AlgebraToQt.hpp AppWindow.hpp Material.hpp Mesh.hpp Primitive.hpp Scene.hpp scene_lua.hpp Shader.hpp Trackball.hpp UndoStack.hpp Viewer.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents Algebra.cpp AlgebraToQt.cpp AppWindow.cpp Main.cpp Material.cpp Mesh.cpp Primitive.cpp Scene.cpp scene_lua.cpp Shader.cpp Trackball.cpp UndoStack.cpp Viewer.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.hpp AlgebraToQt.hpp AppWindow.hpp Material.hpp Mesh.hpp Option.hpp Primitive.hpp Scene.hpp scene_lua.hpp Shader.hpp Trackball.hpp UndoStack.hpp Viewer.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents Algebra.cpp AlgebraToQt.cpp AppWindow.cpp Main.cpp Material.cpp Mesh.cpp Option.cpp Primitive.cpp Scene.cpp scene_lua.cpp Shader.cpp Trackball.cpp UndoStack.cpp Viewer.cpp $(DISTDIR)/
 
 
 clean:compiler_clean 
@@ -591,9 +597,9 @@ compiler_objective_c_make_all:
 compiler_objective_c_clean:
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_AppWindow.cpp moc_Viewer.cpp
+compiler_moc_header_make_all: moc_AppWindow.cpp moc_Option.cpp moc_Viewer.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_AppWindow.cpp moc_Viewer.cpp
+	-$(DEL_FILE) moc_AppWindow.cpp moc_Option.cpp moc_Viewer.cpp
 moc_AppWindow.cpp: /usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
 		/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
@@ -631,6 +637,11 @@ moc_AppWindow.cpp: /usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5
 		UndoStack.hpp \
 		AppWindow.hpp
 	/usr/local/qt/5.4/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/usr/local/qt/5.4/clang_64/mkspecs/macx-clang -I/Users/harrison/Dropbox/School/cs488/A3/src -I/usr/local/include/lua5.1 -I/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Headers -F/usr/local/qt/5.4/clang_64/lib AppWindow.hpp -o moc_AppWindow.cpp
+
+moc_Option.cpp: /usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QObject \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qobject.h \
+		Option.hpp
+	/usr/local/qt/5.4/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/usr/local/qt/5.4/clang_64/mkspecs/macx-clang -I/Users/harrison/Dropbox/School/cs488/A3/src -I/usr/local/include/lua5.1 -I/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtWidgets.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtGui.framework/Headers -I/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Headers -F/usr/local/qt/5.4/clang_64/lib Option.hpp -o moc_Option.cpp
 
 moc_Viewer.cpp: /usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/QGLFramebufferObject \
 		/usr/local/qt/5.4/clang_64/lib/QtOpenGL.framework/Versions/5/Headers/qglframebufferobject.h \
@@ -937,6 +948,11 @@ Mesh.o: Mesh.cpp Mesh.hpp \
 		Material.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Mesh.o Mesh.cpp
 
+Option.o: Option.cpp Option.hpp \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/QObject \
+		/usr/local/qt/5.4/clang_64/lib/QtCore.framework/Versions/5/Headers/qobject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Option.o Option.cpp
+
 Primitive.o: Primitive.cpp Primitive.hpp \
 		Material.hpp \
 		Algebra.hpp \
@@ -1203,6 +1219,9 @@ Viewer.o: Viewer.cpp Viewer.hpp \
 
 moc_AppWindow.o: moc_AppWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_AppWindow.o moc_AppWindow.cpp
+
+moc_Option.o: moc_Option.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Option.o moc_Option.cpp
 
 moc_Viewer.o: moc_Viewer.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Viewer.o moc_Viewer.cpp
