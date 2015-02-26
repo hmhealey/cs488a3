@@ -1,0 +1,15 @@
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
+
+Compilation:
+This program was compiled on gl15 using C++11, QT 5.1, and OpenGL 3.3.
+
+Running:
+To run this program, use the following command. If the path to a puppet is not specified, the program will look for puppet.lua in the current directory. If the specified puppet doesn't exist, it'll likely crash.
+$ ./puppeteer [path/to/puppet]
+
+Assumptions:
+-That requirements listed in the compilation section exist on the target computer
+-Shaders are located in either the current directory, shaders/, or src/shaders/
+-The puppet exists and is valid
