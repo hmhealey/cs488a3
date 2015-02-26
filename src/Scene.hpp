@@ -6,6 +6,7 @@
 #include "Algebra.hpp"
 #include "Material.hpp"
 
+class JointNode;
 class Primitive;
 class Shader;
 
@@ -57,6 +58,8 @@ public:
 
     bool pick(int id);
 
+    const std::list<JointNode*> getSelectedJoints();
+
     // Callbacks to be implemented.
     // These will be called from Lua.
     void rotate(char axis, double angle);
@@ -87,6 +90,12 @@ public:
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
     virtual SceneNode::NodeType getType() const;
+
+    double getXRotation() const;
+    double setXRotation(double xRotation);
+
+    double getYRotation() const;
+    double setYRotation(double yRotation);
 
     void setXRange(double min, double init, double max);
     void setYRange(double min, double init, double max);

@@ -90,6 +90,27 @@ bool SceneNode::pick(int id) {
     return false;
 }
 
+const list<JointNode*> SceneNode::getSelectedJoints() {
+    // horrible inefficient since we're allocating tons of lists here
+    list<JointNode*> joints;
+
+    bool childSelected = false;
+
+    for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
+        auto childJoints = (*i)->getSelectedJoints();
+
+        joints.splice(joints.end(), childJoints);
+
+        childSelected |= (*i)->isSelected();
+    }
+
+    if (childSelected && getType() == SceneNode::Joint) {
+        joints.push_back((JointNode*) this);
+    }
+
+    return joints;
+}
+
 void SceneNode::rotate(char axis, double angle) {
     switch(axis) {
     case 'x':
@@ -133,6 +154,22 @@ void JointNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool pic
 
 SceneNode::NodeType JointNode::getType() const {
     return SceneNode::Joint;
+}
+
+double JointNode::getXRotation() const {
+    return xRotation;
+}
+
+double JointNode::setXRotation(double xRotation) {
+    return this->xRotation = min(max(xRotation, xRange.min), xRange.max);
+}
+
+double JointNode::getYRotation() const {
+    return yRotation;
+}
+
+double JointNode::setYRotation(double yRotation) {
+    return this->yRotation = min(max(yRotation, yRange.min), yRange.max);
 }
 
 void JointNode::setXRange(double min, double init, double max) {

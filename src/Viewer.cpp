@@ -22,6 +22,9 @@ static const double PUPPET_TRANSLATION_X_FACTOR = -0.02;
 static const double PUPPET_TRANSLATION_Y_FACTOR = 0.02;
 static const double PUPPET_TRANSLATION_Z_FACTOR = 0.05;
 
+static const double JOINT_ROTATION_X_FACTOR = 1;
+static const double JOINT_ROTATION_Y_FACTOR = 1;
+
 Viewer::Viewer(const QGLFormat& format, QWidget *parent) : QGLWidget(format, parent), mCircleBufferObject(QOpenGLBuffer::VertexBuffer), mVertexArrayObject(this) { }
 
 Viewer::~Viewer() {
@@ -327,8 +330,6 @@ void Viewer::mousePressEvent(QMouseEvent* event) {
                 // this should never happen
                 cerr << "picking buffer is null when going to do picking" << endl;
             }
-        } else {
-            // TODO joint manipulation
         }
     }
 }
@@ -368,7 +369,21 @@ void Viewer::mouseMoveEvent(QMouseEvent* event) {
             }
         } else if (mode == Viewer::Joints) {
             // but allow multiple operations at once since it actually works here
-            // TODO joint manipulation
+            const list<JointNode*> joints = scene->getSelectedJoints();
+
+            for (auto i = joints.cbegin(); i != joints.cend(); i++) {
+                JointNode* joint = *i;
+
+                // rotate joint around its y axis based on x movement while right clicking
+                if ((event->buttons() & Qt::RightButton) != 0) {
+                    joint->setYRotation(joint->getYRotation() + dx * JOINT_ROTATION_Y_FACTOR);
+                }
+
+                // rotate joint around its x axis based on y movement while middle clicking
+                if ((event->buttons() & Qt::MiddleButton) != 0) {
+                    joint->setXRotation(joint->getXRotation() + dy * JOINT_ROTATION_X_FACTOR);
+                }
+            }
         }
     }
 
