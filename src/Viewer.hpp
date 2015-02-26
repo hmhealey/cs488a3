@@ -1,7 +1,7 @@
 #ifndef CS488_VIEWER_HPP
 #define CS488_VIEWER_HPP
 
-#include <QGLFrameBufferObject>
+#include <QGLFramebufferObject>
 #include <QGLWidget>
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
