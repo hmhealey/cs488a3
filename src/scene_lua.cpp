@@ -127,8 +127,8 @@ int gr_joint_cmd(lua_State* L)
     lua_pop(L, 2);
   }
 
-  node->set_joint_x(x[0], x[1], x[2]);
-  node->set_joint_y(y[0], y[1], y[2]);
+  node->setXRange(x[0], x[1], x[2]);
+  node->setYRange(y[0], y[1], y[2]);
   
   data->node = node;
 

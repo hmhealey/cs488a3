@@ -39,7 +39,7 @@ public:
     bool isSelected() const;
     void setSelected(bool selected);
 
-    Matrix4 getTransform() const;
+    virtual Matrix4 getTransform() const;
     void setTransform(const Matrix4& transform);
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
@@ -67,23 +67,29 @@ public:
 };
 
 class JointNode : public SceneNode {
+protected:
+    struct JointRange {
+        double min, init, max;
+    };
+
+    JointRange xRange;
+    JointRange yRange;
+
+    double xRotation = 0;
+    double yRotation = 0;
+
 public:
     JointNode(const std::string& name, int id);
     virtual ~JointNode();
+
+    virtual Matrix4 getTransform() const;
 
     virtual void walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking = false) const;
 
     virtual SceneNode::NodeType getType() const;
 
-    void set_joint_x(double min, double init, double max);
-    void set_joint_y(double min, double init, double max);
-
-    struct JointRange {
-        double min, init, max;
-    };
-  
-protected:
-    JointRange m_joint_x, m_joint_y;
+    void setXRange(double min, double init, double max);
+    void setYRange(double min, double init, double max);
 };
 
 class GeometryNode : public SceneNode {

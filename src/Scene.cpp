@@ -41,7 +41,6 @@ void SceneNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool pic
     walk_children(shader, parentTransform, picking);
 }
 
-
 void SceneNode::walk_children(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     const Matrix4 transform(parentTransform * getTransform());
     for (auto i = m_children.cbegin(); i != m_children.cend(); i++) {
@@ -124,6 +123,10 @@ JointNode::JointNode(const std::string& name, int id) : SceneNode(name, id) { }
 
 JointNode::~JointNode() { }
 
+Matrix4 JointNode::getTransform() const {
+    return Matrix4::makeYRotation(yRotation) * Matrix4::makeXRotation(xRotation) * transform;
+}
+
 void JointNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool picking) const {
     walk_children(shader, parentTransform, picking);
 }
@@ -132,16 +135,16 @@ SceneNode::NodeType JointNode::getType() const {
     return SceneNode::Joint;
 }
 
-void JointNode::set_joint_x(double min, double init, double max) {
-    m_joint_x.min = min;
-    m_joint_x.init = init;
-    m_joint_x.max = max;
+void JointNode::setXRange(double min, double init, double max) {
+    xRange.min = min;
+    xRange.init = init;
+    xRange.max = max;
 }
 
-void JointNode::set_joint_y(double min, double init, double max) {
-    m_joint_y.min = min;
-    m_joint_y.init = init;
-    m_joint_y.max = max;
+void JointNode::setYRange(double min, double init, double max) {
+    yRange.min = min;
+    yRange.init = init;
+    yRange.max = max;
 }
 
 GeometryNode::GeometryNode(const std::string& name, int id, Primitive* primitive) : SceneNode(name, id), m_primitive(primitive) { }
