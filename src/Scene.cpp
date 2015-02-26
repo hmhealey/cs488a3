@@ -205,7 +205,7 @@ void JointNode::setYRange(double min, double initial, double max) {
     yRange.max = max;
 }
 
-GeometryNode::GeometryNode(const std::string& name, int id, Primitive* primitive) : SceneNode(name, id), m_primitive(primitive) { }
+GeometryNode::GeometryNode(const std::string& name, int id, Primitive* primitive) : SceneNode(name, id), primitive(primitive) { }
 
 GeometryNode::~GeometryNode() { }
 
@@ -214,7 +214,7 @@ void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool 
     shader.use();
 
     if (!picking) {
-        const Material& material = m_primitive->getMaterial();
+        const Material& material = primitive->getMaterial();
         if (!selected) {
             // use the primitive's built-in material
             material.applyTo(shader);
@@ -227,7 +227,7 @@ void GeometryNode::walk_gl(Shader& shader, const Matrix4& parentTransform, bool 
         Material(Colour(id / 255.0, id / 255.0, id / 255.0)).applyTo(shader);
     }
 
-    m_primitive->getMesh().draw(shader);
+    primitive->getMesh().draw(shader);
 
     walk_children(shader, parentTransform, picking);
 }
@@ -237,10 +237,10 @@ SceneNode::NodeType GeometryNode::getType() const {
 }
 
 const Material& GeometryNode::getMaterial() const {
-    return m_primitive->getMaterial();
+    return primitive->getMaterial();
 }
 
 void GeometryNode::setMaterial(const Material& material) {
-    m_primitive->setMaterial(material);
+    primitive->setMaterial(material);
 }
  
