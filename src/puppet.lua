@@ -1,42 +1,75 @@
---
--- CS488 -- Introduction to Computer Graphics
--- 
--- a3mark.lua
---
--- A very simple scene creating a trivial puppet.  The TAs will be
--- using this scene as part of marking your assignment.  You'll
--- probably want to make sure you get reasonable results with it!
-
-rootnode = gr.node('root')
+root = gr.node('root')
 
 red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10)
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10)
 
-s0 = gr.sphere('s0')
-rootnode:add_child(s0)
-s0:set_material(white)
+-- torso/hips/shoulders
 
-s1 = gr.sphere('s1')
-rootnode:add_child(s1)
-s1:scale(0.1, 2.0, 0.1)
-s1:set_material(red)
+torso = gr.sphere('torso')
+torso:scale(2, 4, 2)
+root:add_child(torso)
 
-s2 = gr.sphere('s2')
-rootnode:add_child(s2)
-s2:translate(2.0, -2.0, 0.0)
-s2:rotate('z', -90.0)
-s2:scale(0.1, 2.0, 0.1)
-s2:set_material(blue)
+shoulder = gr.node('shoulder')
+shoulder:translate(0, 2, 0)
+root:add_child(shoulder)
 
-s3 = gr.sphere('s3')
-rootnode:add_child(s3)
-s3:scale(0.1, 0.1, 2.0)
-s3:translate(0.0, -2.0, 2.0)
-s3:set_material(green)
+shoulderShape = gr.sphere('shoulderShape')
+shoulderShape:scale(4, 1, 1)
+shoulder:add_child(shoulderShape)
 
---rootnode:translate(-0.75, 0.25, -10.0)
-rootnode:rotate('y', -20.0)
+hips = gr.node('hips')
+hips:translate(0, -3, 0)
+root:add_child(hips)
 
-return rootnode
+hipShape = gr.sphere('hipShape')
+hipShape:scale(3, 1, 1)
+hips:add_child(hipShape)
+
+-- neck/head/nose
+
+neck = gr.node('neck')
+neck:translate(0, 2, 0)
+shoulder:add_child(neck)
+
+neckShape = gr.sphere('neckShape')
+neckShape:scale(1, 2, 1)
+neck:add_child(neckShape)
+
+head = gr.node('head')
+head:translate(0, 1.5, 0)
+neck:add_child(head)
+
+headShape = gr.sphere('headShape')
+headShape:scale(2, 2, 2)
+head:add_child(headShape)
+
+noseShape = gr.sphere('noseShape')
+noseShape:scale(0.4, 0.4, 0.4)
+noseShape:translate(0, 0, 2)
+head:add_child(noseShape)
+
+-- arms
+
+leftArm = gr.node('leftArm')
+leftArm:translate(0, -3, 0)
+shoulder:add_child(leftArm)
+
+leftArmShape = gr.sphere('leftArmShape')
+leftArmShape:scale(1, 3, 1)
+leftArm:add_child(leftArmShape)
+
+leftForearm = gr.node('leftForearm')
+leftForearm:translate(0, -3, 0)
+leftArm:add_child(leftForearm)
+
+leftForearmShape = gr.sphere('leftForearmShape')
+leftForearmShape:scale(1, 3, 1)
+leftForearm:add_child(leftForearmShape)
+
+leftHandShape = gr.sphere(
+
+
+
+return root
